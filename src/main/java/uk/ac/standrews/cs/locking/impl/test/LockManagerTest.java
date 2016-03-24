@@ -1,15 +1,15 @@
 package uk.ac.standrews.cs.locking.impl.test;
 
 import junit.framework.TestCase;
-import uk.ac.stand.dcs.asa.storage.exceptions.LockException;
-import uk.ac.stand.dcs.asa.storage.exceptions.LockUseException;
-import uk.ac.stand.dcs.asa.storage.locking.impl.LockDepth;
-import uk.ac.stand.dcs.asa.storage.locking.impl.LockManager;
-import uk.ac.stand.dcs.asa.storage.locking.impl.LockScope;
-import uk.ac.stand.dcs.asa.storage.locking.impl.LockType;
-import uk.ac.stand.dcs.asa.storage.locking.interfaces.ILock;
-import uk.ac.stand.dcs.asa.storage.locking.interfaces.ILockManager;
-import uk.ac.stand.dcs.asa.storage.locking.interfaces.IResourceLockInfo;
+import uk.ac.standrews.cs.exceptions.LockException;
+import uk.ac.standrews.cs.exceptions.LockUseException;
+import uk.ac.standrews.cs.locking.impl.LockDepth;
+import uk.ac.standrews.cs.locking.impl.LockManager;
+import uk.ac.standrews.cs.locking.impl.LockScope;
+import uk.ac.standrews.cs.locking.impl.LockType;
+import uk.ac.standrews.cs.locking.interfaces.ILock;
+import uk.ac.standrews.cs.locking.interfaces.ILockManager;
+import uk.ac.standrews.cs.locking.interfaces.IResourceLockInfo;
 
 import java.net.URI;
 import java.net.URISyntaxException;

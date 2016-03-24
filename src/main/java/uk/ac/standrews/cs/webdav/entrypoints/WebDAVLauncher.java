@@ -5,6 +5,7 @@ package uk.ac.standrews.cs.webdav.entrypoints;
 
 import uk.ac.standrews.cs.interfaces.IGUID;
 import uk.ac.standrews.cs.util.*;
+import uk.ac.standrews.cs.util.Error;
 
 import java.io.IOException;
 

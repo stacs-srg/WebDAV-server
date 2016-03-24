@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.webdav.exceptions;
 
-import uk.ac.stand.dcs.asa.storage.webdav.impl.HTTP;
+import uk.ac.standrews.cs.webdav.impl.HTTP;
 
 /**
  * An exception which the HTTP server will attempt to send to the client

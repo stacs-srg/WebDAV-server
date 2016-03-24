@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.webdav.impl.methods.test;
 
-import uk.ac.stand.dcs.asa.util.RandomGUID;
-
+import uk.ac.standrews.cs.util.RandomGUID;
 
 public class LOCKTest extends AbstractMethodTest {
 

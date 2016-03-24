@@ -3,17 +3,15 @@
  */
 package uk.ac.standrews.cs.webdav.impl.methods;
 
-import uk.ac.stand.dcs.asa.storage.absfilesystem.interfaces.IDirectory;
-import uk.ac.stand.dcs.asa.storage.exceptions.BindingAbsentException;
-import uk.ac.stand.dcs.asa.storage.exceptions.BindingPresentException;
-import uk.ac.stand.dcs.asa.storage.exceptions.LockUseException;
-import uk.ac.stand.dcs.asa.storage.exceptions.PersistenceException;
-import uk.ac.stand.dcs.asa.storage.util.UriUtil;
-import uk.ac.stand.dcs.asa.storage.webdav.exceptions.HTTPException;
-import uk.ac.stand.dcs.asa.storage.webdav.impl.HTTP;
-import uk.ac.stand.dcs.asa.storage.webdav.impl.Request;
-import uk.ac.stand.dcs.asa.storage.webdav.impl.Response;
-import uk.ac.stand.dcs.asa.util.Diagnostic;
+import uk.ac.standrews.cs.exceptions.BindingAbsentException;
+import uk.ac.standrews.cs.exceptions.BindingPresentException;
+import uk.ac.standrews.cs.exceptions.LockUseException;
+import uk.ac.standrews.cs.exceptions.PersistenceException;
+import uk.ac.standrews.cs.util.Diagnostic;
+import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
+import uk.ac.standrews.cs.webdav.impl.HTTP;
+import uk.ac.standrews.cs.webdav.impl.Request;
+import uk.ac.standrews.cs.webdav.impl.Response;
 
 import java.io.IOException;
 import java.net.URI;
@@ -69,11 +67,23 @@ public abstract class CopyOrMove extends AbstractHTTPMethod {
 			
 			response.close();
 		}
-		catch (LockUseException e)        { if (lock_token == null) throw new HTTPException(e, HTTP.RESPONSE_LOCKED, true);                  // No lock supplied in header.
-		else                                                        throw new HTTPException(e, HTTP.RESPONSE_PRECONDITION_FAILED, true); }   // Lock supplied but the wrong one, or the resource wasn't actually locked.
-		catch (BindingAbsentException e)  { throw new HTTPException("Source object not found", HTTP.RESPONSE_NOT_FOUND, true); }
-		catch (BindingPresentException e) { throw new HTTPException("Destination non-null with no-overwrite", HTTP.RESPONSE_PRECONDITION_FAILED, true); }
-		catch (PersistenceException e)    { throw new HTTPException("Couldn't create copy", HTTP.RESPONSE_INTERNAL_SERVER_ERROR, true); }
-		catch (URISyntaxException e)      { throw new HTTPException("Invalid destination path", HTTP.RESPONSE_BAD_REQUEST, true); }
+		catch (LockUseException e) {
+			if (lock_token == null)
+				throw new HTTPException(e, HTTP.RESPONSE_LOCKED, true);                  // No lock supplied in header.
+			else
+				throw new HTTPException(e, HTTP.RESPONSE_PRECONDITION_FAILED, true);
+		}   // Lock supplied but the wrong one, or the resource wasn't actually locked.
+		catch (BindingAbsentException e)  {
+			throw new HTTPException("Source object not found", HTTP.RESPONSE_NOT_FOUND, true);
+		}
+		catch (BindingPresentException e) {
+			throw new HTTPException("Destination non-null with no-overwrite", HTTP.RESPONSE_PRECONDITION_FAILED, true);
+		}
+		catch (PersistenceException e) {
+			throw new HTTPException("Couldn't create copy", HTTP.RESPONSE_INTERNAL_SERVER_ERROR, true);
+		}
+		catch (URISyntaxException e) {
+			throw new HTTPException("Invalid destination path", HTTP.RESPONSE_BAD_REQUEST, true);
+		}
 	}
 }

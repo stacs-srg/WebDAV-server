@@ -1,10 +1,9 @@
 package uk.ac.standrews.cs.webdav.interfaces;
 
-import uk.ac.stand.dcs.asa.storage.absfilesystem.interfaces.IFileSystem;
-import uk.ac.stand.dcs.asa.storage.locking.interfaces.ILockManager;
-import uk.ac.stand.dcs.asa.storage.webdav.exceptions.HTTPException;
-import uk.ac.stand.dcs.asa.storage.webdav.impl.Request;
-import uk.ac.stand.dcs.asa.storage.webdav.impl.Response;
+import uk.ac.standrews.cs.locking.interfaces.ILockManager;
+import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
+import uk.ac.standrews.cs.webdav.impl.Request;
+import uk.ac.standrews.cs.webdav.impl.Response;
 
 import java.io.IOException;
 

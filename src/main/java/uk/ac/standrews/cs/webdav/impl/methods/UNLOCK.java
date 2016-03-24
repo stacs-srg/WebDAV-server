@@ -1,12 +1,12 @@
 package uk.ac.standrews.cs.webdav.impl.methods;
 
 import org.w3c.dom.Element;
-import uk.ac.stand.dcs.asa.storage.exceptions.LockUseException;
-import uk.ac.stand.dcs.asa.storage.webdav.exceptions.HTTPException;
-import uk.ac.stand.dcs.asa.storage.webdav.impl.HTTP;
-import uk.ac.stand.dcs.asa.storage.webdav.impl.Request;
-import uk.ac.stand.dcs.asa.storage.webdav.impl.Response;
-import uk.ac.stand.dcs.asa.storage.webdav.impl.WebDAV;
+import uk.ac.standrews.cs.exceptions.LockUseException;
+import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
+import uk.ac.standrews.cs.webdav.impl.HTTP;
+import uk.ac.standrews.cs.webdav.impl.Request;
+import uk.ac.standrews.cs.webdav.impl.Response;
+import uk.ac.standrews.cs.webdav.impl.WebDAV;
 
 import java.io.IOException;
 import java.net.URI;

@@ -1,16 +1,12 @@
 package uk.ac.standrews.cs.webdav.impl.methods;
 
-import uk.ac.stand.dcs.asa.storage.absfilesystem.exceptions.UpdateException;
-import uk.ac.stand.dcs.asa.storage.absfilesystem.interfaces.IDirectory;
-import uk.ac.stand.dcs.asa.storage.exceptions.BindingAbsentException;
-import uk.ac.stand.dcs.asa.storage.exceptions.BindingPresentException;
-import uk.ac.stand.dcs.asa.storage.exceptions.LockUseException;
-import uk.ac.stand.dcs.asa.storage.exceptions.PersistenceException;
-import uk.ac.stand.dcs.asa.storage.persistence.interfaces.IData;
-import uk.ac.stand.dcs.asa.storage.util.UriUtil;
-import uk.ac.stand.dcs.asa.storage.webdav.exceptions.HTTPException;
-import uk.ac.stand.dcs.asa.storage.webdav.impl.*;
-import uk.ac.stand.dcs.asa.util.Diagnostic;
+import uk.ac.standrews.cs.exceptions.BindingAbsentException;
+import uk.ac.standrews.cs.exceptions.BindingPresentException;
+import uk.ac.standrews.cs.exceptions.LockUseException;
+import uk.ac.standrews.cs.exceptions.PersistenceException;
+import uk.ac.standrews.cs.util.Diagnostic;
+import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
+import uk.ac.standrews.cs.webdav.impl.*;
 
 import java.io.IOException;
 import java.net.URI;

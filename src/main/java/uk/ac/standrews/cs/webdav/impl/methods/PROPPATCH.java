@@ -3,12 +3,12 @@ package uk.ac.standrews.cs.webdav.impl.methods;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import uk.ac.stand.dcs.asa.storage.persistence.interfaces.IAttributedStatefulObject;
-import uk.ac.stand.dcs.asa.storage.webdav.exceptions.HTTPException;
-import uk.ac.stand.dcs.asa.storage.webdav.impl.HTTP;
-import uk.ac.stand.dcs.asa.storage.webdav.impl.Request;
-import uk.ac.stand.dcs.asa.storage.webdav.impl.Response;
-import uk.ac.stand.dcs.asa.storage.webdav.impl.WebDAV;
+import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
+import uk.ac.standrews.cs.webdav.impl.HTTP;
+import uk.ac.standrews.cs.webdav.impl.Request;
+import uk.ac.standrews.cs.webdav.impl.Response;
+import uk.ac.standrews.cs.webdav.impl.WebDAV;
+import uk.ac.standrews.cs.util.Error;
 
 import java.io.IOException;
 import java.net.URI;

@@ -3,11 +3,9 @@
  */
 package uk.ac.standrews.cs.webdav.entrypoints;
 
-import uk.ac.stand.dcs.asa.interfaces.IGUID;
-import uk.ac.stand.dcs.asa.storage.absfilesystem.exceptions.FileSystemCreationException;
-import uk.ac.stand.dcs.asa.storage.absfilesystem.factories.LocalFileBasedFileSystemFactory;
-import uk.ac.stand.dcs.asa.storage.absfilesystem.interfaces.IFileSystem;
-import uk.ac.stand.dcs.asa.util.*;
+import uk.ac.standrews.cs.interfaces.IGUID;
+import uk.ac.standrews.cs.util.*;
+import uk.ac.standrews.cs.util.Error;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.webdav.impl.methods.test;
 
-import uk.ac.stand.dcs.asa.storage.webdav.impl.HTTP;
+import uk.ac.standrews.cs.webdav.impl.HTTP;
 
 public class OPTIONSTest extends AbstractMethodTest {
 

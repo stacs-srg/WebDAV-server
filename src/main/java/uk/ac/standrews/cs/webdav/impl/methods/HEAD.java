@@ -1,16 +1,14 @@
 package uk.ac.standrews.cs.webdav.impl.methods;
 
-import uk.ac.stand.dcs.asa.storage.absfilesystem.exceptions.InvalidPathException;
-import uk.ac.stand.dcs.asa.storage.absfilesystem.interfaces.IDirectory;
-import uk.ac.stand.dcs.asa.storage.absfilesystem.interfaces.IFile;
-import uk.ac.stand.dcs.asa.storage.persistence.interfaces.IAttributedStatefulObject;
-import uk.ac.stand.dcs.asa.storage.webdav.exceptions.HTTPException;
-import uk.ac.stand.dcs.asa.storage.webdav.impl.HTTP;
-import uk.ac.stand.dcs.asa.storage.webdav.impl.Request;
-import uk.ac.stand.dcs.asa.storage.webdav.impl.Response;
+import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
+import uk.ac.standrews.cs.webdav.impl.HTTP;
+import uk.ac.standrews.cs.webdav.impl.Request;
+import uk.ac.standrews.cs.webdav.impl.Response;
+import uk.ac.standrews.cs.util.Error;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.InvalidPathException;
 
 /**
  * @author Ben Catherall, al, graham

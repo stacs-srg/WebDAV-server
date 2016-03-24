@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.webdav.impl.HTTP;
 import uk.ac.standrews.cs.webdav.impl.Request;
 import uk.ac.standrews.cs.webdav.interfaces.HTTPMethod;
 import uk.ac.standrews.cs.webdav.util.XMLHelper;
+import uk.ac.standrews.cs.util.Error;
 
 import java.net.URI;
 
