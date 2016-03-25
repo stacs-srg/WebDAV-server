@@ -4,8 +4,9 @@
 package uk.ac.standrews.cs.webdav.entrypoints;
 
 import uk.ac.standrews.cs.interfaces.IGUID;
-import uk.ac.standrews.cs.util.*;
 import uk.ac.standrews.cs.util.Error;
+import uk.ac.standrews.cs.util.GUIDFactory;
+import uk.ac.standrews.cs.util.Output;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +16,7 @@ import java.io.IOException;
  *
  * @author graham
  */
-public class WebDAV_FileBased_Launcher {
+public class WebDAV_FileBased_Launcher extends WebDAVLauncher {
 	
 	/**
 	 * Creates a file system, and runs a WebDAV server over it.
@@ -25,55 +26,28 @@ public class WebDAV_FileBased_Launcher {
 	 * @param args optional command line arguments	
 	 */
 	public static void main(String[] args) {
-		
-		String root_GUID_string = CommandLineArgs.getArg(args, "-r");
-		
-		String root_directory_path = CommandLineArgs.getArg(args, "-d");
-		
-		// Can't continue if no root GUID string supplied.
-		if (root_GUID_string != null) {
-			
-			// ********************************************************************************
-			
-			// Read diagnostic level from the console if not already specified in command line argument.
-			Diagnostic.setLevel(Diagnostic.FULL);
-			
-			if (CommandLineArgs.getArg(args, "-D") == null) {
-				
-				Output.getSingleton().print("Enter D<return> for diagnostics, anything else for no diagnostics: ");
-				String input = CommandLineInput.readLine();
-				
-				if (! input.equalsIgnoreCase("D")) Diagnostic.setLevel(Diagnostic.NONE);
-			}
-			
-			// ********************************************************************************
-			
-			// Get port number.
-			int port = 0;
-			String port_string = CommandLineArgs.getArg(args, "-p");	    // Get port argument.
-			if (port_string != null) port = Integer.parseInt(port_string);	// Try to extract port number.
-			
-			// ********************************************************************************
+
+		String root_directory_path = processDirectoryRoot(args);
+        String root_GUID_string = processStoreRoot(args);
+
+        // Can't continue if no root GUID string supplied.
+        if (root_GUID_string != null) {
+            processDiagnostic(args);
+            int port = processPort(args);
 			
 			try {
 				IGUID root_GUID = GUIDFactory.recreateGUID(root_GUID_string);
-				
 				File root_directory = new File(root_directory_path);
-				
-				// Initialise a file system using the store.
 				IFileSystem file_system = new LocalFileBasedFileSystemFactory(root_directory, root_GUID).makeFileSystem();
-				
-				// Run the WebDAV server.
-				WebDAVServer server;
-				
-				if (port == 0) server = new WebDAVServer(file_system);
-				else           server = new WebDAVServer(file_system, port);
-				
-				server.run();
+
+				startWebDAVServer(file_system, port);
+			} catch (FileSystemCreationException e) {
+				Error.exceptionError("couldn't create file system", e);
+			} catch (IOException e) {
+				Error.exceptionError("socket error", e);
 			}
-			catch (FileSystemCreationException e) { Error.exceptionError("couldn't create file system", e); }
-			catch (IOException e)                 { Error.exceptionError("socket error", e); }
 		}
 		else Output.getSingleton().println("Usage: java WebDAV_FileBased_Launcher -r<store root guid> [-p<port>] [-d<root directory>] [-D]");
 	}
+
 }

@@ -1,5 +1,7 @@
 package uk.ac.standrews.cs.webdav.impl;
 
+import uk.ac.standrews.cs.util.Error;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

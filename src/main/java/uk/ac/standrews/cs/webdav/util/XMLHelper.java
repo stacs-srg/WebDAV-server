@@ -1,7 +1,5 @@
 package uk.ac.standrews.cs.webdav.util;
 
-import uk.ac.standrews.cs.util.Error;
-
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 import org.w3c.dom.CDATASection;
@@ -9,6 +7,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
+import uk.ac.standrews.cs.util.Error;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;

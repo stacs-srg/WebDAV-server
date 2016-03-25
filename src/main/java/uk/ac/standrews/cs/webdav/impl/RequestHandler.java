@@ -5,9 +5,9 @@ package uk.ac.standrews.cs.webdav.impl;
 
 import uk.ac.standrews.cs.locking.interfaces.ILockManager;
 import uk.ac.standrews.cs.util.Diagnostic;
+import uk.ac.standrews.cs.util.Error;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.interfaces.HTTPMethod;
-import uk.ac.standrews.cs.util.Error;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -29,11 +29,8 @@ public class RequestHandler implements Runnable {
 	}
 	
 	public void run() {
-		
 		// Diagnostic.trace( "Thread started " + Thread.currentThread().hashCode(), Diagnostic.INIT );
-		
 		try {
-			
 			InputStream in = socket.getInputStream();
 			OutputStream out = socket.getOutputStream();
 			
@@ -43,7 +40,6 @@ public class RequestHandler implements Runnable {
 			request.setSocket(socket);
 			
 			try {
-				
 				// Partly functioning support for keep-alive of the socket connection removed on 23/8/05 from:
 				//
 				// uk.ac.stand.dcs.asa.storage.webdav.impl.RequestHandler
@@ -61,50 +57,56 @@ public class RequestHandler implements Runnable {
 				method.execute(request, response);
 				
 				Diagnostic.trace("************* Completed Request: " + request.getVerb() + " " + request.getUri() + " [thread " + Thread.currentThread().hashCode() + "]", Diagnostic.RUN);
-			}
-			catch (IOException e) {
-				
+			} catch (IOException e) {
 				// Comms error.
 				// No point in setting the error code in the response if we can't send it...
-				
 				try {
 					Error.exceptionError("While processing request from " + socket.getInetAddress().getHostName(), e);
-					
-					socket.close();
-					socket = null;
+
+					closeSocket();
+				} catch (IOException ioe) {
+					Error.exceptionError("IOException while closing socket", ioe);
 				}
-				catch (IOException ioe) { Error.exceptionError("IOException while closing socket", ioe); }
-			}
-			catch (HTTPException e) {
-				
-				// HTTP related error thrown by HTTP method, so translate to appropriate response code.
-				Response response = request.getResponse();
-				response.writeError(e.getStatusCode(), e.getMessage());
-				
-				//Error.exceptionError("HTTP error code: " + e.getStatusCode(), e);
-				
+			} catch (HTTPException e) {
+				httpExceptionResponse(request, e);
+
 				Diagnostic.trace("************* Completed Request: " + request.getVerb() + " " + request.getUri() + " [thread " + Thread.currentThread().hashCode() + "]", Diagnostic.RUN);
-			}
-			catch (RuntimeException e) {
-				
+			} catch (RuntimeException e) {
 				// Absorb any unchecked exceptions.
-				
 				Error.exceptionError("While processing request", e);
-				
-				Response response = request.getResponse();
-				response.writeError(HTTP.RESPONSE_INTERNAL_SERVER_ERROR, e.getMessage());
+
+				internalServerErrorResponse(request, e);
 			}
-		}
-		catch (IOException e) { Error.exceptionError("While setting up client socket streams", e); }
-		
-		finally {
-			
+		} catch (IOException e) {
+			Error.exceptionError("While setting up client socket streams", e);
+		} finally {
 			//Diagnostic.trace( "Thread completed " + Thread.currentThread().hashCode(), Diagnostic.RUN );
-			
-			try {
-				if (socket != null && socket.isConnected()) socket.close();
-			}
-			catch (IOException e) { Error.exceptionError("While trying to close socket", e); }
+			closeConnectedSocket();
 		}
+	}
+
+	private void closeConnectedSocket() {
+		try {
+			if (socket != null && socket.isConnected())
+				closeSocket();
+		} catch (IOException e) {
+			Error.exceptionError("While trying to close socket", e);
+		}
+	}
+
+	private void closeSocket() throws IOException {
+		socket.close();
+		socket = null;
+	}
+
+	// HTTP related error thrown by HTTP method, so translate to appropriate response code.
+	private void httpExceptionResponse(Request request, HTTPException e) throws IOException {
+		Response response = request.getResponse();
+		response.writeError(e.getStatusCode(), e.getMessage());
+	}
+
+	private void internalServerErrorResponse(Request request, RuntimeException e) throws IOException {
+		Response response = request.getResponse();
+		response.writeError(HTTP.RESPONSE_INTERNAL_SERVER_ERROR, e.getMessage());
 	}
 }

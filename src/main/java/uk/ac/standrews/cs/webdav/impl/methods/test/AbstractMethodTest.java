@@ -1,8 +1,8 @@
 package uk.ac.standrews.cs.webdav.impl.methods.test;
 
 import junit.framework.TestCase;
-import uk.ac.standrews.cs.webdav.impl.HTTP;
 import uk.ac.standrews.cs.util.Error;
+import uk.ac.standrews.cs.webdav.impl.HTTP;
 
 import java.io.*;
 import java.net.Socket;

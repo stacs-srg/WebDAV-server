@@ -4,12 +4,14 @@
 package uk.ac.standrews.cs.webdav.impl.methods;
 
 import uk.ac.standrews.cs.locking.interfaces.ILockManager;
+import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
+import uk.ac.standrews.cs.util.Error;
 import uk.ac.standrews.cs.util.StringUtil;
+import uk.ac.standrews.cs.util.UriUtil;
 import uk.ac.standrews.cs.webdav.impl.HTTP;
 import uk.ac.standrews.cs.webdav.impl.Request;
 import uk.ac.standrews.cs.webdav.interfaces.HTTPMethod;
 import uk.ac.standrews.cs.webdav.util.XMLHelper;
-import uk.ac.standrews.cs.util.Error;
 
 import java.net.URI;
 
@@ -63,7 +65,8 @@ public abstract class AbstractHTTPMethod implements HTTPMethod {
 	protected String getFileContentType(IFile file) {
 		
 		String content_type = file.getAttributes().get(StoreBasedFileSystem.CONTENT);
-		if (content_type == null) content_type = HTTP.CONTENT_TYPE_UNKNOWN;
+		if (content_type == null)
+			content_type = HTTP.CONTENT_TYPE_UNKNOWN;
 		
 		return content_type;
 	}
@@ -87,7 +90,6 @@ public abstract class AbstractHTTPMethod implements HTTPMethod {
 		  State-token = Coded-URL 
 		  Coded-URL = "<" absoluteURI ">" 
 		 */
-		
 		
 		/*
 		  Examples from RFC 2518:
@@ -115,7 +117,8 @@ public abstract class AbstractHTTPMethod implements HTTPMethod {
 			int start =  if_header.indexOf(HTTP.HEADER_OPAQUELOCKTOKEN);
 			int finish = if_header.indexOf(">)", start);
 			
-			if (start > -1 && finish > -1) return if_header.substring(start, finish);
+			if (start > -1 && finish > -1)
+				return if_header.substring(start, finish);
 		}
 		
 		return null;
@@ -131,6 +134,7 @@ public abstract class AbstractHTTPMethod implements HTTPMethod {
 		if (delimited_token.startsWith(open_token_delimiter) && delimited_token.endsWith(close_token_delimiter))
 			return delimited_token.substring(open_token_delimiter.length(), delimited_token.length() - close_token_delimiter.length());
 		
-		else return delimited_token;
+		else
+			return delimited_token;
 	}
 }

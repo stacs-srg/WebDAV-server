@@ -1,10 +1,11 @@
 package uk.ac.standrews.cs.webdav.impl.methods;
 
+import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
+import uk.ac.standrews.cs.util.Error;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.impl.HTTP;
 import uk.ac.standrews.cs.webdav.impl.Request;
 import uk.ac.standrews.cs.webdav.impl.Response;
-import uk.ac.standrews.cs.util.Error;
 
 import java.io.IOException;
 import java.net.URI;

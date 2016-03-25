@@ -18,7 +18,8 @@ public class Range implements Comparable {
     /**
      * @param start the start value
      * @param finish the end value
-     */   public Range(long start, long finish) {
+     */
+    public Range(long start, long finish) {
         this.start = start;
         this.finish = finish;
     }

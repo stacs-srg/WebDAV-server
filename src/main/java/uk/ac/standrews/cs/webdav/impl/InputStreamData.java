@@ -3,7 +3,9 @@
  */
 package uk.ac.standrews.cs.webdav.impl;
 
+import uk.ac.standrews.cs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.util.Diagnostic;
+import uk.ac.standrews.cs.util.Error;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

@@ -2,6 +2,7 @@ package uk.ac.standrews.cs.webdav.impl.methods;
 
 import uk.ac.standrews.cs.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.exceptions.LockUseException;
+import uk.ac.standrews.cs.util.UriUtil;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.impl.HTTP;
 import uk.ac.standrews.cs.webdav.impl.Request;

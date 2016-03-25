@@ -1,7 +1,12 @@
 package uk.ac.standrews.cs.webdav.impl.methods;
 
-
+import uk.ac.standrews.cs.exceptions.AccessFailureException;
+import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
+import uk.ac.standrews.cs.persistence.interfaces.IData;
+import uk.ac.standrews.cs.persistence.interfaces.INameAttributedPersistentObjectBinding;
 import uk.ac.standrews.cs.util.Diagnostic;
+import uk.ac.standrews.cs.util.Error;
+import uk.ac.standrews.cs.util.UriUtil;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.impl.HTTP;
 import uk.ac.standrews.cs.webdav.impl.Request;
@@ -37,49 +42,54 @@ public class GET extends AbstractHTTPMethod {
 			
 			IAttributedStatefulObject target_object = file_system.resolveObject(uri);
 			
-			if (target_object == null) throw new InvalidPathException();     // Caught at the end of this method.
+			if (target_object == null)
+                throw new InvalidPathException();     // Caught at the end of this method.
 			
 			if (target_object instanceof IDirectory) {
-				
-				// If the directory URI has a trailing slash, send a directory listing.
-				// Otherwise, send a redirect to the proper URL with trailing slash.
-				
-				String path_string = request.getUri().getPath();
-				
-				if (path_string.endsWith("/")) {
-					
-					Diagnostic.trace("sending directory listing", Diagnostic.RUN);
-					sendDirectoryListing(request, response, (IDirectory) target_object);
-				}
-				else {
-					
-					Diagnostic.trace("sending redirect", Diagnostic.RUN);
-					response.sendRedirect(path_string + "/", false);
-					return;
-				}
-			}
-			else if (target_object instanceof IFile) {
-				
-				IFile file = (IFile) target_object;
-				
-				if (request.hasParameter(HTTP.PARAMETER_INFO)) {
-					
-					Diagnostic.trace("sending file information", Diagnostic.RUN);
-					sendFileInformation(request, response, file, UriUtil.baseName(uri));
-					response.close();
-					return;
-				}
-				
-				Diagnostic.trace( "Sending file information", Diagnostic.RUN );
-				executeGet(request, response, file);
-			}
-			else Error.hardError("unknown attributed stateful object encountered of type: " + target_object.getClass().getName());
+                processDirectory(request, response, target_object);
+			} else if (target_object instanceof IFile) {
+                processFile(request, response, target_object);
+			} else {
+                Error.hardError("unknown attributed stateful object encountered of type: " + target_object.getClass().getName());
+            }
 			
 			response.setStatusCode(HTTP.RESPONSE_OK);
 			response.close();
-		}
-		catch (InvalidPathException e) { throw new HTTPException("Object '" + request.getUri() + "' not found.", HTTP.RESPONSE_NOT_FOUND, false); }
+		} catch (InvalidPathException e) {
+            throw new HTTPException("Object '" + request.getUri() + "' not found.", HTTP.RESPONSE_NOT_FOUND, false);
+        }
 	}
+
+    private void processDirectory(Request request, Response response, IAttributedStatefulObject target_object) throws IOException {
+        // If the directory URI has a trailing slash, send a directory listing.
+        // Otherwise, send a redirect to the proper URL with trailing slash.
+
+        String path_string = request.getUri().getPath();
+
+        if (path_string.endsWith("/")) {
+            Diagnostic.trace("sending directory listing", Diagnostic.RUN);
+            sendDirectoryListing(request, response, (IDirectory) target_object);
+        }
+        else {
+            Diagnostic.trace("sending redirect", Diagnostic.RUN);
+            response.sendRedirect(path_string + "/", false);
+            return;
+        }
+    }
+
+    private void processFile(Request request, Response response, IAttributedStatefulObject target_object) throws IOException {
+        IFile file = (IFile) target_object;
+
+        if (request.hasParameter(HTTP.PARAMETER_INFO)) {
+            Diagnostic.trace("sending file information", Diagnostic.RUN);
+            sendFileInformation(request, response, file, UriUtil.baseName(uri));
+            response.close();
+            return;
+        }
+
+        Diagnostic.trace("Sending file information", Diagnostic.RUN );
+        executeGet(request, response, file);
+    }
 	
 	private void executeGet(Request request, Response response, IFile file) throws IOException {
 		
