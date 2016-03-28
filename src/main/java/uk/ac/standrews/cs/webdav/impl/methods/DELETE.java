@@ -29,23 +29,25 @@ public class DELETE extends AbstractHTTPMethod {
 		String if_header =  request.getHeader(HTTP.HEADER_IF);       // Get the If header.
 		String lock_token = getLockTokenFromIfHeader(if_header); 
 		
-		try { 			
-			
+		try {
 			// If the file is currently locked, check that the token specified in the If header is the right one.
 			lock_manager.checkWhetherLockedWithOtherToken(uri, lock_token);
 			
 			// If a lock token was specified in an If header, the file must be currently locked with the given token (RFC 2518: 9.4).
-			if (lock_token != null) lock_manager.checkWhetherLockedWithToken(uri, lock_token);
+			if (lock_token != null) {
+				lock_manager.checkWhetherLockedWithToken(uri, lock_token);
+			}
 			
 			file_system.deleteObject(parent, base_name);
 			
 			lock_manager.removeResourceFromMatchingLocks(uri, lock_token);
 			
 			// TODO if this is a directory, need to remove all locks on objects within it.
-		}
-		catch (BindingAbsentException e) { throw new HTTPException("Object not found", HTTP.RESPONSE_NOT_FOUND, false); }
-		catch (LockUseException e)       { if (lock_token == null) throw new HTTPException(e, HTTP.RESPONSE_LOCKED, true);                  // No lock supplied in header.
-		                                   else                    throw new HTTPException(e, HTTP.RESPONSE_PRECONDITION_FAILED, true); }   // Lock supplied but the wrong one, or the resource wasn't actually locked.
+		} catch (BindingAbsentException e) {
+            throw new HTTPException("Object not found", HTTP.RESPONSE_NOT_FOUND, false);
+        } catch (LockUseException e) {
+            handleLockException(lock_token, e);
+        }
 		
 		response.setStatusCode(HTTP.RESPONSE_NO_CONTENT);
 		response.close();

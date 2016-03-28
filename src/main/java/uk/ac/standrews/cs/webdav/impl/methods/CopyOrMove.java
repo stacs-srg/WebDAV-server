@@ -61,8 +61,11 @@ public abstract class CopyOrMove extends AbstractHTTPMethod {
 			// TODO check if the destination is locked, in which case must have lock token. Ditto for source in case of move.
 			
 			// Either copy the object or move it.
-			if (do_copy) file_system.copyObject(source_parent, source_base_name, destination_parent, destination_base_name, overwrite);
-			else         file_system.moveObject(source_parent, source_base_name, destination_parent, destination_base_name, overwrite);
+			if (do_copy) {
+				file_system.copyObject(source_parent, source_base_name, destination_parent, destination_base_name, overwrite);
+			} else {
+				file_system.moveObject(source_parent, source_base_name, destination_parent, destination_base_name, overwrite);
+			}
 			
 			if (destination_not_null) response.setStatusCode(HTTP.RESPONSE_NO_CONTENT);
 			else                      response.setStatusCode(HTTP.RESPONSE_CREATED);
@@ -70,11 +73,8 @@ public abstract class CopyOrMove extends AbstractHTTPMethod {
 			response.close();
 		}
 		catch (LockUseException e) {
-			if (lock_token == null)
-				throw new HTTPException(e, HTTP.RESPONSE_LOCKED, true);                  // No lock supplied in header.
-			else
-				throw new HTTPException(e, HTTP.RESPONSE_PRECONDITION_FAILED, true);
-		}   // Lock supplied but the wrong one, or the resource wasn't actually locked.
+            handleLockException(lock_token, e);
+		}
 		catch (BindingAbsentException e)  {
 			throw new HTTPException("Source object not found", HTTP.RESPONSE_NOT_FOUND, true);
 		}

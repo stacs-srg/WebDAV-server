@@ -54,14 +54,9 @@ public class PUT extends AbstractHTTPMethod {
             else {
                 createFile(uri, lock_token, parent, base_name, content_type, data);
             }
-        }
-        catch (LockUseException e) {
-            if (lock_token == null)
-                throw new HTTPException(e, HTTP.RESPONSE_LOCKED, true); // No lock supplied in header.
-            else
-                throw new HTTPException(e, HTTP.RESPONSE_PRECONDITION_FAILED, true);
-        }   // Lock supplied but the wrong one, or the resource wasn't actually locked.
-        catch (BindingAbsentException | BindingPresentException |
+        } catch (LockUseException e) {
+            handleLockException(lock_token, e);
+        } catch (BindingAbsentException | BindingPresentException |
                 PersistenceException | UpdateException e)  {
             throw new HTTPException(e, HTTP.RESPONSE_INTERNAL_SERVER_ERROR, true);
         }

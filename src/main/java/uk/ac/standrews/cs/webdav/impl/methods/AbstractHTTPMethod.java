@@ -3,6 +3,7 @@
  */
 package uk.ac.standrews.cs.webdav.impl.methods;
 
+import uk.ac.standrews.cs.exceptions.LockUseException;
 import uk.ac.standrews.cs.filesystem.FileSystemConstants;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
@@ -12,6 +13,7 @@ import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.util.Error;
 import uk.ac.standrews.cs.util.StringUtil;
 import uk.ac.standrews.cs.util.UriUtil;
+import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.impl.HTTP;
 import uk.ac.standrews.cs.webdav.impl.Request;
 import uk.ac.standrews.cs.webdav.interfaces.HTTPMethod;
@@ -140,5 +142,12 @@ public abstract class AbstractHTTPMethod implements HTTPMethod {
 		
 		else
 			return delimited_token;
+	}
+
+	protected void handleLockException(String lock_token, LockUseException e) throws HTTPException {
+		if (lock_token == null) // No lock supplied in header.
+			throw new HTTPException(e, HTTP.RESPONSE_LOCKED, true);
+		else  // Lock supplied but the wrong one, or the resource wasn't actually locked.
+			throw new HTTPException(e, HTTP.RESPONSE_PRECONDITION_FAILED, true);
 	}
 }

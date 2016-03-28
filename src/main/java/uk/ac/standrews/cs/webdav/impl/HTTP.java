@@ -115,13 +115,16 @@ public class HTTP {
     public static String[] NON_CHUNKED_AGENTS;
     public static HttpClient HTTP_CLIENT;
 
+    private static final char STATUS_CODE_CHAR = 'T';
+    private static final char STATUS_MESSSAGE_CHAR = 'M';
+
     static {
         Enumeration elements = BUNDLE.getKeys();	// of <String>
         while (elements.hasMoreElements()) {
             String key = (String) elements.nextElement();
-            if (key.charAt(0) == 'T') {
+            if (key.charAt(0) == STATUS_CODE_CHAR) {
                 RESPONSE_TITLES.put(new Integer(key.substring(1)), BUNDLE.getString(key).getBytes());
-            } else if (key.charAt(0) == 'M') {
+            } else if (key.charAt(0) == STATUS_MESSSAGE_CHAR) {
                 RESPONSE_MESSAGES.put(new Integer(key.substring(1)), BUNDLE.getString(key).getBytes());
             }
         }
@@ -141,14 +144,12 @@ public class HTTP {
             UNLOCK.class
         };
 
-        for( int i = 0; i < methods.length; i++ ) {
+        for(int i = 0; i < methods.length; i++) {
             Class clazz = methods[i];
             try {
-                HTTPMethod m = (HTTPMethod) clazz.newInstance();
-                METHODS.put(m.getMethodName(), m);
-            } catch (InstantiationException e) {
-                Error.exceptionError("While initialising HTTP method of class " + clazz, e);
-            } catch (IllegalAccessException e) {
+                HTTPMethod method = (HTTPMethod) clazz.newInstance();
+                METHODS.put(method.getMethodName(), method);
+            } catch (InstantiationException | IllegalAccessException e) {
                 Error.exceptionError("While initialising HTTP method of class " + clazz, e);
             }
         }

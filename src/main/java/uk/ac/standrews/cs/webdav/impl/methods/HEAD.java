@@ -30,34 +30,38 @@ public class HEAD extends AbstractHTTPMethod {
 			
 			IAttributedStatefulObject target_object = file_system.resolveObject(uri);
 			
-			if (target_object == null) throw new InvalidPathException();     // Caught at the end of this method.
+			if (target_object == null) {
+				throw new InvalidPathException();     // Caught at the end of this method.
+			}
 			
 			if (target_object instanceof IDirectory) {
-				
 				// If the directory URL has a trailing slash, just set the content type.
 				// Otherwise, send a redirect to the proper URL with trailing slash.
 
 				String path_string = uri.getPath();
 				
-				if (path_string.endsWith("/")) response.setContentType(HTTP.CONTENT_TYPE_HTML);
-				else {
+				if (path_string.endsWith("/")) {
+                    response.setContentType(HTTP.CONTENT_TYPE_HTML);
+                } else {
 					response.sendRedirect(path_string + "/", false);
 					return;
 				}
-			}
-			else if (target_object instanceof IFile) {
-				
+
+			} else if (target_object instanceof IFile) {
 				IFile file = (IFile) target_object;
 				
 				response.setContentType(getFileContentType(file));
 				response.setContentLength(getFileSize(file));
-			}
-			else Error.hardError("unknown attributed stateful object encountered of type: " + target_object.getClass().getName());
+			} else {
+                Error.hardError("unknown attributed stateful object encountered of type: " + target_object.getClass().getName());
+            }
 			
 			response.setStatusCode(HTTP.RESPONSE_OK);
 			response.close();
 		}
-		catch (InvalidPathException e) { throw new HTTPException("Object '" + request.getUri() + "' not found.", HTTP.RESPONSE_NOT_FOUND, false); }
+		catch (InvalidPathException e) {
+            throw new HTTPException("Object '" + request.getUri() + "' not found.", HTTP.RESPONSE_NOT_FOUND, false);
+        }
 	}
 	
 	private long getFileSize(IFile file) {

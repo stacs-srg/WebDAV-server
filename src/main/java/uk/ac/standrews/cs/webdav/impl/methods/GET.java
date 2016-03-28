@@ -45,9 +45,10 @@ public class GET extends AbstractHTTPMethod {
 			
 			IAttributedStatefulObject target_object = file_system.resolveObject(uri);
 			
-			if (target_object == null)
-                throw new InvalidPathException();     // Caught at the end of this method.
-			
+			if (target_object == null) {
+				throw new InvalidPathException();     // Caught at the end of this method.
+			}
+
 			if (target_object instanceof IDirectory) {
                 processDirectory(request, response, target_object);
 			} else if (target_object instanceof IFile) {
@@ -72,8 +73,7 @@ public class GET extends AbstractHTTPMethod {
         if (path_string.endsWith("/")) {
             Diagnostic.trace("sending directory listing", Diagnostic.RUN);
             sendDirectoryListing(request, response, (IDirectory) target_object);
-        }
-        else {
+        } else {
             Diagnostic.trace("sending redirect", Diagnostic.RUN);
             response.sendRedirect(path_string + "/", false);
             return;
@@ -127,7 +127,7 @@ public class GET extends AbstractHTTPMethod {
 		writer.write("<html><head><title>Index of " + decoded +
 				"</title><link rel=\"stylesheet\" href=\"http://www-os.dcs.st-and.ac.uk/asa/ASA/asa.css\"></head><body><h1>Index of " +
 				decoded +
-		"</h1><pre>\r\n");
+		        "</h1><pre>\r\n");
 		
 		int nameWidth = 30;
 		Iterator iter = collection.iterator();
@@ -141,7 +141,7 @@ public class GET extends AbstractHTTPMethod {
 		
 		writer.write("<img src=\"http://www.dcs.st-and.ac.uk/icons/blank.gif\" alt=\"     \"> " +
 				"Name"  +	// there was a Format.makeWidth in 
-		"  Last Modified      Size       Information\r\n");
+		        "  Last Modified      Size       Information\r\n");
 		writer.write("<hr>\r\n");
 		
 		if (collection.getParent() != null) {
@@ -193,7 +193,7 @@ public class GET extends AbstractHTTPMethod {
 					lastmodifiedDate +
 					"  " +
 					size +
-			"\r\n");
+			        "\r\n");
 		}
 		writer.write("</pre>");
 		

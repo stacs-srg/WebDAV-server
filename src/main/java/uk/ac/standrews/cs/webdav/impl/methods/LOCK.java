@@ -31,8 +31,8 @@ public class LOCK extends AbstractHTTPMethod {
 	}
 	
 	public void execute(Request request, Response response) throws IOException, HTTPException {
+
 		try {
-			
 			// Read the contents to see what locks are requested.
 			if (request.hasContent()) {
 				
@@ -59,10 +59,10 @@ public class LOCK extends AbstractHTTPMethod {
 				// <!ELEMENT shared EMPTY >
 				// <!ELEMENT owner ANY >
 				
-				NodeList lockinfoNL = document.getElementsByTagNameNS(WebDAV.DAV_NS, WebDAV.DAV_LOCKINFO);
-				if( lockinfoNL.getLength() != 1 ) throw new HTTPException("More than 1 " + WebDAV.DAV_LOCKINFO + " nodes found", HTTP.RESPONSE_BAD_REQUEST, true);
+				NodeList lockInfoNL = document.getElementsByTagNameNS(WebDAV.DAV_NS, WebDAV.DAV_LOCKINFO);
+				if( lockInfoNL.getLength() != 1 ) throw new HTTPException("More than 1 " + WebDAV.DAV_LOCKINFO + " nodes found", HTTP.RESPONSE_BAD_REQUEST, true);
 				
-				Node lockInfoNode = lockinfoNL.item(0); // this is the root node
+				Node lockInfoNode = lockInfoNL.item(0); // this is the root node
 				NodeList lockInfoChildren = lockInfoNode.getChildNodes();
 				int listLength = lockInfoChildren.getLength();
 				
@@ -240,16 +240,27 @@ public class LOCK extends AbstractHTTPMethod {
 		LockType type;
 		LockDepth depth;
 		
-		if (lock_scope.equals(WebDAV.DAV_EXCLUSIVE))	scope = LockScope.LOCK_SCOPE_EXCLUSIVE;
-		else if (lock_scope.equals( WebDAV.DAV_SHARED)) scope = LockScope.LOCK_SCOPE_SHARED;
-		else throw new HTTPException("Lock scope neither shared nor exclusive", HTTP.RESPONSE_BAD_REQUEST, true);
+		if (lock_scope.equals(WebDAV.DAV_EXCLUSIVE)) {
+            scope = LockScope.LOCK_SCOPE_EXCLUSIVE;
+        } else if (lock_scope.equals(WebDAV.DAV_SHARED)) {
+            scope = LockScope.LOCK_SCOPE_SHARED;
+        } else {
+            throw new HTTPException("Lock scope neither shared nor exclusive", HTTP.RESPONSE_BAD_REQUEST, true);
+        }
 		
-		if (lock_type.equals(WebDAV.DAV_WRITE)) type = LockType.LOCK_TYPE_WRITE;
-		else throw new HTTPException("Lock type not write", HTTP.RESPONSE_BAD_REQUEST, true);
+		if (lock_type.equals(WebDAV.DAV_WRITE)) {
+            type = LockType.LOCK_TYPE_WRITE;
+        } else {
+            throw new HTTPException("Lock type not write", HTTP.RESPONSE_BAD_REQUEST, true);
+        }
 		
-		if (lock_depth == 0) depth = LockDepth.LOCK_DEPTH_ZERO;
-		else if (lock_depth == Integer.MAX_VALUE) depth = LockDepth.LOCK_DEPTH_INFINITY;
-		else throw new HTTPException("Lock depth neither zero nor infinity", HTTP.RESPONSE_BAD_REQUEST, true);
+		if (lock_depth == 0) {
+            depth = LockDepth.LOCK_DEPTH_ZERO;
+        } else if (lock_depth == Integer.MAX_VALUE) {
+            depth = LockDepth.LOCK_DEPTH_INFINITY;
+        } else {
+            throw new HTTPException("Lock depth neither zero nor infinity", HTTP.RESPONSE_BAD_REQUEST, true);
+        }
 		
 		ILock new_lock = lock_manager.newLock(lock_owner, HTTP.HEADER_OPAQUELOCKTOKEN + ":");
 		lock_manager.addResourceToLock(new_lock, resource, scope, type, depth);

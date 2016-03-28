@@ -40,10 +40,15 @@ public class MKCOL extends AbstractHTTPMethod {
 			
 			file_system.createNewDirectory(parent, name);
 		}
-		catch (LockUseException e)        { if (lock_token == null) throw new HTTPException(e,     HTTP.RESPONSE_LOCKED, true);                  // No lock supplied in header.
-		                                    else                    throw new HTTPException(e,     HTTP.RESPONSE_PRECONDITION_FAILED, true); }   // Lock supplied but the wrong one, or the resource wasn't actually locked.
-		catch (BindingPresentException e) { throw new HTTPException("collection already exists",   HTTP.RESPONSE_METHOD_NOT_ALLOWED, true); }
-		catch (PersistenceException e)    { throw new HTTPException("could not create collection", HTTP.RESPONSE_INTERNAL_SERVER_ERROR, true); }
+		catch (LockUseException e) {
+			handleLockException(lock_token, e);
+		}
+		catch (BindingPresentException e) {
+            throw new HTTPException("collection already exists",   HTTP.RESPONSE_METHOD_NOT_ALLOWED, true);
+        }
+		catch (PersistenceException e) {
+            throw new HTTPException("could not create collection", HTTP.RESPONSE_INTERNAL_SERVER_ERROR, true);
+        }
 		
 		response.setStatusCode(HTTP.RESPONSE_CREATED);
 		response.close();
