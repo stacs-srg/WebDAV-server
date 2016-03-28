@@ -1,13 +1,13 @@
 package uk.ac.standrews.cs.store.test;
 
 import junit.framework.TestCase;
-import uk.ac.stand.dcs.asa.interfaces.IGUID;
-import uk.ac.stand.dcs.asa.interfaces.IPID;
-import uk.ac.stand.dcs.asa.storage.absfilesystem.impl.general.StringData;
-import uk.ac.stand.dcs.asa.storage.absfilesystem.impl.storebased.StoreBasedFile;
-import uk.ac.stand.dcs.asa.storage.persistence.interfaces.IData;
-import uk.ac.stand.dcs.asa.storage.store.factories.LocalFileBasedStoreFactory;
-import uk.ac.stand.dcs.asa.storage.store.interfaces.IGUIDStore;
+import uk.ac.standrews.cs.filesystem.absfilesystem.impl.general.StringData;
+import uk.ac.standrews.cs.filesystem.absfilesystem.impl.storebased.StoreBasedFile;
+import uk.ac.standrews.cs.interfaces.IGUID;
+import uk.ac.standrews.cs.interfaces.IPID;
+import uk.ac.standrews.cs.persistence.interfaces.IData;
+import uk.ac.standrews.cs.store.factories.LocalFileBasedStoreFactory;
+import uk.ac.standrews.cs.store.interfaces.IGUIDStore;
 
 /**
  * Test class for StatefulObject:

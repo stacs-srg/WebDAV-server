@@ -4,6 +4,7 @@
 package uk.ac.standrews.cs.store.test;
 
 import junit.framework.TestCase;
+import uk.ac.standrews.cs.filesystem.absfilesystem.impl.general.StringData;
 import uk.ac.standrews.cs.interfaces.IGUID;
 import uk.ac.standrews.cs.interfaces.IPID;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
@@ -12,6 +13,7 @@ import uk.ac.standrews.cs.store.exceptions.StorePutException;
 import uk.ac.standrews.cs.store.factories.LocalFileBasedStoreFactory;
 import uk.ac.standrews.cs.store.interfaces.IGUIDStore;
 import uk.ac.standrews.cs.util.GUIDFactory;
+import uk.ac.standrews.cs.util.PIDFactory;
 
 import java.util.Iterator;
 

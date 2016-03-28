@@ -1,5 +1,8 @@
 package uk.ac.standrews.cs.webdav.impl.methods;
 
+import uk.ac.standrews.cs.filesystem.exceptions.InvalidPathException;
+import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
+import uk.ac.standrews.cs.filesystem.interfaces.IFile;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.util.Error;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
@@ -9,7 +12,6 @@ import uk.ac.standrews.cs.webdav.impl.Response;
 
 import java.io.IOException;
 import java.net.URI;
-import java.nio.file.InvalidPathException;
 
 /**
  * @author Ben Catherall, al, graham

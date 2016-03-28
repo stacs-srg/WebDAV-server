@@ -3,6 +3,10 @@
  */
 package uk.ac.standrews.cs.webdav.impl.methods;
 
+import uk.ac.standrews.cs.filesystem.absfilesystem.impl.storebased.StoreBasedFileSystem;
+import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
+import uk.ac.standrews.cs.filesystem.interfaces.IFile;
+import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
 import uk.ac.standrews.cs.locking.interfaces.ILockManager;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.util.Error;

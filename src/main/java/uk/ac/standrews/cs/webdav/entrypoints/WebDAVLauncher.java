@@ -1,5 +1,6 @@
 package uk.ac.standrews.cs.webdav.entrypoints;
 
+import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
 import uk.ac.standrews.cs.util.CommandLineArgs;
 import uk.ac.standrews.cs.util.CommandLineInput;
 import uk.ac.standrews.cs.util.Diagnostic;

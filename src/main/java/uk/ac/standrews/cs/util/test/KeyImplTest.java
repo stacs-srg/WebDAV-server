@@ -5,6 +5,7 @@ package uk.ac.standrews.cs.util.test;
 
 import junit.framework.TestCase;
 import uk.ac.standrews.cs.util.KeyImpl;
+import uk.ac.standrews.cs.util.SegmentArithmetic;
 
 import java.math.BigInteger;
 

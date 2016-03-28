@@ -8,10 +8,12 @@ import uk.ac.standrews.cs.exceptions.BindingPresentException;
 import uk.ac.standrews.cs.exceptions.LockUseException;
 import uk.ac.standrews.cs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.util.Diagnostic;
+import uk.ac.standrews.cs.util.UriUtil;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.impl.HTTP;
 import uk.ac.standrews.cs.webdav.impl.Request;
 import uk.ac.standrews.cs.webdav.impl.Response;
+import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 
 import java.io.IOException;
 import java.net.URI;
@@ -31,7 +33,7 @@ public abstract class CopyOrMove extends AbstractHTTPMethod {
 		
 		URI uri =                    request.getUri();
 		IDirectory source_parent =   getParent(uri);                          // Get the parent directory of the source location.
-		String source_base_name =    UriUtil.baseName(uri);                  // Get the name of the location within that directory.        
+		String source_base_name =    UriUtil.baseName(uri);                  // Get the name of the location within that directory.
 		String if_header =           request.getHeader(HTTP.HEADER_IF);       // Get the If header.
 		String lock_token =          getLockTokenFromIfHeader(if_header);
 		

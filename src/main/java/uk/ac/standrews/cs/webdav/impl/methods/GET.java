@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.webdav.impl.methods;
 
 import uk.ac.standrews.cs.exceptions.AccessFailureException;
+import uk.ac.standrews.cs.filesystem.absfilesystem.impl.storebased.StoreBasedFileSystem;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.persistence.interfaces.INameAttributedPersistentObjectBinding;
@@ -11,13 +12,15 @@ import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.impl.HTTP;
 import uk.ac.standrews.cs.webdav.impl.Request;
 import uk.ac.standrews.cs.webdav.impl.Response;
+import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
+import uk.ac.standrews.cs.filesystem.interfaces.IFile;
+import uk.ac.standrews.cs.filesystem.exceptions.InvalidPathException;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.net.URI;
 import java.net.URLDecoder;
-import java.nio.file.InvalidPathException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -48,7 +51,7 @@ public class GET extends AbstractHTTPMethod {
 			if (target_object instanceof IDirectory) {
                 processDirectory(request, response, target_object);
 			} else if (target_object instanceof IFile) {
-                processFile(request, response, target_object);
+                processFile(request, response, target_object, uri);
 			} else {
                 Error.hardError("unknown attributed stateful object encountered of type: " + target_object.getClass().getName());
             }
@@ -77,7 +80,7 @@ public class GET extends AbstractHTTPMethod {
         }
     }
 
-    private void processFile(Request request, Response response, IAttributedStatefulObject target_object) throws IOException {
+    private void processFile(Request request, Response response, IAttributedStatefulObject target_object, URI uri) throws IOException {
         IFile file = (IFile) target_object;
 
         if (request.hasParameter(HTTP.PARAMETER_INFO)) {
@@ -239,7 +242,7 @@ public class GET extends AbstractHTTPMethod {
 			e.printStackTrace();
 		}
 		String content;
-		if ((content = file.getAttributes().get(StoreBasedFileSystem.CONTENT)) != null) {
+		if ((content = file.getAttributes().get(StoreBasedFileSystem.CONTENT)) != null) { // FIXME - there should be no depencency on a specific file system
 			sendRow(writer, "Content Type", content);
 		}
 		writer.write("</table>");

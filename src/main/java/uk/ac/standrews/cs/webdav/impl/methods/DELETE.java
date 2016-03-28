@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.impl.HTTP;
 import uk.ac.standrews.cs.webdav.impl.Request;
 import uk.ac.standrews.cs.webdav.impl.Response;
+import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 
 import java.io.IOException;
 import java.net.URI;
