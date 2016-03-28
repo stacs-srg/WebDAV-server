@@ -3,13 +3,12 @@
  */
 package uk.ac.standrews.cs.filesystem.interfaces;
 
-
 import uk.ac.standrews.cs.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.exceptions.BindingPresentException;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
+import uk.ac.standrews.cs.persistence.interfaces.INameAttributedPersistentObjectBinding;
 
 import java.util.Iterator;
-
 
 /**
  * Abstract directory interface.

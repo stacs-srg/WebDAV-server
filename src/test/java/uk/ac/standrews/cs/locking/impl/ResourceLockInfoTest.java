@@ -2,10 +2,6 @@ package uk.ac.standrews.cs.locking.impl;
 
 import junit.framework.TestCase;
 import org.junit.Test;
-import uk.ac.standrews.cs.locking.impl.LockDepth;
-import uk.ac.standrews.cs.locking.impl.LockScope;
-import uk.ac.standrews.cs.locking.impl.LockType;
-import uk.ac.standrews.cs.locking.impl.ResourceLockInfo;
 import uk.ac.standrews.cs.locking.interfaces.IResourceLockInfo;
 
 import java.net.URI;

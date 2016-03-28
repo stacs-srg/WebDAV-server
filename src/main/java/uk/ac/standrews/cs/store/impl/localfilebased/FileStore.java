@@ -58,8 +58,6 @@ public class FileStore implements IGUIDStore, IManagedGUIDStore {
      * 
      * @param pid the PID of a persistent object
      * @return the contents of the corresponding persistent object, or null if no object found
-     * 
-     * @see uk.ac.stand.dcs.asa.storage.store.interfaces.IGUIDStore#get(uk.ac.stand.dcs.asa.interfaces.IPID)
      */
     public IData get(IPID pid) {
     	
@@ -101,8 +99,6 @@ public class FileStore implements IGUIDStore, IManagedGUIDStore {
      * @param data the contents of an object to be made persistent
      * @return a PID for subsequent retrieval of the object
      * @throws StorePutException if the object could not be made persistent
-     * 
-     * @see uk.ac.stand.dcs.asa.storage.store.interfaces.IGUIDStore#put(uk.ac.stand.dcs.asa.storage.persistence.interfaces.IData)
      */
     public IPID put(IData data) throws StorePutException {
     	
@@ -149,8 +145,6 @@ public class FileStore implements IGUIDStore, IManagedGUIDStore {
      * 
      * @param guid the GUID to be looked up
      * @return the latest PID associated with the given GUID
-     * 
-     * @see uk.ac.stand.dcs.asa.storage.store.interfaces.IGUIDPIDMap#getLatestPID(uk.ac.stand.dcs.asa.interfaces.IGUID)
      */
     public IPID getLatestPID(IGUID guid) {
     	
@@ -208,8 +202,6 @@ public class FileStore implements IGUIDStore, IManagedGUIDStore {
      * 
      * @param guid the GUID to be looked up
      * @return an iterator over all the PIDs associated with the given GUID, each typed as PID
-     * 
-     * @see uk.ac.stand.dcs.asa.storage.store.interfaces.IGUIDPIDMap#getAllPIDs(uk.ac.stand.dcs.asa.interfaces.IGUID)
      */
     public Iterator getAllPIDs(IGUID guid) {
         String filename = guidToFilePath(guid);
@@ -224,8 +216,6 @@ public class FileStore implements IGUIDStore, IManagedGUIDStore {
      * 
      * @param guid the GUID
      * @param pid the PID
-     * 
-     * @see uk.ac.stand.dcs.asa.storage.store.interfaces.IGUIDPIDMap#put(uk.ac.stand.dcs.asa.interfaces.IGUID, uk.ac.stand.dcs.asa.interfaces.IPID)
      */
     public void put(IGUID guid, IPID pid) {
     	boolean created=false;

@@ -36,9 +36,9 @@ public interface ILockManager {
 	 * 
 	 * @param lock the lock to which the resource is to be added
 	 * @param resource the resource to be added
-	 * @param scope the scope of the lock ({@link uk.ac.stand.dcs.asa.storage.locking.impl.LockScope#LOCK_SCOPE_EXCLUSIVE} or {@link uk.ac.stand.dcs.asa.storage.locking.impl.LockScope#LOCK_SCOPE_SHARED})
-	 * @param type the type of the lock ({@link uk.ac.stand.dcs.asa.storage.locking.impl.LockType#LOCK_TYPE_WRITE})
-	 * @param depth the depth of the lock ({@link uk.ac.stand.dcs.asa.storage.locking.impl.LockDepth#LOCK_DEPTH_ZERO} or {@link uk.ac.stand.dcs.asa.storage.locking.impl.LockDepth#LOCK_DEPTH_INFINITY})
+	 * @param scope the scope of the lock
+	 * @param type the type of the lock
+	 * @param depth the depth of the lock
 	 * @return information about the added resource, including a lock token for use in later removal
 	 * 
 	 * @throws LockException if the lock is not managed by this lock manager, or the request conflicts with an existing lock issued by this lock manager

@@ -25,8 +25,7 @@ public abstract class AbstractStoreFactory implements IGUIDStoreFactory {
     protected static String defaultStoreDirectory() {
     	
         // TODO make this much nicer - hacked for OS specificity at the moment.
-        // FIXME - tests write to these directories. We need to make sure that data is then deleted
-    	
+
     	String os_name = System.getProperty("os.name");
     	
         if (os_name.equals(MAC_PROPERTY))          return DEFAULT_ROOT_MAC;

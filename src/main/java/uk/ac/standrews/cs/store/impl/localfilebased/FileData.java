@@ -31,7 +31,6 @@ public class FileData implements IData {
      * Gets the data.
      * 
      * @return the underlying data
-     * @see uk.ac.stand.dcs.asa.storage.persistence.interfaces.IData#getState()
      */
     public byte[] getState() {
         byte[] bytes = new byte[(int) getSize()];
@@ -49,7 +48,6 @@ public class FileData implements IData {
      * Gets the size of the data in bytes.
      * 
      * @return the size of the data
-     * @see uk.ac.stand.dcs.asa.storage.persistence.interfaces.IData#getSize()
      */
     public long getSize() {
         return theFile.length();
@@ -59,7 +57,6 @@ public class FileData implements IData {
      * Creates an input stream reading from the file.
      * 
      * @return an input stream reading from the file
-     * @see uk.ac.stand.dcs.asa.storage.persistence.interfaces.IData#getInputStream()
      */
     public InputStream getInputStream() throws FileNotFoundException {
         return new FileInputStream(theFile);

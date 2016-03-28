@@ -31,7 +31,6 @@ public class ByteData implements IData {
      * Gets the data.
      * 
      * @return the underlying data
-     * @see uk.ac.stand.dcs.asa.storage.persistence.interfaces.IData#getState()
      */
     public byte[] getState() {
         return state;
@@ -41,7 +40,6 @@ public class ByteData implements IData {
      * Gets the size of the data in bytes.
      * 
      * @return the size of the data
-     * @see uk.ac.stand.dcs.asa.storage.persistence.interfaces.IData#getSize()
      */
     public long getSize() {
         return state.length;
@@ -51,7 +49,6 @@ public class ByteData implements IData {
      * Creates an input stream reading from the byte array.
      * 
      * @return an input stream reading from the byte array
-     * @see uk.ac.stand.dcs.asa.storage.persistence.interfaces.IData#getInputStream()
      */
     public InputStream getInputStream() {
         return new ByteArrayInputStream(state);

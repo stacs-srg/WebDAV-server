@@ -3,7 +3,6 @@
  */
 package uk.ac.standrews.cs.filesystem.absfilesystem.impl.general;
 
-
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 
 import java.io.ByteArrayInputStream;
@@ -33,7 +32,6 @@ public class StringData implements IData {
      * Gets the data.
      * 
      * @return the underlying data
-     * @see uk.ac.stand.dcs.asa.storage.persistence.interfaces.IData#getState()
      */
     public byte[] getState() {
         return state.getBytes();
@@ -43,7 +41,6 @@ public class StringData implements IData {
      * Gets the size of the data in bytes.
      * 
      * @return the size of the data
-     * @see uk.ac.stand.dcs.asa.storage.persistence.interfaces.IData#getSize()
      */
     public long getSize() {
         return state.length();
@@ -53,7 +50,6 @@ public class StringData implements IData {
      * Creates an input stream reading from the string.
      * 
      * @return an input stream reading from the string
-     * @see uk.ac.stand.dcs.asa.storage.persistence.interfaces.IData#getInputStream()
      */
     public InputStream getInputStream() throws FileNotFoundException {
         return new ByteArrayInputStream(state.getBytes());

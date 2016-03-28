@@ -2,7 +2,6 @@ package uk.ac.standrews.cs.util;
 
 import junit.framework.TestCase;
 import org.junit.Test;
-import uk.ac.standrews.cs.util.UriUtil;
 
 import java.net.URI;
 import java.net.URISyntaxException;

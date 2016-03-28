@@ -157,8 +157,6 @@ public abstract class AbstractFileSystem {
 	 * Returns the root GUID of the file system.
 	 * 
 	 * @return the root GUID
-	 * 
-	 * @see uk.ac.stand.dcs.asa.storage.absfilesystem.interfaces.IFileSystem#getRootId()
 	 */
 	public IGUID getRootId() {
 		return root_GUID;
@@ -168,8 +166,6 @@ public abstract class AbstractFileSystem {
 	 * Returns the root directory of the file system.
 	 * 
 	 * @return the root directory
-	 * 
-	 * @see uk.ac.stand.dcs.asa.storage.absfilesystem.interfaces.IFileSystem#getRootDirectory()
 	 */
 	public IDirectory getRootDirectory() {
 		return root_collection;

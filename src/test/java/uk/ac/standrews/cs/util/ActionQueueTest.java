@@ -5,9 +5,6 @@ package uk.ac.standrews.cs.util;
 
 import junit.framework.TestCase;
 import org.junit.Test;
-import uk.ac.standrews.cs.util.Action;
-import uk.ac.standrews.cs.util.ActionQueue;
-import uk.ac.standrews.cs.util.Semaphore;
 
 /**
  * Test class for ActionQueue.

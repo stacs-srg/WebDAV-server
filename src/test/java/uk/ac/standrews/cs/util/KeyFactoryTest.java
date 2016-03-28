@@ -6,7 +6,6 @@ package uk.ac.standrews.cs.util;
 import junit.framework.TestCase;
 import org.junit.Test;
 import uk.ac.standrews.cs.interfaces.IKey;
-import uk.ac.standrews.cs.util.SHA1KeyFactory;
 
 import java.net.InetSocketAddress;
 

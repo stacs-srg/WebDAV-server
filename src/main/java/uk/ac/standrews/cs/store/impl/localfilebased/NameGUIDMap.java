@@ -119,8 +119,6 @@ public class NameGUIDMap extends Properties implements INameGUIDMap {
      * 
      * @param name the name to be looked up
      * @return the GUID associated with the name, or null if it is not found
-     * 
-     * @see uk.ac.stand.dcs.asa.storage.store.interfaces.INameGUIDMap#get(String)
      */
     public synchronized IGUID get(String name) {
 
@@ -136,8 +134,6 @@ public class NameGUIDMap extends Properties implements INameGUIDMap {
      * @param name the name to be added
      * @param guid the GUID to be added
      * @throws BindingPresentException if a binding with the given name is already present
-     *
-     * @see uk.ac.stand.dcs.asa.storage.store.interfaces.INameGUIDMap#put(String, uk.ac.stand.dcs.asa.interfaces.IGUID)
      */
     public synchronized void put(String name, IGUID guid) throws BindingPresentException {
 
@@ -154,8 +150,6 @@ public class NameGUIDMap extends Properties implements INameGUIDMap {
      *
      * @param name the name to be deleted
      * @throws BindingAbsentException if no binding with the given name is present
-     *
-     * @see uk.ac.stand.dcs.asa.storage.store.interfaces.INameGUIDMap#delete(String)
      */
     public synchronized void delete(String name) throws BindingAbsentException {
 
@@ -172,8 +166,6 @@ public class NameGUIDMap extends Properties implements INameGUIDMap {
      * @param new_name the new name
      * @throws BindingAbsentException if no binding with the old name is present
      * @throws BindingPresentException if a binding with the new name is already present
-     *
-     * @see uk.ac.stand.dcs.asa.storage.store.interfaces.INameGUIDMap#rename(String, String)
      */
     public synchronized void rename(String old_name, String new_name) throws BindingAbsentException, BindingPresentException {
     	
@@ -192,8 +184,6 @@ public class NameGUIDMap extends Properties implements INameGUIDMap {
      * Gets all the name-GUID bindings.
      * 
      * @return an iterator over all the bindings, each typed as IName_GUID_Binding
-     * @see uk.ac.stand.dcs.asa.storage.store.interfaces.INameGUIDBinding
-     * @see uk.ac.stand.dcs.asa.storage.store.interfaces.INameGUIDMap#iterator()
      */
     public synchronized Iterator iterator() {
     	
@@ -238,8 +228,6 @@ public class NameGUIDMap extends Properties implements INameGUIDMap {
      * Gets a representation of the object.
      * 
      * @return the object's state
-     * 
-     * @see uk.ac.stand.dcs.asa.storage.persistence.interfaces.IPersistentObject#reify()
      */
     public IData reify() {
     	
@@ -263,8 +251,6 @@ public class NameGUIDMap extends Properties implements INameGUIDMap {
      * @param data the new state
      * @param pid the new PID
      * @param guid the new GUID
-     * 
-     * @see uk.ac.stand.dcs.asa.storage.persistence.interfaces.IPersistentObject#initialise(uk.ac.stand.dcs.asa.storage.persistence.interfaces.IData, uk.ac.stand.dcs.asa.interfaces.IPID, uk.ac.stand.dcs.asa.interfaces.IGUID)
      */
     public void initialise(IData data, IPID pid, IGUID guid) {
     	
@@ -288,8 +274,6 @@ public class NameGUIDMap extends Properties implements INameGUIDMap {
      * Records the object's current state.
      * 
      * @throws PersistenceException if the object's state could not be recorded
-     * 
-     * @see uk.ac.stand.dcs.asa.storage.persistence.interfaces.IPersistentObject#persist()
      */
     public void persist() throws PersistenceException {
     	
@@ -309,8 +293,6 @@ public class NameGUIDMap extends Properties implements INameGUIDMap {
      * Gets the PID referring to the object's most recently recorded persistent state.
      * 
      * @return the PID for the object's most recent persistent state
-     * 
-     * @see uk.ac.stand.dcs.asa.storage.persistence.interfaces.IPersistentObject#getPID()
      */
     public IPID getPID() {
     	
@@ -321,8 +303,6 @@ public class NameGUIDMap extends Properties implements INameGUIDMap {
      * Gets the GUID of the object.
      * 
      * @return the GUID of the object
-     * 
-     * @see uk.ac.stand.dcs.asa.storage.persistence.interfaces.IGUIDObject#getGUID()
      */
     public IGUID getGUID() {
     	

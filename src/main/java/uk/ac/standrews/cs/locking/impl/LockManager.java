@@ -41,9 +41,9 @@ public class LockManager implements ILockManager {
 	 * 
 	 * @param lock the lock to which the resource is to be added
 	 * @param resource the resource to be added
-	 * @param scope the scope of the lock ({@link uk.ac.stand.dcs.asa.storage.locking.impl.LockScope#LOCK_SCOPE_EXCLUSIVE} or {@link uk.ac.stand.dcs.asa.storage.locking.impl.LockScope#LOCK_SCOPE_SHARED})
-	 * @param type the type of the lock ({@link uk.ac.stand.dcs.asa.storage.locking.impl.LockType#LOCK_TYPE_WRITE})
-	 * @param depth the depth of the lock ({@link uk.ac.stand.dcs.asa.storage.locking.impl.LockDepth#LOCK_DEPTH_ZERO} or {@link uk.ac.stand.dcs.asa.storage.locking.impl.LockDepth#LOCK_DEPTH_INFINITY})
+	 * @param scope the scope of the lock
+	 * @param type the type of the lock
+	 * @param depth the depth of the lock
 	 * @return information about the added resource, including a lock token for use in later removal
 	 * 
 	 * @throws LockException if the lock is not managed by this lock manager, or the request conflicts with an existing lock issued by this lock manager
@@ -124,23 +124,8 @@ public class LockManager implements ILockManager {
     		
         		throw new LockUseException("resource " + resource + " is not locked, but the token"  + lock_token + "was presented");
         }
-        
-        while (lock_iterator.hasNext()) {
-			
-			ILock lock = (ILock)(lock_iterator.next());
-			
-			Iterator resource_iterator = lock.resourceIterator();
-			
-			while (resource_iterator.hasNext()) {
-				
-				IResourceLockInfo resource_lock_info = (IResourceLockInfo)(resource_iterator.next());
 
-		        if (!resource_lock_info.getLockToken().equals(lock_token)) {          // ... throw exception if the object isn't locked with the presented token.
-		        		
-		        		throw new LockUseException("resource " + resource + " is locked with token: " + resource_lock_info.getLockToken() + ", token presented: " + lock_token);
-		        }
-			}
-		}
+		checkLockTokenOverLocks(resource, lock_token, lock_iterator);
 	}
 	
 	/**
@@ -154,21 +139,25 @@ public class LockManager implements ILockManager {
 	public void checkWhetherLockedWithOtherToken(URI resource, String lock_token) throws LockUseException {
 		
 		Iterator lock_iterator = lockIterator(resource);
-		
+
+		checkLockTokenOverLocks(resource, lock_token, lock_iterator);
+	}
+
+	private void checkLockTokenOverLocks(URI resource, String lock_token, Iterator lock_iterator) throws LockUseException {
 		while (lock_iterator.hasNext()) {
-			
+
 			ILock lock = (ILock)(lock_iterator.next());
-			
+
 			Iterator resource_iterator = lock.resourceIterator();
-			
+
 			while (resource_iterator.hasNext()) {
-				
+
 				IResourceLockInfo resource_lock_info = (IResourceLockInfo)(resource_iterator.next());
 
-		        if (!resource_lock_info.getLockToken().equals(lock_token)) {           // ... throw exception if the same lock token hasn't been presented.
-		        		
-		        		throw new LockUseException("resource " + resource + " is locked with token: " + resource_lock_info.getLockToken() + ", token presented: " + lock_token);
-		        }
+				if (!resource_lock_info.getLockToken().equals(lock_token)) {           // ... throw exception if the same lock token hasn't been presented.
+
+					throw new LockUseException("resource " + resource + " is locked with token: " + resource_lock_info.getLockToken() + ", token presented: " + lock_token);
+				}
 			}
 		}
 	}

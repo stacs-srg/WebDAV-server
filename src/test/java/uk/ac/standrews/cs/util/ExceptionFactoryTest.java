@@ -5,7 +5,6 @@ package uk.ac.standrews.cs.util;
 
 import junit.framework.TestCase;
 import org.junit.Test;
-import uk.ac.standrews.cs.util.ExceptionFactory;
 
 /**
  * Test class for ExceptionFactory.
