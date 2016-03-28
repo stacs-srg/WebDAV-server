@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.webdav.impl.methods;
 
 import uk.ac.standrews.cs.exceptions.AccessFailureException;
-import uk.ac.standrews.cs.filesystem.absfilesystem.impl.storebased.StoreBasedFileSystem;
+import uk.ac.standrews.cs.filesystem.FileSystemConstants;
 import uk.ac.standrews.cs.filesystem.exceptions.InvalidPathException;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
@@ -242,7 +242,7 @@ public class GET extends AbstractHTTPMethod {
 			e.printStackTrace();
 		}
 		String content;
-		if ((content = file.getAttributes().get(StoreBasedFileSystem.CONTENT)) != null) { // FIXME - there should be no depencency on a specific file system
+		if ((content = file.getAttributes().get(FileSystemConstants.CONTENT)) != null) { // FIXME - there should be no depencency on a specific file system
 			sendRow(writer, "Content Type", content);
 		}
 		writer.write("</table>");

@@ -3,7 +3,7 @@
  */
 package uk.ac.standrews.cs.webdav.impl.methods;
 
-import uk.ac.standrews.cs.filesystem.absfilesystem.impl.storebased.StoreBasedFileSystem;
+import uk.ac.standrews.cs.filesystem.FileSystemConstants;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
 import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
@@ -68,7 +68,7 @@ public abstract class AbstractHTTPMethod implements HTTPMethod {
 	
 	protected String getFileContentType(IFile file) {
 		
-		String content_type = file.getAttributes().get(StoreBasedFileSystem.CONTENT);
+		String content_type = file.getAttributes().get(FileSystemConstants.CONTENT);
 		if (content_type == null)
 			content_type = HTTP.CONTENT_TYPE_UNKNOWN;
 		

@@ -4,7 +4,7 @@
 package uk.ac.standrews.cs.filesystem.absfilesystem.impl.localfilebased;
 
 import uk.ac.standrews.cs.exceptions.PersistenceException;
-import uk.ac.standrews.cs.filesystem.absfilesystem.impl.storebased.StoreBasedFileSystem;
+import uk.ac.standrews.cs.filesystem.FileSystemConstants;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributes;
@@ -83,8 +83,8 @@ public class FileBasedFile extends FileBasedFileSystemObject implements IFile {
 		
 		String content_type = MIME.getContentTypeFromFileName(name);
 
-        IAttributes attributes = new Attributes( StoreBasedFileSystem.ISFILE + Attributes.EQUALS + "true" + Attributes.SEPARATOR +
-                StoreBasedFileSystem.CONTENT + Attributes.EQUALS + content_type + Attributes.SEPARATOR );
+        IAttributes attributes = new Attributes(FileSystemConstants.ISFILE + Attributes.EQUALS + "true" + Attributes.SEPARATOR +
+				FileSystemConstants.CONTENT + Attributes.EQUALS + content_type + Attributes.SEPARATOR );
         
         return attributes;
 	}

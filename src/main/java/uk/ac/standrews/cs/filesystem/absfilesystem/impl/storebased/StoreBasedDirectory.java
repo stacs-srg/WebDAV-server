@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.exceptions.AccessFailureException;
 import uk.ac.standrews.cs.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.exceptions.BindingPresentException;
 import uk.ac.standrews.cs.exceptions.PersistenceException;
+import uk.ac.standrews.cs.filesystem.FileSystemConstants;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
 import uk.ac.standrews.cs.interfaces.IGUID;
@@ -73,7 +74,7 @@ public class StoreBasedDirectory extends StoreBasedFileSystemObject implements I
 			IAttributes atts = map.getAttributes(name);
 			IGUID guid = map.get(name);
 
-			if (atts.contains(StoreBasedFileSystem.ISDIRECTORY)) {
+			if (atts.contains(FileSystemConstants.ISDIRECTORY)) {
 				
 				if (directoryCache.containsKey(guid.toString())) {
 					Diagnostic.trace("Found directory with name: " + name + " in cache", Diagnostic.RUN);
@@ -82,7 +83,7 @@ public class StoreBasedDirectory extends StoreBasedFileSystemObject implements I
 				else return makeCollection(guid, this, store, atts);
 
 			}
-			else if (atts.contains(StoreBasedFileSystem.ISFILE))
+			else if (atts.contains(FileSystemConstants.ISFILE))
 				try {
 					return makeFile(guid, store, atts);
 				} catch (StoreGetException e) {
@@ -113,8 +114,8 @@ public class StoreBasedDirectory extends StoreBasedFileSystemObject implements I
 		
 		Diagnostic.trace( "Adding file with name: " + name, Diagnostic.RUN );
 		
-		IAttributes atts = new Attributes( StoreBasedFileSystem.ISFILE + Attributes.EQUALS + "true" + Attributes.SEPARATOR +
-				StoreBasedFileSystem.CONTENT + Attributes.EQUALS + contentType + Attributes.SEPARATOR );
+		IAttributes atts = new Attributes( FileSystemConstants.ISFILE + Attributes.EQUALS + "true" + Attributes.SEPARATOR +
+				FileSystemConstants.CONTENT + Attributes.EQUALS + contentType + Attributes.SEPARATOR );
 		
 		addObject(name, file, atts);
 	}
@@ -123,7 +124,7 @@ public class StoreBasedDirectory extends StoreBasedFileSystemObject implements I
 		
 		Diagnostic.trace( "Adding directory with name: " + name, Diagnostic.RUN );
 		
-		IAttributes atts = new Attributes( StoreBasedFileSystem.ISDIRECTORY + Attributes.EQUALS + "true" + Attributes.SEPARATOR );
+		IAttributes atts = new Attributes( FileSystemConstants.ISDIRECTORY + Attributes.EQUALS + "true" + Attributes.SEPARATOR );
 		
 		addObject(name, directory, atts);
 		directory.setParent(this);
@@ -271,7 +272,7 @@ public class StoreBasedDirectory extends StoreBasedFileSystemObject implements I
 				try {
 					IAttributes atts = map.getAttributes(name);
 					IDirectory d;
-					if( atts.contains( StoreBasedFileSystem.ISDIRECTORY ) ) {
+					if(atts.contains(FileSystemConstants.ISDIRECTORY)) {
 						if( directoryCache.containsKey( g.toString() ) ) {
 							Diagnostic.trace( "Found directory with name: " + name + " in cache", Diagnostic.RUN );
 							d = (IDirectory) directoryCache.get( g.toString() );
@@ -280,7 +281,7 @@ public class StoreBasedDirectory extends StoreBasedFileSystemObject implements I
 						}
 						return new NameAttributedPersistentObjectBinding( name, d );
 					}
-					else if( atts.contains( StoreBasedFileSystem.ISFILE ) ) {
+					else if(atts.contains(FileSystemConstants.ISFILE)) {
 						IFile f = makeFile( g, store, atts );
 						return new NameAttributedPersistentObjectBinding( name, f );
 					}

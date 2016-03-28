@@ -6,7 +6,7 @@ package uk.ac.standrews.cs.filesystem.absfilesystem.impl.localfilebased;
 import uk.ac.standrews.cs.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.exceptions.BindingPresentException;
 import uk.ac.standrews.cs.exceptions.PersistenceException;
-import uk.ac.standrews.cs.filesystem.absfilesystem.impl.storebased.StoreBasedFileSystem;
+import uk.ac.standrews.cs.filesystem.FileSystemConstants;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
 import uk.ac.standrews.cs.persistence.impl.NameAttributedPersistentObjectBinding;
@@ -112,7 +112,7 @@ public class FileBasedDirectory extends FileBasedFileSystemObject implements IDi
 
 	public IAttributes getAttributes() {
 
-        IAttributes attributes = new Attributes(StoreBasedFileSystem.ISDIRECTORY + Attributes.EQUALS + "true" + Attributes.SEPARATOR);
+        IAttributes attributes = new Attributes(FileSystemConstants.ISDIRECTORY + Attributes.EQUALS + "true" + Attributes.SEPARATOR);
         
         return attributes;
 	}

@@ -6,6 +6,7 @@ package uk.ac.standrews.cs.filesystem.absfilesystem.impl.storebased;
 import uk.ac.standrews.cs.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.exceptions.BindingPresentException;
 import uk.ac.standrews.cs.exceptions.PersistenceException;
+import uk.ac.standrews.cs.filesystem.FileSystemConstants;
 import uk.ac.standrews.cs.filesystem.absfilesystem.impl.general.AbstractFileSystem;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
@@ -32,10 +33,6 @@ public class StoreBasedFileSystem extends AbstractFileSystem implements IFileSys
 	private IGUIDStore store;
 	private INameGUIDMap store_root_map;
 	
-	public static final String CONTENT =	 "CONTENT";
-	public static final String ISDIRECTORY = "ISDIRECTORY";
-	public static final String ISFILE =	  "ISFILE";
-	
 	/**
 	 * Creates a file system operating over a given store.
 	 * 
@@ -51,7 +48,7 @@ public class StoreBasedFileSystem extends AbstractFileSystem implements IFileSys
 		
 		if (root_GUID == null) throw new StoreIntegrityException("supplied root GUID is null");
 
-		IAttributes attributes = new Attributes(StoreBasedFileSystem.ISDIRECTORY + Attributes.EQUALS + "true" + Attributes.SEPARATOR);
+		IAttributes attributes = new Attributes(FileSystemConstants.ISDIRECTORY + Attributes.EQUALS + "true" + Attributes.SEPARATOR);
 
 		store_root_map = new NameGUIDMap(store, root_GUID);
 		
@@ -157,7 +154,7 @@ public class StoreBasedFileSystem extends AbstractFileSystem implements IFileSys
 	private void addExistingFileToDirectory(IDirectory destinationParent, String destinationName, IFile file) throws BindingPresentException {
 		
 		IAttributes atts = file.getAttributes();
-		String mime = atts.get(StoreBasedFileSystem.CONTENT);
+		String mime = atts.get(FileSystemConstants.CONTENT);
 		
 		destinationParent.addFile(destinationName, file, mime);
 	}
@@ -165,7 +162,7 @@ public class StoreBasedFileSystem extends AbstractFileSystem implements IFileSys
 	protected void addCopyOfFileToDirectory(IDirectory destinationParent, String destinationName, IFile file) throws PersistenceException, BindingPresentException  {
 		
 		IAttributes atts = file.getAttributes();
-		String mime = atts.get(StoreBasedFileSystem.CONTENT);
+		String mime = atts.get(FileSystemConstants.CONTENT);
 		
 		IFile f = new StoreBasedFile(store, file.reify(), atts);
 		

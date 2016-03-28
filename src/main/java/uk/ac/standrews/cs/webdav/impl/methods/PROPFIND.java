@@ -5,7 +5,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import uk.ac.standrews.cs.exceptions.AccessFailureException;
-import uk.ac.standrews.cs.filesystem.absfilesystem.impl.storebased.StoreBasedFileSystem;
+import uk.ac.standrews.cs.filesystem.FileSystemConstants;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
 import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
@@ -370,7 +370,7 @@ public class PROPFIND extends AbstractHTTPMethod {
 			if (object instanceof IDirectory) content_type = HTTP.CONTENT_TYPE_HTTPD_UNIX_DIRECTORY;
 			else {
 				IAttributes attributes = object.getAttributes();
-				content_type = attributes.get(StoreBasedFileSystem.CONTENT);
+				content_type = attributes.get(FileSystemConstants.CONTENT);
 				if (content_type == null) content_type = "CONTENT TYPE NOT FOUND";
 			}
 	
