@@ -1,5 +1,6 @@
-package uk.ac.standrews.cs.webdav.impl.methods.test;
+package uk.ac.standrews.cs.webdav.impl.methods;
 
+import org.junit.Test;
 
 public class PROPFINDTest extends AbstractMethodTest {
 
@@ -11,7 +12,8 @@ public class PROPFINDTest extends AbstractMethodTest {
 	public PROPFINDTest(String name) {
 		super(name);
 	}
-	
+
+	@Test
 	public void test1() {
 		
 		// No specific properties specified, so should return all.
@@ -19,7 +21,8 @@ public class PROPFINDTest extends AbstractMethodTest {
 		//showResponse(null, 80, "Apache", "PROPFIND /asa/ - no properties specified", makeRequestHeader(80, "/asa/", "0", ""));
 		showResponse(null, 9093, "ASA", "PROPFIND / - no properties specified", makeRequestHeader(9093, "/", "0", ""));
 	}
-	
+
+    @Test
 	public void test2() {
 		
 		String creation_date_request_body = makeCreationDateRequestBody();
@@ -27,7 +30,8 @@ public class PROPFINDTest extends AbstractMethodTest {
 		showResponse(null, 80, "Apache", "PROPFIND /asa/", makeRequestHeader(80, "/asa/", "0", creation_date_request_body));
 		showResponse(null, 9090, "ASA", "PROPFIND /asa/", makeRequestHeader(9090, "/asa/", "0", creation_date_request_body));
 	}
-	
+
+    @Test
 	public void test3() {
 		
 		String request_body = makeOSXRequestBody();
@@ -35,7 +39,8 @@ public class PROPFINDTest extends AbstractMethodTest {
 		showResponse(null, 80, "Apache", "PROPFIND /asa/", makeRequestHeader(80, "/asa/", "0", request_body));
 		showResponse(null, 9090, "ASA", "PROPFIND /asa/", makeRequestHeader(9090, "/asa/", "0", request_body));
 	}
-	
+
+    @Test
 	public void test4() {
 		
 		String request_body = makeRequestBodyAllProperties();
@@ -45,6 +50,7 @@ public class PROPFINDTest extends AbstractMethodTest {
 	}
 	
 	// Test response for missing resource.
+    @Test
 	public void test5() {
 		
 		String request_body = makeOSXRequestBody();
@@ -52,7 +58,8 @@ public class PROPFINDTest extends AbstractMethodTest {
 		showResponse(null, 80, "Apache", "PROPFIND /asa/fish.doc", makeRequestHeader(80, "/asa/fish.doc", "0", request_body));
 		showResponse(null, 9090, "ASA", "PROPFIND /fish.doc", makeRequestHeader(9090, "/fish.doc", "0", request_body));
 	}
-	
+
+    @Test
 	public void test6() {
 		
 		// No specific properties specified, so should return all.
@@ -60,7 +67,8 @@ public class PROPFINDTest extends AbstractMethodTest {
 		showResponse(null, 80, "Apache", "PROPFIND /asa/file1.doc - no properties specified", makeRequestHeader(80, "/asa/file1.doc", "0", ""));
 		showResponse(null, 9090, "ASA", "PROPFIND /asa/file1.doc - no properties specified", makeRequestHeader(9090, "/asa/file1.doc", "0", ""));
 	}
-	
+
+    @Test
 	public void test7() {
 		
 		// All properties requested.
@@ -70,7 +78,8 @@ public class PROPFINDTest extends AbstractMethodTest {
 		showResponse(null, 80, "Apache", "PROPFIND /asa/file1.doc - no properties specified", makeRequestHeader(80, "/asa/file1.doc", "0", request_body));
 		showResponse(null, 9090, "ASA", "PROPFIND /asa/file1.doc - no properties specified", makeRequestHeader(9090, "/asa/file1.doc", "0", request_body));
 	}
-	
+
+    @Test
 	public void test8() {
 		
 		// No specific properties requested, depth infinity.
@@ -78,7 +87,8 @@ public class PROPFINDTest extends AbstractMethodTest {
 		showResponse(null, 80, "Apache", "PROPFIND /asa/ - no properties specified, depth infinity", makeRequestHeader(80, "/asa/", "infinity", ""));
 		showResponse(null, 9090, "ASA", "PROPFIND /asa/ - no properties specified, depth infinity", makeRequestHeader(9090, "/asa/", "infinity", ""));
 	}
-	
+
+    @Test
 	public void test9() {
 		
 		// No specific properties requested, depth 1.
@@ -86,7 +96,8 @@ public class PROPFINDTest extends AbstractMethodTest {
 		showResponse(null, 80, "Apache", "PROPFIND /asa/ - no properties specified, depth 1", makeRequestHeader(80, "/asa/", "1", ""));
 		showResponse(null, 9090, "ASA", "PROPFIND /asa/ - no properties specified, depth 1", makeRequestHeader(9090, "/asa/", "1", ""));
 	}
-	
+
+    @Test
 	public void test10() {
 		
 		// No specific properties requested, no depth specified.
@@ -94,7 +105,8 @@ public class PROPFINDTest extends AbstractMethodTest {
 		showResponse(null, 80, "Apache", "PROPFIND /asa/ - no properties specified, no depth", makeRequestHeader(80, "/asa/", "", ""));
 		showResponse(null, 9090, "ASA", "PROPFIND /asa/ - no properties specified, no depth", makeRequestHeader(9090, "/asa/", "", ""));
 	}
-	
+
+    @Test
 	public void test11() {
 		
 		// All properties explicitly requested, depth 1.
@@ -104,7 +116,8 @@ public class PROPFINDTest extends AbstractMethodTest {
 		showResponse(null, 80, "Apache", "PROPFIND /asa/ - all properties requested, depth 1", makeRequestHeader(80, "/asa/", "1", request_body));
 		showResponse(null, 9090, "ASA", "PROPFIND /asa/ - all properties requested, depth 1", makeRequestHeader(9090, "/asa/", "1", request_body));
 	}
-	
+
+    @Test
 	public void test12() {
 		
 		// All property names explicitly requested, depth 1.

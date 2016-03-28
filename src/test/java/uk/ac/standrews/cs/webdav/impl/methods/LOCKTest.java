@@ -1,5 +1,6 @@
-package uk.ac.standrews.cs.webdav.impl.methods.test;
+package uk.ac.standrews.cs.webdav.impl.methods;
 
+import org.junit.Test;
 import uk.ac.standrews.cs.util.RandomGUID;
 
 public class LOCKTest extends AbstractMethodTest {
@@ -12,7 +13,8 @@ public class LOCKTest extends AbstractMethodTest {
 	public LOCKTest(String name) {
 		super(name);
 	}
-	
+
+	@Test
 	public void test1() {
 		
 		String uri = "/" + (new RandomGUID()).toString();
@@ -52,7 +54,8 @@ public class LOCKTest extends AbstractMethodTest {
 		//showResponse(null, 80, "Apache OSX", "LOCK /" + file_name, makeTestString(80, "/test/" + file_name));
 		//showResponse("systems.dcs.st-and.ac.uk", 80, "Apache Linux", "LOCK /" + file_name, makeTestString(80, "/graham/" + file_name));
 	}
-	
+
+    @Test
 	public void test2() {
 		
 		String random_name = new RandomGUID().toString();

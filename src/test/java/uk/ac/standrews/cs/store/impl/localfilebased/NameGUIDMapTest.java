@@ -1,10 +1,11 @@
-package uk.ac.standrews.cs.store.impl.localfilebased.test;
+package uk.ac.standrews.cs.store.impl.localfilebased;
 
 import junit.framework.TestCase;
+import org.junit.Test;
 import uk.ac.standrews.cs.interfaces.IGUID;
+import uk.ac.standrews.cs.store.StoreConstants;
 import uk.ac.standrews.cs.store.factories.LocalFileBasedStoreFactory;
 import uk.ac.standrews.cs.store.general.NameGUIDBinding;
-import uk.ac.standrews.cs.store.impl.localfilebased.NameGUIDMap;
 import uk.ac.standrews.cs.store.interfaces.IGUIDStore;
 import uk.ac.standrews.cs.store.interfaces.INameGUIDMap;
 import uk.ac.standrews.cs.util.GUIDFactory;
@@ -31,11 +32,12 @@ import java.util.Iterator;
  */
 public class NameGUIDMapTest extends TestCase {
 
+	@Test
 	public void testPut() {
 		
 		try {
 		
-	        IGUIDStore store = new LocalFileBasedStoreFactory().makeStore();
+	        IGUIDStore store = new LocalFileBasedStoreFactory(StoreConstants.STORE_DIRECTORY_PATH, StoreConstants.STORE_NAME).makeStore();
 	
 	        INameGUIDMap map = new NameGUIDMap(store);
 	        
@@ -57,11 +59,12 @@ public class NameGUIDMapTest extends TestCase {
 		catch (Exception e) { e.printStackTrace(); fail(); }
 	}
 
+    @Test
 	public void testDelete() {
 		
 		try {
 		
-            IGUIDStore store = new LocalFileBasedStoreFactory().makeStore();
+            IGUIDStore store = new LocalFileBasedStoreFactory(StoreConstants.STORE_DIRECTORY_PATH, StoreConstants.STORE_NAME).makeStore();
 	
 	        INameGUIDMap map = new NameGUIDMap(store);
 	        
@@ -83,10 +86,11 @@ public class NameGUIDMapTest extends TestCase {
 		catch (Exception e) { e.printStackTrace(); fail(); }
 	}
 
+    @Test
 	public void testRename() {
 		try {
 		
-            IGUIDStore store = new LocalFileBasedStoreFactory().makeStore();
+            IGUIDStore store = new LocalFileBasedStoreFactory(StoreConstants.STORE_DIRECTORY_PATH, StoreConstants.STORE_NAME).makeStore();
 	
 	        INameGUIDMap map = new NameGUIDMap(store);
 	        
@@ -101,10 +105,11 @@ public class NameGUIDMapTest extends TestCase {
 		catch (Exception e) { e.printStackTrace(); fail(); }
 	}
 
+    @Test
 	public void testIterator() {
 		try {
 		
-            IGUIDStore store = new LocalFileBasedStoreFactory().makeStore();
+            IGUIDStore store = new LocalFileBasedStoreFactory(StoreConstants.STORE_DIRECTORY_PATH, StoreConstants.STORE_NAME).makeStore();
 	
 	        INameGUIDMap map = new NameGUIDMap(store);
 	        

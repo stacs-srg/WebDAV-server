@@ -1,9 +1,10 @@
 /*
  * Created on Dec 15, 2004 at 10:56:29 PM.
  */
-package uk.ac.standrews.cs.util.test;
+package uk.ac.standrews.cs.util;
 
 import junit.framework.TestCase;
+import org.junit.Test;
 import uk.ac.standrews.cs.interfaces.IKey;
 import uk.ac.standrews.cs.util.SHA1KeyFactory;
 
@@ -19,6 +20,7 @@ public class KeyFactoryTest extends TestCase {
     /*
      * Class under test for Key generateKey()
      */
+    @Test
     public void testGenerateKey() {
         
         IKey k1 = SHA1KeyFactory.generateKey();
@@ -35,6 +37,7 @@ public class KeyFactoryTest extends TestCase {
     /*
      * Class under test for Key generateKey(String)
      */
+    @Test
     public void testGenerateKeyWithString() {
         
         IKey k1 = SHA1KeyFactory.generateKey("null");
@@ -55,6 +58,7 @@ public class KeyFactoryTest extends TestCase {
     /*
      * Class under test for Key generateKey(INetSocketAddress)
      */
+    @Test
     public void testGenerateKeyWithIPAddress() {
         IKey k1 = SHA1KeyFactory.generateKey(new InetSocketAddress("138.251.195.25", 80));
         IKey k2 = SHA1KeyFactory.generateKey(new InetSocketAddress("212.58.224.56", 1024));

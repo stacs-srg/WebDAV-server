@@ -1,9 +1,10 @@
 /*
  * Created on Dec 20, 2004 at 10:14:33 PM.
  */
-package uk.ac.standrews.cs.util.test;
+package uk.ac.standrews.cs.util;
 
 import junit.framework.TestCase;
+import org.junit.Test;
 import uk.ac.standrews.cs.util.Action;
 import uk.ac.standrews.cs.util.ActionQueue;
 import uk.ac.standrews.cs.util.Semaphore;
@@ -20,6 +21,7 @@ public class ActionQueueTest extends TestCase {
      * It's not clear how to test timing issues given that we can't assume
      * anything about relative progress of threads.
      */
+    @Test
     public void testQueue() {
 
         // Single action, single queue slot, single thread.

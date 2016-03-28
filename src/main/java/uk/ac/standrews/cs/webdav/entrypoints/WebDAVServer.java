@@ -49,7 +49,7 @@ public class WebDAVServer {
 		ServerSocket server_socket = new ServerSocket(port);
 		
 		// Show startup confirmation whatever the run level...
-		Diagnostic.trace("ASA WebDav Server started on port " + port);
+		Diagnostic.trace("WebDav Server started on port " + port);
 		
 		while (true) {
 			Socket client = server_socket.accept();

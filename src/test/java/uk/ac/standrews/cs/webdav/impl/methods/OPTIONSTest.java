@@ -1,5 +1,6 @@
-package uk.ac.standrews.cs.webdav.impl.methods.test;
+package uk.ac.standrews.cs.webdav.impl.methods;
 
+import org.junit.Test;
 import uk.ac.standrews.cs.webdav.impl.HTTP;
 
 public class OPTIONSTest extends AbstractMethodTest {
@@ -12,13 +13,15 @@ public class OPTIONSTest extends AbstractMethodTest {
 	public OPTIONSTest(String name) {
 		super(name);
 	}
-	
+
+	@Test
 	public void test1() {
 
 		showResponse(null, 9093, "ASA", "OPTIONS /", makeTestString(9093));
 		//showResponse(null, 80, "Apache", "OPTIONS /", makeTestString(80));
 	}
-	
+
+	@Test
 	public void test2() {
 
 		showResponse(null, 9090, "ASA", "OPTIONS /asa/", makeTestString(9090));

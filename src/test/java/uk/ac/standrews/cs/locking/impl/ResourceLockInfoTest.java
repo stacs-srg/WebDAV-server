@@ -1,6 +1,7 @@
-package uk.ac.standrews.cs.locking.impl.test;
+package uk.ac.standrews.cs.locking.impl;
 
 import junit.framework.TestCase;
+import org.junit.Test;
 import uk.ac.standrews.cs.locking.impl.LockDepth;
 import uk.ac.standrews.cs.locking.impl.LockScope;
 import uk.ac.standrews.cs.locking.impl.LockType;
@@ -22,6 +23,7 @@ public class ResourceLockInfoTest extends TestCase {
 	/*
 	 * Test method for 'uk.ac.stand.dcs.asa.storage.locking.impl.ResourceLockInfo.getLockToken()'
 	 */
+	@Test
 	public void testGetLockToken() {
 		
 		IResourceLockInfo r1 = null;
@@ -50,6 +52,7 @@ public class ResourceLockInfoTest extends TestCase {
 	/*
 	 * Test method for 'uk.ac.stand.dcs.asa.storage.locking.impl.ResourceLockInfo.conflictsWith(IResourceLockInfo)'
 	 */
+    @Test
 	public void testConflictsWith() {
 		
 		try {
@@ -94,6 +97,7 @@ public class ResourceLockInfoTest extends TestCase {
 	/*
 	 * Test method for 'uk.ac.stand.dcs.asa.storage.locking.impl.ResourceLockInfo.includes(URI)'
 	 */
+    @Test
 	public void testIncludes() {
 		
 		try {

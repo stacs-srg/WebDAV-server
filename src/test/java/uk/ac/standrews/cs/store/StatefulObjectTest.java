@@ -1,6 +1,7 @@
-package uk.ac.standrews.cs.store.test;
+package uk.ac.standrews.cs.store;
 
 import junit.framework.TestCase;
+import org.junit.Test;
 import uk.ac.standrews.cs.filesystem.absfilesystem.impl.general.StringData;
 import uk.ac.standrews.cs.filesystem.absfilesystem.impl.storebased.StoreBasedFile;
 import uk.ac.standrews.cs.interfaces.IGUID;
@@ -24,10 +25,11 @@ public class StatefulObjectTest extends TestCase {
 	
 	private IData data1 = new StringData("quick brown fox");
 	private IData data2 = new StringData("lazy dog");
-	
+
+    @Test
 	public void testPersist() {
 		
-        IGUIDStore store = new LocalFileBasedStoreFactory().makeStore();
+        IGUIDStore store = new LocalFileBasedStoreFactory(StoreConstants.STORE_DIRECTORY_PATH, StoreConstants.STORE_NAME).makeStore();
 
         try {
             StoreBasedFile file = new StoreBasedFile(store, data1);
@@ -67,10 +69,11 @@ public class StatefulObjectTest extends TestCase {
         } catch (Exception e) { fail(e.getMessage()); }
 	}
 
+    @Test
 	public void testReify() {
 
 		try {
-            IGUIDStore store = new LocalFileBasedStoreFactory().makeStore();
+            IGUIDStore store = new LocalFileBasedStoreFactory(StoreConstants.STORE_DIRECTORY_PATH, StoreConstants.STORE_NAME).makeStore();
 	        StoreBasedFile file = new StoreBasedFile(store, data1);
 	
 	        IData data = file.reify();
@@ -79,10 +82,11 @@ public class StatefulObjectTest extends TestCase {
 	    } catch (Exception e) { fail(e.getMessage()); }
 	}
 
+    @Test
 	public void testUpdate() {
 		
 		try {
-            IGUIDStore store = new LocalFileBasedStoreFactory().makeStore();
+            IGUIDStore store = new LocalFileBasedStoreFactory(StoreConstants.STORE_DIRECTORY_PATH, StoreConstants.STORE_NAME).makeStore();
 	        StoreBasedFile file = new StoreBasedFile(store, data1);
 	        file.update(data2);
 	

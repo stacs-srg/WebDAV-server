@@ -1,4 +1,4 @@
-package uk.ac.standrews.cs.webdav.impl.methods.test;
+package uk.ac.standrews.cs.webdav.impl.methods;
 
 import junit.framework.TestCase;
 import uk.ac.standrews.cs.util.Error;

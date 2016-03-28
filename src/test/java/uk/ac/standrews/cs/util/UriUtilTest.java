@@ -1,6 +1,7 @@
-package uk.ac.standrews.cs.util.test;
+package uk.ac.standrews.cs.util;
 
 import junit.framework.TestCase;
+import org.junit.Test;
 import uk.ac.standrews.cs.util.UriUtil;
 
 import java.net.URI;
@@ -8,7 +9,8 @@ import java.net.URISyntaxException;
 import java.util.Iterator;
 
 public class UriUtilTest extends TestCase {
-	
+
+	@Test
 	public void testUriEncode() {
 
 		assertEquals(UriUtil.uriEncode("my files"), "my%20files");
@@ -17,6 +19,7 @@ public class UriUtilTest extends TestCase {
 		assertEquals(UriUtil.uriEncode("/P2P Services.Data/rdb copy/"), "/P2P%20Services.Data/rdb%20copy/");
 	}
 
+	@Test
 	public void testChildUri() {
 		
 		try {
@@ -35,7 +38,8 @@ public class UriUtilTest extends TestCase {
 			fail();
 		}
 	}
-	
+
+	@Test
 	public void testParentUri() {
 		
 		try {
@@ -50,7 +54,8 @@ public class UriUtilTest extends TestCase {
 			fail();
 		}
 	}
-	
+
+	@Test
 	public void testBaseName() {
 		
 		try {
@@ -65,7 +70,8 @@ public class UriUtilTest extends TestCase {
 			fail();
 		}
 	}
-	
+
+	@Test
 	public void testPathElementIterator() {
 		
 		try {

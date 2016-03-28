@@ -1,9 +1,10 @@
 /*
  * Created on Dec 12, 2004 at 5:24:27 PM.
  */
-package uk.ac.standrews.cs.util.test;
+package uk.ac.standrews.cs.util;
 
 import junit.framework.TestCase;
+import org.junit.Test;
 import uk.ac.standrews.cs.util.KeyImpl;
 import uk.ac.standrews.cs.util.SegmentArithmetic;
 
@@ -29,6 +30,7 @@ public class KeyImplTest extends TestCase {
     /**
      * Tests whether the key integers are as expected. All should lie in range zero to keyspace_size - 1.
      */
+    @Test
     public void testBigIntegerRepresentation() {
         
         // -1 should wrap to keyspace_size - 1.
@@ -56,6 +58,7 @@ public class KeyImplTest extends TestCase {
     /**
      *  Does what is says on the box
      */
+    @Test
     public void testhexPrefixMatch() {
         // first check a few ..
         // checks that zero and one have 39 hex digits in common        
@@ -76,6 +79,7 @@ public class KeyImplTest extends TestCase {
     /**
      * Tests whether the string representations are as expected. Should contain hex integers in range zero to keyspace size - 1.
      */
+    @Test
     public void testToString() {
         
         assertEquals(k1.toString(), "ffffffffffffffffffffffffffffffffffffffff");
@@ -92,6 +96,7 @@ public class KeyImplTest extends TestCase {
     /**
      * Tests whether the bit lengths of the keys are as expected.
      */
+    @Test
     public void testBitLength() {
 
         assertEquals(k1.bitLength(), 160);
@@ -108,6 +113,7 @@ public class KeyImplTest extends TestCase {
     /**
      * Tests whether key comparison works as expected.
      */
+    @Test
     public void testCompareTo() {
         
         // k1 is the largest possible key, keyspace_size - 1.
@@ -136,6 +142,7 @@ public class KeyImplTest extends TestCase {
     /**
      * Tests whether ring distance calculation works as expected.
      */
+    @Test
     public void testRingDistanceTo() {
         
         // Distances clockwise from keyspace_size - 1.
@@ -167,6 +174,7 @@ public class KeyImplTest extends TestCase {
     /**
      * Tests whether ring ordering calculation works as expected.
      */
+    @Test
     public void testFirstCloserThanSecond() {
 
         assertTrue(k1.firstCloserInRingThanSecond(k2, k3));

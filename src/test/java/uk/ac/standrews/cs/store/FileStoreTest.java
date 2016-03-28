@@ -1,9 +1,10 @@
 /*
  * Created on May 22, 2005 at 4:19:05 PM.
  */
-package uk.ac.standrews.cs.store.test;
+package uk.ac.standrews.cs.store;
 
 import junit.framework.TestCase;
+import org.junit.Test;
 import uk.ac.standrews.cs.filesystem.absfilesystem.impl.general.StringData;
 import uk.ac.standrews.cs.interfaces.IGUID;
 import uk.ac.standrews.cs.interfaces.IPID;
@@ -32,9 +33,10 @@ public class FileStoreTest extends TestCase {
      *     public PID put( IData data ) throws Exception;
      *   }
      */
+	@Test
     public void testIStore() {
     	
-        IGUIDStore store = new LocalFileBasedStoreFactory().makeStore();
+        IGUIDStore store = new LocalFileBasedStoreFactory(StoreConstants.STORE_DIRECTORY_PATH, StoreConstants.STORE_NAME).makeStore();
 
         try {
         	IData data1 = new StringData( "quick brown fox" );
@@ -74,9 +76,10 @@ public class FileStoreTest extends TestCase {
      *     public Iterator getAllBindings();
      *   }
      */
+    @Test
     public void testIGUID_PID_Map() {
 
-        IGUIDStore store = new LocalFileBasedStoreFactory().makeStore();
+        IGUIDStore store = new LocalFileBasedStoreFactory(StoreConstants.STORE_DIRECTORY_PATH, StoreConstants.STORE_NAME).makeStore();
 
     	IPID pid1 = PIDFactory.generateRandomPID();
     	IPID pid2 = PIDFactory.generateRandomPID();

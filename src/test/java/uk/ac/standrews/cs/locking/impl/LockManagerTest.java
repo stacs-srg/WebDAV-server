@@ -1,6 +1,7 @@
-package uk.ac.standrews.cs.locking.impl.test;
+package uk.ac.standrews.cs.locking.impl;
 
 import junit.framework.TestCase;
+import org.junit.Test;
 import uk.ac.standrews.cs.exceptions.LockException;
 import uk.ac.standrews.cs.exceptions.LockUseException;
 import uk.ac.standrews.cs.locking.impl.LockDepth;
@@ -20,6 +21,7 @@ public class LockManagerTest extends TestCase {
 	/*
 	 * Test method for 'uk.ac.stand.dcs.asa.storage.locking.impl.LockManager.addResource(ILock, URI, LockScope, LockType, LockDepth)'
 	 */
+	@Test
 	public void testAddResource() {
 		
 		ILockManager lock_manager = new LockManager();
@@ -108,6 +110,7 @@ public class LockManagerTest extends TestCase {
 	/*
 	 * Test method for 'uk.ac.stand.dcs.asa.storage.locking.impl.LockManager.addResource(ILock, URI, LockScope, LockType, LockDepth)'
 	 */
+    @Test
 	public void testAddResource2() {
 		
 		ILockManager lock_manager = new LockManager();
@@ -135,6 +138,7 @@ public class LockManagerTest extends TestCase {
 	/*
 	 * Test method for 'uk.ac.stand.dcs.asa.storage.locking.impl.LockManager.addResource(ILock, URI, LockScope, LockType, LockDepth)'
 	 */
+    @Test
 	public void testAddResource3() {
 		
 		ILockManager lock_manager = new LockManager();
@@ -188,6 +192,7 @@ public class LockManagerTest extends TestCase {
 	/*
 	 * Test method for 'uk.ac.stand.dcs.asa.storage.locking.impl.LockManager.removeResourceFromMatchingLocks(URI, String)'
 	 */
+    @Test
 	public void testRemoveResourceFromMatchingLocks() {
 
 		ILockManager lock_manager = new LockManager();
@@ -239,6 +244,7 @@ public class LockManagerTest extends TestCase {
 	/*
 	 * Test method for 'uk.ac.stand.dcs.asa.storage.locking.impl.LockManager.lockIterator()'
 	 */
+    @Test
 	public void testLockIterator() {
 
 		ILockManager lock_manager = new LockManager();
@@ -275,6 +281,7 @@ public class LockManagerTest extends TestCase {
 	/*
 	 * Test method for 'uk.ac.stand.dcs.asa.storage.locking.impl.LockManager.lockIterator(URI)'
 	 */
+    @Test
 	public void testLockIteratorURI() {
 
 		ILockManager lock_manager = new LockManager();
@@ -314,6 +321,7 @@ public class LockManagerTest extends TestCase {
 		}
 	}
 
+    @Test
 	public void testUriIterator() {
 		
 		ILockManager lock_manager = new LockManager();
@@ -353,6 +361,7 @@ public class LockManagerTest extends TestCase {
 	/*
 	 * Test method for 'uk.ac.stand.dcs.asa.storage.locking.impl.LockManager.checkWhetherLockedWithOtherToken(URI, String)'
 	 */
+    @Test
 	public void testCheckWhetherLockedWithOtherToken() {
 
 		ILockManager lock_manager = new LockManager();
@@ -396,6 +405,7 @@ public class LockManagerTest extends TestCase {
 	/*
 	 * Test method for 'uk.ac.stand.dcs.asa.storage.locking.impl.LockManager.checkWhetherLockedWithToken(URI, String)'
 	 */
+    @Test
 	public void testCheckWhetherLockedWithToken() {
 
 		ILockManager lock_manager = new LockManager();
