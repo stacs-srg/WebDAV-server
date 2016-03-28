@@ -13,9 +13,10 @@ import java.math.BigInteger;
  */
 public class SegmentArithmetic {
 
+    public static final int KEY_LENGTH = 160; // TODO - this used to be the keylength for jChord and was retrieved from a file
+
     public static final BigInteger TWO = BigInteger.ONE.add(BigInteger.ONE);
 
-    public static final BigInteger KEYSPACE_SIZE = BigInteger.valueOf(160);
-    
+    public static final BigInteger KEYSPACE_SIZE = TWO.pow(KEY_LENGTH);
 
 }

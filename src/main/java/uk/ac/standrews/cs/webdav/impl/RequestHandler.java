@@ -17,43 +17,44 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 public class RequestHandler implements Runnable {
-	
+
 	private static final int INPUT_BUFFER_SIZE = 2048;
 	private Socket socket;
 	private IFileSystem file_system;
 	private ILockManager lock_manager;
-	
+
 	public RequestHandler(Socket socket, IFileSystem file_system, ILockManager lock_manager) {
 		this.socket = socket;
 		this.file_system = file_system;
 		this.lock_manager = lock_manager;
 	}
-	
+
 	public void run() {
 		// Diagnostic.trace( "Thread started " + Thread.currentThread().hashCode(), Diagnostic.INIT );
         Request request = null;
 		try {
             request = getRequest();
 			request.setSocket(socket);
+
+            try {
+                runRequest(request);
+            } catch (IOException e) {
+                tryToCloseSocket(e);
+            } catch (HTTPException e) {
+                httpExceptionResponse(request, e);
+
+                Diagnostic.trace("************* Completed Request: " + request.getVerb() + " " + request.getUri() + " [thread " + Thread.currentThread().hashCode() + "]", Diagnostic.RUN);
+            } catch (RuntimeException e) {
+                // Absorb any unchecked exceptions.
+                Error.exceptionError("While processing request", e);
+                internalServerErrorResponse(request, e);
+            }
+
         } catch (IOException e) {
             Error.exceptionError("While setting up client socket streams", e);
         } finally {
             //Diagnostic.trace( "Thread completed " + Thread.currentThread().hashCode(), Diagnostic.RUN );
             closeConnectedSocket();
-        }
-
-        try {
-            runRequest(request);
-        } catch (IOException e) {
-            tryToCloseSocket(e);
-        } catch (HTTPException e) {
-            httpExceptionResponse(request, e);
-
-            Diagnostic.trace("************* Completed Request: " + request.getVerb() + " " + request.getUri() + " [thread " + Thread.currentThread().hashCode() + "]", Diagnostic.RUN);
-        } catch (RuntimeException e) {
-            // Absorb any unchecked exceptions.
-            Error.exceptionError("While processing request", e);
-            internalServerErrorResponse(request, e);
         }
 
 	}
