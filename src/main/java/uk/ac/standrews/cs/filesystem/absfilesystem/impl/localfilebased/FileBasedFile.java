@@ -10,8 +10,8 @@ import uk.ac.standrews.cs.filesystem.interfaces.IFile;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.util.Attributes;
-import uk.ac.standrews.cs.util.KeyImpl;
 import uk.ac.standrews.cs.util.Error;
+import uk.ac.standrews.cs.util.KeyImpl;
 import uk.ac.standrews.cs.util.SHA1KeyFactory;
 import uk.ac.standrews.cs.webdav.impl.MIME;
 

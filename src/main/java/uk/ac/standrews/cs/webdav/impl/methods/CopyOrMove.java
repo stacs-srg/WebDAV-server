@@ -7,13 +7,13 @@ import uk.ac.standrews.cs.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.exceptions.BindingPresentException;
 import uk.ac.standrews.cs.exceptions.LockUseException;
 import uk.ac.standrews.cs.exceptions.PersistenceException;
+import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.util.Diagnostic;
 import uk.ac.standrews.cs.util.UriUtil;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.impl.HTTP;
 import uk.ac.standrews.cs.webdav.impl.Request;
 import uk.ac.standrews.cs.webdav.impl.Response;
-import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 
 import java.io.IOException;
 import java.net.URI;

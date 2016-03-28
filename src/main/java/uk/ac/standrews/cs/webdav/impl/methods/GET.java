@@ -2,6 +2,9 @@ package uk.ac.standrews.cs.webdav.impl.methods;
 
 import uk.ac.standrews.cs.exceptions.AccessFailureException;
 import uk.ac.standrews.cs.filesystem.absfilesystem.impl.storebased.StoreBasedFileSystem;
+import uk.ac.standrews.cs.filesystem.exceptions.InvalidPathException;
+import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
+import uk.ac.standrews.cs.filesystem.interfaces.IFile;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.persistence.interfaces.INameAttributedPersistentObjectBinding;
@@ -12,9 +15,6 @@ import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.impl.HTTP;
 import uk.ac.standrews.cs.webdav.impl.Request;
 import uk.ac.standrews.cs.webdav.impl.Response;
-import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
-import uk.ac.standrews.cs.filesystem.interfaces.IFile;
-import uk.ac.standrews.cs.filesystem.exceptions.InvalidPathException;
 
 import java.io.IOException;
 import java.io.OutputStream;

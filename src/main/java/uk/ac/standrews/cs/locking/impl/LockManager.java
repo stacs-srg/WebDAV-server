@@ -8,7 +8,6 @@ import uk.ac.standrews.cs.exceptions.LockUseException;
 import uk.ac.standrews.cs.locking.interfaces.ILock;
 import uk.ac.standrews.cs.locking.interfaces.ILockManager;
 import uk.ac.standrews.cs.locking.interfaces.IResourceLockInfo;
-
 import uk.ac.standrews.cs.util.Error;
 
 import java.net.URI;
