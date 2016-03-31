@@ -80,15 +80,4 @@ public class RandomString {
         }
     }
 
-
-
-    /**
-     * Test1. Only here for testing purposes.
-     */
-    public static void main(String[] args)
-    {
-        RandomString uuidgen = new RandomString();
-        System.out.println(uuidgen.generateString());
-    }
-
 }

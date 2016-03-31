@@ -1,18 +1,63 @@
 package uk.ac.standrews.cs.webdav.impl.methods;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import uk.ac.standrews.cs.util.RandomGUID;
+import uk.ac.standrews.cs.webdav.entrypoints.WebDAV_FileBased_Launcher;
+import uk.ac.standrews.cs.webdav.impl.Response;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class LOCKTest extends AbstractMethodTest {
 
-	/**
-	 * Construct new test instance.
-	 *
-	 * @param name the test name
-	 */
-	public LOCKTest(String name) {
-		super(name);
-	}
+    private static final int TEST_PORT = 9093;
+    private static final String TEST_LABEL = "ASA";
+
+    // TODO - better naming + consider windows and linux platforms
+    private static final String TEST_PATH = "test";
+
+    @Before
+    public void setUp() throws InterruptedException {
+
+        System.out.println("starting server (terrible!)");
+        String[] args = {"-r73e057624a5b5005ab0e35ca45f6fb48ddfa8d5e",  "-p"+TEST_PORT ,"-d/Users/sic2/webdav", "-s" + TEST_PATH, "-D"};
+
+        Thread t = new Thread() {
+            public void run() {
+                WebDAV_FileBased_Launcher.main(args);
+            }
+        };
+        t.start();
+        System.out.println("server started");
+
+        Thread t2 = new Thread() {
+            public void run() {
+
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        t2.start();
+
+    }
+
+	@Test
+    public void testNonExtantURI() {
+        String uri = "/" + (new RandomGUID()).toString();
+
+        System.out.println("Should be able to lock a non-extant URI with extant parent - result should be 201 CREATED.\n");
+
+        String request = makeTestString(TEST_PORT, uri);
+        String response = processRequest(request, null, TEST_PORT);
+        showResponse(response, TEST_PORT, TEST_LABEL, "LOCK" + uri);
+
+        assertTrue(response.startsWith("HTTP/1.1 201 Created\r\n")); // TODO - mock response
+    }
 
 	@Test
 	public void test1() {
@@ -86,11 +131,6 @@ public class LOCKTest extends AbstractMethodTest {
 			   "Connection: close" + CRLF +
 			   "Host: localhost:" + port + CRLF + CRLF +
 			   lock_spec;
-	}
-
-	public static void main(String[] args) {
-		
-		new LOCKTest("test").test2();
 	}
 	
 	public String makePropfindRequestHeader(int port, String depth, String uri, String body) {

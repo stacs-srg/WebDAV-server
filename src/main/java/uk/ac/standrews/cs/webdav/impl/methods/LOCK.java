@@ -10,6 +10,7 @@ import uk.ac.standrews.cs.locking.impl.LockScope;
 import uk.ac.standrews.cs.locking.impl.LockType;
 import uk.ac.standrews.cs.locking.interfaces.ILock;
 import uk.ac.standrews.cs.locking.interfaces.IResourceLockInfo;
+import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.util.Diagnostic;
 import uk.ac.standrews.cs.util.StringUtil;
 import uk.ac.standrews.cs.util.UriUtil;
@@ -40,14 +41,18 @@ public class LOCK extends AbstractHTTPMethod {
 				URI uri = request.getUri();
 				
 				URI parent_uri = UriUtil.parentUri(uri);
-				if (file_system.resolveObject(parent_uri) == null) throw new HTTPException("Parent of lock-null request does not exist", HTTP.RESPONSE_PRECONDITION_FAILED, true);;
+				if (file_system.resolveObject(parent_uri) == null) {
+                    throw new HTTPException("Parent of lock-null request does not exist", HTTP.RESPONSE_PRECONDITION_FAILED, true);
+                }
 				
 				// Parse the contents.
 				Document document;
 				try {
 					document = xml_helper.parse(new LengthInputStream( request.getInputStream(), request.getContentLength()));
 				}
-				catch (IOException e) { throw new HTTPException(e.getMessage(), HTTP.RESPONSE_BAD_REQUEST); }
+				catch (IOException e) {
+                    throw new HTTPException(e.getMessage(), HTTP.RESPONSE_BAD_REQUEST);
+                }
 				
 				// Taken from RFC 2518:
 				//
@@ -60,7 +65,9 @@ public class LOCK extends AbstractHTTPMethod {
 				// <!ELEMENT owner ANY >
 				
 				NodeList lockInfoNL = document.getElementsByTagNameNS(WebDAV.DAV_NS, WebDAV.DAV_LOCKINFO);
-				if( lockInfoNL.getLength() != 1 ) throw new HTTPException("More than 1 " + WebDAV.DAV_LOCKINFO + " nodes found", HTTP.RESPONSE_BAD_REQUEST, true);
+				if( lockInfoNL.getLength() != 1 ) {
+                    throw new HTTPException("More than 1 " + WebDAV.DAV_LOCKINFO + " nodes found", HTTP.RESPONSE_BAD_REQUEST, true);
+                }
 				
 				Node lockInfoNode = lockInfoNL.item(0); // this is the root node
 				NodeList lockInfoChildren = lockInfoNode.getChildNodes();
@@ -72,26 +79,34 @@ public class LOCK extends AbstractHTTPMethod {
 				
 				// Iterate through the elements.
 				for (int i = 0; i < listLength; i++ ) {
-					
+
 					Node next_element = lockInfoChildren.item(i);
 					
 					if (next_element.getNodeType() == Node.ELEMENT_NODE) { // skip over white space elements
 						
 						if (next_element.getLocalName().equals(WebDAV.DAV_LOCKTYPE)) {   // mandatory field - <!ELEMENT locktype (write) >
 							
-							if (lock_type == null) lock_type = extractLockType(next_element);
-							else                   throw new HTTPException("Multiple locktype elements", HTTP.RESPONSE_BAD_REQUEST, true);
-						}
-						else if (next_element.getLocalName().equals(WebDAV.DAV_LOCKSCOPE)) {   // mandatory - <!ELEMENT lockscope (exclusive | shared) >
+							if (lock_type == null) {
+								lock_type = extractLockType(next_element);
+							} else {
+								throw new HTTPException("Multiple locktype elements", HTTP.RESPONSE_BAD_REQUEST, true);
+							}
+						} else if (next_element.getLocalName().equals(WebDAV.DAV_LOCKSCOPE)) {   // mandatory - <!ELEMENT lockscope (exclusive | shared) >
 							
-							if (lock_scope == null) lock_scope = extractLockScope(next_element);
-							else                    throw new HTTPException("Multiple lockscope elements", HTTP.RESPONSE_BAD_REQUEST, true);
+							if (lock_scope == null) {
+                                lock_scope = extractLockScope(next_element);
+                            } else {
+                                throw new HTTPException("Multiple lockscope elements", HTTP.RESPONSE_BAD_REQUEST, true);
+                            }
 							
-						}
-						else if (next_element.getLocalName().equals(WebDAV.DAV_OWNER)) { //optional <!ELEMENT owner ANY >
+						} else if (next_element.getLocalName().equals(WebDAV.DAV_OWNER)) { //optional <!ELEMENT owner ANY >
 							
-							if (lock_owner == null) lock_owner = extractLockOwner(lock_owner, next_element);
-							else                    throw new HTTPException("Multiple owner elements", HTTP.RESPONSE_BAD_REQUEST, true);
+							if (lock_owner == null) {
+                                lock_owner = extractLockOwner(lock_owner, next_element);
+                            }
+							else {
+                                throw new HTTPException("Multiple owner elements", HTTP.RESPONSE_BAD_REQUEST, true);
+                            }
 						}
 					}
 				} // end for loop
@@ -131,8 +146,17 @@ public class LOCK extends AbstractHTTPMethod {
 				response.setHeader(HTTP.HEADER_LOCKTOKEN, addTokenDelimiters(token)); // Don't need delimiters according to spec, but Apache does it.
 				
 				response.setContentType(HTTP.CONTENT_TYPE_XML);
-				response.setStatusCode(HTTP.RESPONSE_MULTI_STATUS);
-				response.setStatusCode(HTTP.RESPONSE_OK);
+
+				// FIXME - set only one status, not multiple
+                // Target object seems to be returned even if object does not exist
+                IAttributedStatefulObject target_object = file_system.resolveObject(uri);
+                if (target_object != null) {
+                    response.setStatusCode(HTTP.RESPONSE_MULTI_STATUS);
+                    response.setStatusCode(HTTP.RESPONSE_OK);
+                } else {
+                    response.setStatusCode(HTTP.RESPONSE_MULTI_STATUS);
+                    response.setStatusCode(HTTP.RESPONSE_CREATED);
+                }
 				
 				Element properties = xml_helper.createElement(WebDAV.DAV_NS, WebDAV.DAV_NS_PREFIX_ + WebDAV.DAV_PROP );
 				properties.setAttribute(WebDAV.DAV_XML_NS_PREFIX, WebDAV.DAV_NS);
@@ -225,49 +249,59 @@ public class LOCK extends AbstractHTTPMethod {
 				if (lockChild.getNodeType() == Node.ELEMENT_NODE) { // skip over white space elements
 					
 					String property = lockChild.getLocalName();
-					if (! predicate.holds(property)) throw new HTTPException(predicate_error_message, HTTP.RESPONSE_BAD_REQUEST, true);
+					if (! predicate.holds(property)) {
+                        throw new HTTPException(predicate_error_message, HTTP.RESPONSE_BAD_REQUEST, true);
+                    }
+
 					return property;
 				}
 			}
 			throw new HTTPException("No content found in " + element_name + " element", HTTP.RESPONSE_BAD_REQUEST, true);
-		}
-		else throw new HTTPException("No content found in " + element_name + " element", HTTP.RESPONSE_BAD_REQUEST, true);
+
+		} else {
+            throw new HTTPException("No content found in " + element_name + " element", HTTP.RESPONSE_BAD_REQUEST, true);
+        }
 	}
 	
 	private ILock lock(int lock_depth, String lock_type, String lock_scope, String lock_owner, URI resource) throws LockException, HTTPException {
-		
-		LockScope scope;
-		LockType type;
-		LockDepth depth;
-		
-		if (lock_scope.equals(WebDAV.DAV_EXCLUSIVE)) {
-            scope = LockScope.LOCK_SCOPE_EXCLUSIVE;
-        } else if (lock_scope.equals(WebDAV.DAV_SHARED)) {
-            scope = LockScope.LOCK_SCOPE_SHARED;
-        } else {
-            throw new HTTPException("Lock scope neither shared nor exclusive", HTTP.RESPONSE_BAD_REQUEST, true);
-        }
-		
-		if (lock_type.equals(WebDAV.DAV_WRITE)) {
-            type = LockType.LOCK_TYPE_WRITE;
-        } else {
-            throw new HTTPException("Lock type not write", HTTP.RESPONSE_BAD_REQUEST, true);
-        }
-		
-		if (lock_depth == 0) {
-            depth = LockDepth.LOCK_DEPTH_ZERO;
-        } else if (lock_depth == Integer.MAX_VALUE) {
-            depth = LockDepth.LOCK_DEPTH_INFINITY;
-        } else {
-            throw new HTTPException("Lock depth neither zero nor infinity", HTTP.RESPONSE_BAD_REQUEST, true);
-        }
-		
+		LockScope scope = getLockScope(lock_scope);
+		LockType type = getLockType(lock_type);
+		LockDepth depth = getLockDepth(lock_depth);
+
 		ILock new_lock = lock_manager.newLock(lock_owner, HTTP.HEADER_OPAQUELOCKTOKEN + ":");
 		lock_manager.addResourceToLock(new_lock, resource, scope, type, depth);
 		
 		return new_lock;
 	}
-	
+
+    private LockScope getLockScope(String lock_scope) throws HTTPException {
+        if (lock_scope.equals(WebDAV.DAV_EXCLUSIVE)) {
+            return LockScope.LOCK_SCOPE_EXCLUSIVE;
+        } else if (lock_scope.equals(WebDAV.DAV_SHARED)) {
+            return LockScope.LOCK_SCOPE_SHARED;
+        } else {
+            throw new HTTPException("Lock scope neither shared nor exclusive", HTTP.RESPONSE_BAD_REQUEST, true);
+        }
+    }
+
+    private LockType getLockType(String lock_type) throws HTTPException {
+        if (lock_type.equals(WebDAV.DAV_WRITE)) {
+            return LockType.LOCK_TYPE_WRITE;
+        } else {
+            throw new HTTPException("Lock type not write", HTTP.RESPONSE_BAD_REQUEST, true);
+        }
+    }
+
+    private LockDepth getLockDepth(int lock_depth) throws HTTPException {
+        if (lock_depth == 0) {
+            return LockDepth.LOCK_DEPTH_ZERO;
+        } else if (lock_depth == Integer.MAX_VALUE) {
+            return LockDepth.LOCK_DEPTH_INFINITY;
+        } else {
+            throw new HTTPException("Lock depth neither zero nor infinity", HTTP.RESPONSE_BAD_REQUEST, true);
+        }
+    }
+
 	interface Predicate {
 		
 		boolean holds(String property);

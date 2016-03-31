@@ -18,7 +18,7 @@ public interface IEvent {
 	 * @param attribute the name of an attribute
 	 * @return the value of the specified attribute, or null if the event contains no value for this attribute.
 	 */
-	public Object get(String attribute);
+	Object get(String attribute);
 	
 	/**
 	 * Adds an attribute to the event.
@@ -26,12 +26,12 @@ public interface IEvent {
 	 * @param attribute attribute with which the specified value is to be associated
 	 * @param value value to be associated with the specified attribute
 	 */
-	public void put(String attribute, Object value);
+	void put(String attribute, Object value);
 	
 	/**
 	 * Returns an iterator over the event attributes.
 	 * 
 	 * @return an iterator over the attributes, each typed as String.
 	 */
-	public Iterator iterator();
+	Iterator iterator();
 }

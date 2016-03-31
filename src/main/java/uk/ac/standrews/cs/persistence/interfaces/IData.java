@@ -3,6 +3,8 @@
  */
 package uk.ac.standrews.cs.persistence.interfaces;
 
+import com.sun.xml.internal.bind.v2.model.core.ID;
+
 import java.io.IOException;
 import java.io.InputStream;
 

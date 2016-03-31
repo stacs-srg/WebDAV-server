@@ -237,7 +237,7 @@ public class StoreBasedDirectory extends StoreBasedFileSystemObject implements I
 			return new_collection;
 		}
 	}
-	
+
 	/**
 	 * This class acts as a type convertor hiding underlying iterator over GUIDs and gives
 	 * an iterator over Name_AttributedPersistentObject_Binding.

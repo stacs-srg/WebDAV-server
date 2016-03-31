@@ -3,12 +3,14 @@
  */
 package uk.ac.standrews.cs.filesystem.absfilesystem.impl.localfilebased;
 
+import org.apache.commons.lang.ArrayUtils;
 import uk.ac.standrews.cs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.filesystem.FileSystemConstants;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
+import uk.ac.standrews.cs.store.impl.localfilebased.ByteData;
 import uk.ac.standrews.cs.util.Attributes;
 import uk.ac.standrews.cs.util.Error;
 import uk.ac.standrews.cs.util.KeyImpl;
@@ -59,13 +61,17 @@ public class FileBasedFile extends FileBasedFileSystemObject implements IFile {
 	public void persist() throws PersistenceException {
 		
 		if (real_file.exists()) {
-			if (!real_file.isFile()) throw new PersistenceException("backing file isn't a file");
-		}
-		else {
-			try {
-				if (!real_file.createNewFile()) throw new PersistenceException("couldn't create file");
+			if (!real_file.isFile()) {
+				throw new PersistenceException("backing file isn't a file");
 			}
-			catch (IOException e) { throw new PersistenceException("couldn't create file"); }
+		} else {
+			try {
+				if (!real_file.createNewFile()) {
+                    throw new PersistenceException("couldn't create file");
+                }
+			} catch (IOException e) {
+                throw new PersistenceException("couldn't create file");
+            }
 		}
 		
 		// Write the data to the file.
@@ -75,8 +81,9 @@ public class FileBasedFile extends FileBasedFileSystemObject implements IFile {
 	        FileOutputStream output_stream = new FileOutputStream(real_file);
 			output_stream.write(bytes);
 			output_stream.close();
-    	}
-    	catch (IOException e) { throw new PersistenceException("couldn't write data to file: "+ e.getMessage()); }
+    	} catch (IOException e) {
+            throw new PersistenceException("couldn't write data to file: "+ e.getMessage());
+        }
 	}
 
 	public IAttributes getAttributes() {

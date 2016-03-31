@@ -17,4 +17,13 @@ public interface IStatefulObject extends IPersistentObject {
      * @param data the new state for the object
      */
     void update(IData data);
+
+    /**
+     * Append to data to this object.
+     *
+     * TODO - maybe have issue with big data (keeping it all in memory is expensive or just not possible)
+     *
+     * @param data
+     */
+    void append(IData data);
 }

@@ -8,24 +8,21 @@ import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public abstract class AbstractMethodTest extends TestCase {
+public abstract class AbstractMethodTest {
 
 	protected static final String LF = String.valueOf((char) 10);
 	protected static final String CRLF = new String(HTTP.CRLF);
-	
-	/**
-	 * Construct new test instance
-	 *
-	 * @param name the test name
-	 */
-	public AbstractMethodTest(String name) {
-		super(name);
-	}
 
 	public void showResponse(String host, int port, String label, String request_name, String request_string) {
 		
 		String response = processRequest(request_string, host, port);
 		
+		System.out.println("Response from port: " + port + " (" + label + ") for request: " + request_name);
+		System.out.println("---------------------");
+		System.out.println(response);
+	}
+
+	public void showResponse(String response, int port, String label, String request_name) {
 		System.out.println("Response from port: " + port + " (" + label + ") for request: " + request_name);
 		System.out.println("---------------------");
 		System.out.println(response);
@@ -54,8 +51,10 @@ public abstract class AbstractMethodTest extends TestCase {
 			output_stream.close();
 			
 			return reply.toString();
+		} catch (UnknownHostException e) {
+			Error.exceptionError("connecting to host", e); return "";
+		} catch (IOException e) {
+			Error.exceptionError("connecting to host", e); return "";
 		}
-		catch (UnknownHostException e) { Error.exceptionError("connecting to host", e); return ""; }
-		catch (IOException e) { Error.exceptionError("connecting to host", e); return ""; }
 	}
 }

@@ -34,11 +34,12 @@ public class InputStreamData implements IData {
         try {
             do {
                 int available = inputStream.available();
-
+                if (available > expected_byte_count) {
+                    available = expected_byte_count;
+                }
                 int read = inputStream.read(state,bytes_read,available);
                 bytes_read += read;
-            }
-            while (bytes_read != expected_byte_count); // TODO Al - need to protect against erroneous clients
+            } while (bytes_read != expected_byte_count); // TODO Al - need to protect against erroneous clients
         }
         catch (IOException e) { Error.exceptionError( "I/O error during stream read",e ); }
         
@@ -49,7 +50,6 @@ public class InputStreamData implements IData {
      * Gets the data.
      * 
      * @return the underlying data
-     * @see uk.ac.stand.dcs.asa.storage.persistence.interfaces.IData#getState()
      */
     public byte[] getState() {
         return state;
@@ -59,7 +59,6 @@ public class InputStreamData implements IData {
      * Gets the size of the data in bytes.
      * 
      * @return the size of the data
-     * @see uk.ac.stand.dcs.asa.storage.persistence.interfaces.IData#getSize()
      */
     public long getSize() {
         return state.length;
@@ -69,7 +68,6 @@ public class InputStreamData implements IData {
      * Creates an input stream reading from the byte array.
      * 
      * @return an input stream reading from the byte array
-     * @see uk.ac.stand.dcs.asa.storage.persistence.interfaces.IData#getInputStream()
      */
     public InputStream getInputStream() {
         return new ByteArrayInputStream(state);

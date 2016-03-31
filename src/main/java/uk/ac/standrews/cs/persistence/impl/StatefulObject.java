@@ -3,10 +3,12 @@
  */
 package uk.ac.standrews.cs.persistence.impl;
 
+import org.apache.commons.lang.ArrayUtils;
 import uk.ac.standrews.cs.interfaces.IGUID;
 import uk.ac.standrews.cs.interfaces.IPID;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.persistence.interfaces.IStatefulObject;
+import uk.ac.standrews.cs.store.impl.localfilebased.ByteData;
 import uk.ac.standrews.cs.util.Error;
 
 /**
@@ -70,8 +72,7 @@ public abstract class StatefulObject extends PersistentBase implements IStateful
      * @param data the new state
      * @param pid the new PID
      * @param guid the new GUID
-     * 
-     * @see uk.ac.stand.dcs.asa.storage.persistence.interfaces.IPersistentObject#initialise(uk.ac.stand.dcs.asa.storage.persistence.interfaces.IData, uk.ac.stand.dcs.asa.interfaces.IPID, uk.ac.stand.dcs.asa.interfaces.IGUID)
+     *
      */
     public void initialise(IData data, IPID pid, IGUID guid) {
         this.state = data;
@@ -87,4 +88,14 @@ public abstract class StatefulObject extends PersistentBase implements IStateful
     public void update(IData data) {
     	this.state = data;
     }
+
+    public void append(IData data) {
+        // TODO - this solution is weak.
+        // this relies on the data being always in-memory
+        // one solution would be to persist in the update method, rather than keeping the state around
+        System.out.println("state size was " + state.getSize() + " and appending data is " + data.getSize());
+        state = new ByteData(ArrayUtils.addAll(state.getState(), data.getState()));
+        System.out.println("state size is " + state.getSize());
+    }
+
 }

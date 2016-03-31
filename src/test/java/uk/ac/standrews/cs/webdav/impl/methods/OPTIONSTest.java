@@ -5,15 +5,6 @@ import uk.ac.standrews.cs.webdav.impl.HTTP;
 
 public class OPTIONSTest extends AbstractMethodTest {
 
-	/**
-	 * Construct new test instance
-	 *
-	 * @param name the test name
-	 */
-	public OPTIONSTest(String name) {
-		super(name);
-	}
-
 	@Test
 	public void test1() {
 
@@ -40,8 +31,4 @@ public class OPTIONSTest extends AbstractMethodTest {
 	           "Host: localhost:" + port + crlf + crlf;
 	}
 
-	public static void main(String[] args) {
-		
-		new OPTIONSTest("test").test1();
-	}
 }

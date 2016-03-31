@@ -48,6 +48,9 @@ public interface IFileSystem {
      */
     void updateFile(IDirectory parent, String name, String content_type, IData data) throws BindingAbsentException, UpdateException, PersistenceException;
 
+    // TODO - append to file
+    void appendToFile(IDirectory parent, String name, String content_type, IData data) throws BindingAbsentException, PersistenceException;
+
     /**
      * Creates a completely new sub-directory and a binding to it in a parent directory. Similar to 'creat' in Unix.
      * 

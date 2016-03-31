@@ -4,15 +4,6 @@ import org.junit.Test;
 
 public class PROPFINDTest extends AbstractMethodTest {
 
-	/**
-	 * Construct new test instance
-	 *
-	 * @param name the test name
-	 */
-	public PROPFINDTest(String name) {
-		super(name);
-	}
-
 	@Test
 	public void test1() {
 		
@@ -234,8 +225,4 @@ public class PROPFINDTest extends AbstractMethodTest {
 		return "\"" + s + "\"";
 	}
 
-	public static void main(String[] args) {
-		
-		new PROPFINDTest("test").test1();
-	}
 }

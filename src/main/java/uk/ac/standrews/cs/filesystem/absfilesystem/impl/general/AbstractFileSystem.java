@@ -3,6 +3,7 @@
  */
 package uk.ac.standrews.cs.filesystem.absfilesystem.impl.general;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.exceptions.BindingPresentException;
 import uk.ac.standrews.cs.exceptions.PersistenceException;
@@ -83,6 +84,35 @@ public abstract class AbstractFileSystem {
 		
 		// TODO Does the content type need to be updated?
 		// If the content type is determined by the file extension then the content type can't change on an update, since the name is the same.
+	}
+
+	public synchronized void appendToFile(IDirectory directory, String name, String content_type, IData data) throws BindingAbsentException, PersistenceException{
+
+        IAttributedStatefulObject source_file = directory.get(name);
+
+        // Check that the file exists.
+        if (source_file == null) {
+
+            String msg = "attempt to update non-existent file: " + name;
+            Error.error(msg);						  // log it and
+            throw new BindingAbsentException(msg);	 // propagate to caller
+        }
+
+        // Check that the file is really a file.
+        if (! (source_file instanceof IFile)) {
+            throw new NotImplementedException();
+            // TODO - throw appendException
+            //throw new UpdateException("attempt to update non-file object: " + name);
+        }
+
+        // Append file with new IData.
+        source_file.append(data);
+
+        // Make new data persistent.
+        source_file.persist();
+
+        // TODO Does the content type need to be updated?
+        // If the content type is determined by the file extension then the content type can't change on an update, since the name is the same.
 	}
 
 	/**

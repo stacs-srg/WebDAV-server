@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.locking.impl;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 import uk.ac.standrews.cs.exceptions.LockException;
 import uk.ac.standrews.cs.exceptions.LockUseException;
@@ -12,7 +11,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Iterator;
 
-public class LockManagerTest extends TestCase {
+import static org.junit.Assert.*;
+
+public class LockManagerTest {
 
 	/*
 	 * Test method for 'uk.ac.stand.dcs.asa.storage.locking.impl.LockManager.addResource(ILock, URI, LockScope, LockType, LockDepth)'

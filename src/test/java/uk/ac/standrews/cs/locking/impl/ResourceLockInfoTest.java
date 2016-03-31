@@ -1,13 +1,14 @@
 package uk.ac.standrews.cs.locking.impl;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 import uk.ac.standrews.cs.locking.interfaces.IResourceLockInfo;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class ResourceLockInfoTest extends TestCase {
+import static org.junit.Assert.*;
+
+public class ResourceLockInfoTest {
 	
 	private static String prefix1 = "prefix321";
 	

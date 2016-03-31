@@ -50,8 +50,9 @@ public class WebDAV_StoreBased_Launcher extends WebDAVLauncher {
 			} catch (IOException e) {
 				Error.exceptionError("socket error", e);
 			}
-	    }
-	    else Output.getSingleton().println("Usage: java WebDAV_StoreBased_Launcher -r<store root guid> [-p<port>] [-d<store root directory>] [-s<store name>] [-D]");
+	    } else {
+			Output.getSingleton().println("Usage: java WebDAV_StoreBased_Launcher -r<store root guid> [-p<port>] [-d<store root directory>] [-s<store name>] [-D]");
+		}
 	}
 
 }

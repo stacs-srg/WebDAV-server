@@ -98,7 +98,7 @@ public interface ILockManager {
 	 * 
 	 * @return an iterator over all URIs currently locked by this lock manager, typed as {@link URI}
 	 */
-	public Iterator uriIterator();
+	Iterator uriIterator();
 	
 	/**
 	 * Returns an iterator over all locks currently managed by this lock manager.

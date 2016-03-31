@@ -18,5 +18,5 @@ public interface IDistanceCalculator {
 	 * @return the normalised (wrt number of nodes) distance between the two nodes in real space
 	 * or a negative value if the distance between the two specified node cannot be calculated.
 	 */
-	public double distance(InetAddress address1, InetAddress address2);
+	double distance(InetAddress address1, InetAddress address2);
 }

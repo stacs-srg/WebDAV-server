@@ -52,7 +52,9 @@ public class LockManager implements ILockManager {
 		
 		IResourceLockInfo new_resource_lock_info = new ResourceLockInfo(resource, depth, scope, type, lock.getTokenPrefix());
 
-		if (wouldConflictWithExistingLock(new_resource_lock_info)) throw new LockException("lock conflict");
+		if (wouldConflictWithExistingLock(new_resource_lock_info)) {
+			throw new LockException("lock conflict");
+		}
 		
 		lock.addResource(new_resource_lock_info);
 		
@@ -105,7 +107,9 @@ public class LockManager implements ILockManager {
 	 */
 	public void discardLock(ILock lock) throws LockException {
 
-		if (!lock_set.remove(lock)) throw new LockException("lock not present");
+		if (!lock_set.remove(lock)) {
+            throw new LockException("lock not present");
+        }
 	}
 
 	/**
@@ -121,8 +125,7 @@ public class LockManager implements ILockManager {
 		Iterator lock_iterator = lockIterator(resource);
 		
         if (!lock_iterator.hasNext()) {           // ... throw exception if the object isn't locked at all.
-    		
-        		throw new LockUseException("resource " + resource + " is not locked, but the token"  + lock_token + "was presented");
+            throw new LockUseException("resource " + resource + " is not locked, but the token"  + lock_token + "was presented");
         }
 
 		checkLockTokenOverLocks(resource, lock_token, lock_iterator);

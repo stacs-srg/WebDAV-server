@@ -252,7 +252,7 @@ public class Request {
         return hasContent;
     }
 
-    private byte[] stopAtBytes(byte[] lookFor, int maxSearch, int expected) throws IOException {
+    public byte[] stopAtBytes(byte[] lookFor, int maxSearch, int expected) throws IOException {
     	
         //Diagnostic.trace("Looking for block of length "+lookFor.length+" maxsearch "+maxSearch+" expected "+expected, Diagnostic.RUN );
         byte[] buffer = new byte[expected];
