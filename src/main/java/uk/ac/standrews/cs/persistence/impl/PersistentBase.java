@@ -71,7 +71,6 @@ public abstract class PersistentBase implements IPersistentObject {
      * 
      * @throws PersistenceException if the object's state could not be recorded
      *
-     * @see uk.ac.stand.dcs.asa.storage.persistence.interfaces.IPersistentObject#persist()
      */
     public abstract void persist() throws PersistenceException;
     

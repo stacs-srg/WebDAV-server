@@ -4,7 +4,7 @@
 package uk.ac.standrews.cs.webdav.entrypoints;
 
 import uk.ac.standrews.cs.filesystem.exceptions.FileSystemCreationException;
-import uk.ac.standrews.cs.filesystem.factories.StoreBasedFileSystemFactory;
+import uk.ac.standrews.cs.filesystem.factories.StoreFileSystemFactory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
 import uk.ac.standrews.cs.interfaces.IGUID;
 import uk.ac.standrews.cs.store.factories.LocalFileBasedStoreFactory;
@@ -42,7 +42,7 @@ public class WebDAV_StoreBased_Launcher extends WebDAVLauncher {
  			try {
 				IGUID root_GUID = GUIDFactory.recreateGUID(root_GUID_string);
 				IGUIDStore store = new LocalFileBasedStoreFactory(args).makeStore();
-		        IFileSystem file_system = new StoreBasedFileSystemFactory(store, root_GUID).makeFileSystem();
+		        IFileSystem file_system = new StoreFileSystemFactory(store, root_GUID).makeFileSystem();
 
 				startWebDAVServer(file_system, port);
 			} catch (FileSystemCreationException e) {

@@ -18,6 +18,8 @@ import uk.ac.standrews.cs.webdav.impl.MIME;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
 
 /**
  * File implementation using real local file system.
@@ -30,10 +32,11 @@ public class FileBasedFile extends FileBasedFileSystemObject implements IFile {
      * Used to create a new file.
      */
     public FileBasedFile(IDirectory logical_parent, String name, IData data) throws PersistenceException {
-    	
         super(logical_parent, name, data);
         
-        if (!(logical_parent instanceof FileBasedDirectory)) Error.hardError("parent of file-based file isn't file-based");
+        if (!(logical_parent instanceof FileBasedDirectory)) {
+			Error.hardError("parent of file-based file isn't file-based");
+		}
         
         real_file = new File(((FileBasedDirectory)logical_parent).getRealFile(), name);
         
@@ -47,12 +50,17 @@ public class FileBasedFile extends FileBasedFileSystemObject implements IFile {
     }
 
 	public long getCreationTime() {
+        BasicFileAttributes attr = null;
+        try {
+            attr = Files.readAttributes(real_file.toPath(), BasicFileAttributes.class);
+        } catch (IOException e) {
+            Error.error("Unable to get creation time for file " + real_file.getName());
+        }
 
-		return 0;  // Can't obtain from file itself, so would have to maintain separate persistent data structure.
+		return attr.creationTime().toMillis();
 	}
 
 	public long getModificationTime() {
-		
 		return real_file.lastModified();
 	}
 
@@ -85,7 +93,7 @@ public class FileBasedFile extends FileBasedFileSystemObject implements IFile {
 	}
 
 	public IAttributes getAttributes() {
-		
+
 		String content_type = MIME.getContentTypeFromFileName(name);
 
         IAttributes attributes = new Attributes(FileSystemConstants.ISFILE + Attributes.EQUALS + "true" + Attributes.SEPARATOR +

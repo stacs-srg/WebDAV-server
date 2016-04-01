@@ -16,7 +16,7 @@ import java.io.File;
  *  
  * @author al, graham
  */
-public class LocalFileBasedFileSystemFactory implements IFileSystemFactory {
+public class LocalFileFileSystemFactory implements IFileSystemFactory {
 	
 	IGUID root_GUID;
 	File real_root_directory;
@@ -24,7 +24,7 @@ public class LocalFileBasedFileSystemFactory implements IFileSystemFactory {
     /**
      * Creates a file system factory using the specified store.
      */
-   public LocalFileBasedFileSystemFactory(File real_root_directory, IGUID root_GUID) {
+   public LocalFileFileSystemFactory(File real_root_directory, IGUID root_GUID) {
 	   
 	   this.real_root_directory = real_root_directory;
 	   this.root_GUID = root_GUID;

@@ -236,13 +236,12 @@ public class PROPFIND extends AbstractHTTPMethod {
 		Element property_element;
 		
 		if (value_requested) {
-			
 			String tag = quote(object.getGUID().toString());
-			
 			property_element = xml_helper.createElementWithText(WebDAV.DAV_NS, WebDAV.DAV_NS_PREFIX_ + WebDAV.PROPERTY_E_TAG, tag);
+		} else {
+			property_element = xml_helper.createElement(WebDAV.DAV_NS, WebDAV.DAV_NS_PREFIX_ + WebDAV.PROPERTY_E_TAG);
 		}
-		else property_element = xml_helper.createElement(WebDAV.DAV_NS, WebDAV.DAV_NS_PREFIX_ + WebDAV.PROPERTY_E_TAG);
-			
+
 		prop_element_OK.appendChild(property_element);
 	}
 

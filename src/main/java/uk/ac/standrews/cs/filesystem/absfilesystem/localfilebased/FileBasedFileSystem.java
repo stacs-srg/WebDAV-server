@@ -31,7 +31,9 @@ public class FileBasedFileSystem extends AbstractFileSystem implements IFileSyst
     	
     	super(root_GUID);
         
-        if (!real_root_directory.exists()) real_root_directory.mkdirs();
+        if (!real_root_directory.exists()) {
+			real_root_directory.mkdirs();
+		}
 
         root_collection = new FileBasedDirectory(real_root_directory); 
     }

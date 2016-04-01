@@ -18,6 +18,7 @@ import java.net.URI;
  * Abstract file system interface.
  * 
  * @author al, graham
+ * @author sic2 - added appendToFile(...)
  */
 public interface IFileSystem {
 

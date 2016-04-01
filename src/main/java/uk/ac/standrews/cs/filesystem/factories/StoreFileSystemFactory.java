@@ -18,7 +18,7 @@ import uk.ac.standrews.cs.store.interfaces.IGUIDStore;
  *  
  * @author al, graham
  */
-public class StoreBasedFileSystemFactory implements IFileSystemFactory {
+public class StoreFileSystemFactory implements IFileSystemFactory {
 	
 	private IGUIDStore store;
 	private IGUID root_GUID;
@@ -26,7 +26,7 @@ public class StoreBasedFileSystemFactory implements IFileSystemFactory {
     /**
      * Creates a file system factory using the default store.
      */
-    public StoreBasedFileSystemFactory(IGUID root_GUID) {
+    public StoreFileSystemFactory(IGUID root_GUID) {
     	
     	this(null, root_GUID);
     }
@@ -34,7 +34,7 @@ public class StoreBasedFileSystemFactory implements IFileSystemFactory {
     /**
      * Creates a file system factory using the specified store.
      */
-   public StoreBasedFileSystemFactory(IGUIDStore store, IGUID root_GUID) {
+   public StoreFileSystemFactory(IGUIDStore store, IGUID root_GUID) {
 	   
 	   this.store = store;
 	   this.root_GUID = root_GUID;

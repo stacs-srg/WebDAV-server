@@ -39,6 +39,7 @@ public class MIME {
         }
     }
 
+    // FIXME - getting content type from the file name does not seem to be a good solution
     public static String getContentTypeFromFileName(String fileName){
         int i = fileName.lastIndexOf('.');
         if (i > 0){
