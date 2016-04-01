@@ -56,7 +56,9 @@ public class WebDAVServer {
 			Diagnostic.trace("Accepted connection",Diagnostic.RUN);
 			final RequestHandler handler = new RequestHandler(client, file_system, lock_manager);
 			
-			if (request_queue.freeSpace() == 0) Diagnostic.trace("request queue full", Diagnostic.INIT);
+			if (request_queue.freeSpace() == 0) {
+				Diagnostic.trace("request queue full", Diagnostic.INIT);
+			}
 
 			request_queue.enqueue(new Action() {
 

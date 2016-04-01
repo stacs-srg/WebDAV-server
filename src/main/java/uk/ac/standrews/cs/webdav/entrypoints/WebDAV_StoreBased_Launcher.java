@@ -3,8 +3,8 @@
  */
 package uk.ac.standrews.cs.webdav.entrypoints;
 
-import uk.ac.standrews.cs.filesystem.absfilesystem.factories.StoreBasedFileSystemFactory;
 import uk.ac.standrews.cs.filesystem.exceptions.FileSystemCreationException;
+import uk.ac.standrews.cs.filesystem.factories.StoreBasedFileSystemFactory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
 import uk.ac.standrews.cs.interfaces.IGUID;
 import uk.ac.standrews.cs.store.factories.LocalFileBasedStoreFactory;

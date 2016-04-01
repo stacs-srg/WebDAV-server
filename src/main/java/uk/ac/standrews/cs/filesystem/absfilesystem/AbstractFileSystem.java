@@ -1,12 +1,12 @@
 /*
  * Created on Nov 15, 2005 at 3:07:49 APM.
  */
-package uk.ac.standrews.cs.filesystem.absfilesystem.impl.general;
+package uk.ac.standrews.cs.filesystem.absfilesystem;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.exceptions.BindingPresentException;
 import uk.ac.standrews.cs.exceptions.PersistenceException;
+import uk.ac.standrews.cs.filesystem.exceptions.AppendException;
 import uk.ac.standrews.cs.filesystem.exceptions.UpdateException;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
@@ -35,8 +35,11 @@ public abstract class AbstractFileSystem {
 		this.root_GUID = root_GUID;
 	}
 	
-	protected abstract void addCopyOfFileToDirectory(IDirectory destination_parent, String destination_name, IFile file) throws BindingPresentException, PersistenceException;
-	public abstract IDirectory createNewDirectory(IDirectory parent, String name) throws BindingPresentException, PersistenceException;
+	protected abstract void addCopyOfFileToDirectory(IDirectory destination_parent, String destination_name, IFile file)
+            throws BindingPresentException, PersistenceException;
+
+	public abstract IDirectory createNewDirectory(IDirectory parent, String name)
+            throws BindingPresentException, PersistenceException;
 
 	public void check(IDirectory parent, String name, String error_message, boolean absence) throws BindingPresentException {
 
@@ -74,7 +77,9 @@ public abstract class AbstractFileSystem {
 		}
 		
 		// Check that the file is really a file.
-		if (! (source_file instanceof IFile)) throw new UpdateException("attempt to update non-file object: " + name);
+		if (! (source_file instanceof IFile)) {
+            throw new UpdateException("attempt to update non-file object: " + name);
+        }
 		
 		// Update file with new IData.
 		source_file.update(data);
@@ -86,7 +91,7 @@ public abstract class AbstractFileSystem {
 		// If the content type is determined by the file extension then the content type can't change on an update, since the name is the same.
 	}
 
-	public synchronized void appendToFile(IDirectory directory, String name, String content_type, IData data) throws BindingAbsentException, PersistenceException{
+	public synchronized void appendToFile(IDirectory directory, String name, String content_type, IData data) throws BindingAbsentException, AppendException, PersistenceException {
 
         IAttributedStatefulObject source_file = directory.get(name);
 
@@ -94,21 +99,17 @@ public abstract class AbstractFileSystem {
         if (source_file == null) {
 
             String msg = "attempt to update non-existent file: " + name;
-            Error.error(msg);						  // log it and
-            throw new BindingAbsentException(msg);	 // propagate to caller
+            Error.error(msg);
+            throw new BindingAbsentException(msg);
         }
 
         // Check that the file is really a file.
         if (! (source_file instanceof IFile)) {
-            throw new NotImplementedException();
-            // TODO - throw appendException
-            //throw new UpdateException("attempt to update non-file object: " + name);
+            throw new AppendException("attempt to append to non-file object: " + name);
         }
 
-        // Append file with new IData.
+        // Append file with new IData and persist
         source_file.append(data);
-
-        // Make new data persistent.
         source_file.persist();
 
         // TODO Does the content type need to be updated?
@@ -220,12 +221,14 @@ public abstract class AbstractFileSystem {
 			
 			object = parent.get(name);
 			
-			if (object == null) return null;  // No object with the current name.
+			if (object == null)
+                return null;  // No object with the current name.
 
 			try {
 				if (iterator.hasNext()) parent = (IDirectory) object;
-			}
-			catch (ClassCastException e) { return null; }   // Current object isn't a directory, and we haven't reached the end of the path, so invalid path.
+			} catch (ClassCastException e) {
+                return null;  // Current object isn't a directory, and we haven't reached the end of the path, so invalid path.
+            }
 		}
 
 		return object;
@@ -241,7 +244,7 @@ public abstract class AbstractFileSystem {
 			throw new BindingAbsentException(msg);   // propagate to caller		   
 		}
 		
-	// Error if the destination already exists and we've not to overwrite.
+	    // Error if the destination already exists and we've not to overwrite.
 		if (! overwrite && destination_parent.contains(destination_name))  {
 		
 			String msg = "destination exists but overwrite set to false for: " + destination_name;

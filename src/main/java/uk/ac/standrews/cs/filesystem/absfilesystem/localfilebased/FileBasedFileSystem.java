@@ -1,12 +1,12 @@
 /**
  * Created on Sep 9, 2005 at 12:36:03 PM.
  */
-package uk.ac.standrews.cs.filesystem.absfilesystem.impl.localfilebased;
+package uk.ac.standrews.cs.filesystem.absfilesystem.localfilebased;
 
 import uk.ac.standrews.cs.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.exceptions.BindingPresentException;
 import uk.ac.standrews.cs.exceptions.PersistenceException;
-import uk.ac.standrews.cs.filesystem.absfilesystem.impl.general.AbstractFileSystem;
+import uk.ac.standrews.cs.filesystem.absfilesystem.AbstractFileSystem;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
 import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;

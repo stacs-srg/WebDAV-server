@@ -1,7 +1,7 @@
 /*
  * Created on May 23, 2005 at 10:51:17 AM.
  */
-package uk.ac.standrews.cs.filesystem.absfilesystem.impl.general;
+package uk.ac.standrews.cs.store;
 
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 

@@ -5,7 +5,7 @@ package uk.ac.standrews.cs.filesystem;
  */
 public class FileSystemConstants {
 
-    public static final String CONTENT =	 "CONTENT";
+    public static final String CONTENT = "CONTENT";
     public static final String ISDIRECTORY = "ISDIRECTORY";
-    public static final String ISFILE =	  "ISFILE";
+    public static final String ISFILE =	"ISFILE";
 }

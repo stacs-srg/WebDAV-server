@@ -1,10 +1,10 @@
 /*
  * Created on May 30, 2005 at 1:28:34 PM.
  */
-package uk.ac.standrews.cs.filesystem.absfilesystem.factories;
+package uk.ac.standrews.cs.filesystem.factories;
 
 import uk.ac.standrews.cs.exceptions.PersistenceException;
-import uk.ac.standrews.cs.filesystem.absfilesystem.impl.storebased.StoreBasedFileSystem;
+import uk.ac.standrews.cs.filesystem.absfilesystem.storebased.StoreBasedFileSystem;
 import uk.ac.standrews.cs.filesystem.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
 import uk.ac.standrews.cs.filesystem.interfaces.IFileSystemFactory;

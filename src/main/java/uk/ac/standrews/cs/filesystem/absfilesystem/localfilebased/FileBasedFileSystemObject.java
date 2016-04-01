@@ -1,7 +1,7 @@
 /**
  * Created on Sep 9, 2005 at 12:36:03 PM.
  */
-package uk.ac.standrews.cs.filesystem.absfilesystem.impl.localfilebased;
+package uk.ac.standrews.cs.filesystem.absfilesystem.localfilebased;
 
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.persistence.impl.AttributedStatefulObject;

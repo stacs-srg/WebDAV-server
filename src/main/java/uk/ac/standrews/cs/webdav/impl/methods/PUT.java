@@ -4,20 +4,19 @@ import uk.ac.standrews.cs.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.exceptions.BindingPresentException;
 import uk.ac.standrews.cs.exceptions.LockUseException;
 import uk.ac.standrews.cs.exceptions.PersistenceException;
+import uk.ac.standrews.cs.filesystem.exceptions.AppendException;
 import uk.ac.standrews.cs.filesystem.exceptions.UpdateException;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
-import uk.ac.standrews.cs.filesystem.interfaces.IFile;
-import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.util.Diagnostic;
 import uk.ac.standrews.cs.util.UriUtil;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.impl.*;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
-
-import static com.sun.javafx.tools.resource.DeployResource.Type.data;
 
 /**
  * @author Ben Catherall, al, graham
@@ -123,12 +122,10 @@ public class PUT extends AbstractHTTPMethod {
 
                     Diagnostic.trace("Read chunked data in: " + data.getSize() + " bytes ", Diagnostic.RUN);
                     // If a file with the given name already exists, update it, otherwise create a new one.
-
                     if (parent.contains(base_name) && firstChunk) {
                         updateFile(uri, lock_token, parent, base_name, content_type, data);
                         firstChunk = false;
                     } else if (parent.contains(base_name) && !firstChunk){
-                        // TODO - append
                         appendToFile(uri, lock_token, parent, base_name, content_type, data);
                     }
 
@@ -139,19 +136,14 @@ public class PUT extends AbstractHTTPMethod {
                 request.getInputStream().read();
             } while (data != null);
 
-
-
-
         } catch (LockUseException e) {
             handleLockException(lock_token, e);
         } catch (BindingAbsentException |
-                PersistenceException | UpdateException e)  {
+                PersistenceException | UpdateException | AppendException e)  {
             throw new HTTPException(e, HTTP.RESPONSE_INTERNAL_SERVER_ERROR, true);
         }catch (IOException e) {
             throw new HTTPException(e, HTTP.RESPONSE_INTERNAL_SERVER_ERROR, true);
         }
-
-
     }
 
     private void updateFile(URI uri, String lock_token, IDirectory parent, String base_name, String content_type, IData data)
@@ -168,7 +160,7 @@ public class PUT extends AbstractHTTPMethod {
     }
 
     private void appendToFile(URI uri, String lock_token, IDirectory parent, String base_name, String content_type, IData data)
-            throws LockUseException, BindingAbsentException, PersistenceException {
+            throws LockUseException, BindingAbsentException, PersistenceException, AppendException {
         // If the file is currently locked, check that the token specified in the If header is the right one.
         lock_manager.checkWhetherLockedWithOtherToken(uri, lock_token);
 

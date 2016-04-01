@@ -5,7 +5,6 @@ package uk.ac.standrews.cs.store;
 
 import junit.framework.TestCase;
 import org.junit.Test;
-import uk.ac.standrews.cs.filesystem.absfilesystem.impl.general.StringData;
 import uk.ac.standrews.cs.interfaces.IGUID;
 import uk.ac.standrews.cs.interfaces.IPID;
 import uk.ac.standrews.cs.persistence.interfaces.IData;

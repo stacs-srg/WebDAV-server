@@ -1,7 +1,8 @@
 package uk.ac.standrews.cs.webdav.impl.methods;
 
-import junit.framework.TestCase;
+import org.junit.Before;
 import uk.ac.standrews.cs.util.Error;
+import uk.ac.standrews.cs.webdav.entrypoints.WebDAV_FileBased_Launcher;
 import uk.ac.standrews.cs.webdav.impl.HTTP;
 
 import java.io.*;
@@ -12,6 +13,40 @@ public abstract class AbstractMethodTest {
 
 	protected static final String LF = String.valueOf((char) 10);
 	protected static final String CRLF = new String(HTTP.CRLF);
+
+    protected static final String TEST_HOST = "localhost";
+    protected static final int TEST_PORT = 9093;
+    protected static final String TEST_LABEL = "ASA";
+
+    // TODO - better naming + consider windows and linux platforms
+    protected static final String TEST_PATH = "test";
+
+	@Before
+	public void setUp() throws InterruptedException {
+
+		System.out.println("starting server (terrible!)");
+		String[] args = {"-r73e057624a5b5005ab0e35ca45f6fb48ddfa8d5e",  "-p"+TEST_PORT ,"-d/Users/sic2/webdav", "-s" + TEST_PATH, "-D"};
+
+		Thread t = new Thread() {
+			public void run() {
+				WebDAV_FileBased_Launcher.main(args);
+			}
+		};
+		t.start();
+		System.out.println("server started");
+
+		Thread t2 = new Thread() {
+			public void run() {
+
+				try {
+					Thread.sleep(10000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		t2.start();
+	}
 
 	public void showResponse(String host, int port, String label, String request_name, String request_string) {
 		

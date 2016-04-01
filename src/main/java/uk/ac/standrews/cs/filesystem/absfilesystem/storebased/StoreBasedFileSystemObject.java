@@ -1,7 +1,7 @@
 /*
  * Created on Jun 16, 2005 at 9:03:03 AM.
  */
-package uk.ac.standrews.cs.filesystem.absfilesystem.impl.storebased;
+package uk.ac.standrews.cs.filesystem.absfilesystem.storebased;
 
 import uk.ac.standrews.cs.exceptions.AccessFailureException;
 import uk.ac.standrews.cs.exceptions.PersistenceException;

@@ -1,16 +1,14 @@
 /**
  * Created on Sep 9, 2005 at 12:36:03 PM.
  */
-package uk.ac.standrews.cs.filesystem.absfilesystem.impl.localfilebased;
+package uk.ac.standrews.cs.filesystem.absfilesystem.localfilebased;
 
-import org.apache.commons.lang.ArrayUtils;
 import uk.ac.standrews.cs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.filesystem.FileSystemConstants;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
-import uk.ac.standrews.cs.store.impl.localfilebased.ByteData;
 import uk.ac.standrews.cs.util.Attributes;
 import uk.ac.standrews.cs.util.Error;
 import uk.ac.standrews.cs.util.KeyImpl;
