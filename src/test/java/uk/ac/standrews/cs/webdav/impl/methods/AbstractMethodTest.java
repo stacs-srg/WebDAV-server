@@ -25,7 +25,7 @@ public abstract class AbstractMethodTest {
 	public void setUp() throws InterruptedException {
 
 		System.out.println("starting server (terrible!)");
-		String[] args = {"-r73e057624a5b5005ab0e35ca45f6fb48ddfa8d5e",  "-p"+TEST_PORT ,"-d/Users/sic2/webdav", "-s" + TEST_PATH, "-D"};
+		String[] args = {"-r73e057624a5b5005ab0e35ca45f6fb48ddfa8d5e",  "-p"+TEST_PORT ,"-d/Users/sic2/webdav", "-stest" + TEST_PATH, "-D"};
 
 		Thread t = new Thread() {
 			public void run() {

@@ -3,7 +3,7 @@
  */
 package uk.ac.standrews.cs.persistence.impl;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import uk.ac.standrews.cs.interfaces.IGUID;
 import uk.ac.standrews.cs.interfaces.IPID;
 import uk.ac.standrews.cs.persistence.interfaces.IData;

@@ -3,8 +3,12 @@
  */
 package uk.ac.standrews.cs.util;
 
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.digest.DigestUtils;
 import uk.ac.standrews.cs.interfaces.IKey;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.net.InetSocketAddress;
 import java.security.MessageDigest;
@@ -22,6 +26,7 @@ public class SHA1KeyFactory {
     /**
      * Prints out the digest in a form that can be easily compared to the test vectors. 
      */
+    /*
     public static String toHex(byte[] bytes ) {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < bytes.length ; i++) { 
@@ -35,6 +40,7 @@ public class SHA1KeyFactory {
         }
         return sb.toString();
     }
+    */
     
     public static byte[] hash( byte[] bytes ) {
 		try {
@@ -46,6 +52,21 @@ public class SHA1KeyFactory {
 		}
 
 		return null;
+		/*
+			sun.security.provider.SHA sha = new sun.security.provider.SHA();
+			sha.engineUpdate
+			return sha.engineDigest();
+        */
+    }
+
+    public static byte[] hash(InputStream source) {
+        try {
+            return DigestUtils.sha1(source);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
 		/*
 			sun.security.provider.SHA sha = new sun.security.provider.SHA();
 			sha.engineUpdate
@@ -68,7 +89,7 @@ public class SHA1KeyFactory {
 	 * @return a key with a value generated from s
 	 */
 	public static IKey generateKey(String s) {	
-        return generateKey( s.getBytes() );
+        return generateKey(s.getBytes());
 	}
 	
 	/**
@@ -90,10 +111,19 @@ public class SHA1KeyFactory {
 	 */
 	public static IKey generateKey(byte[] bytes) {
         byte[] hashed = hash(bytes);
-        String hex = toHex(hashed);       // Generate hexadecimal key string.
+		String hex = Hex.encodeHexString(hashed);
+
         BigInteger bi = new BigInteger(hex, HEX_BASE);  // Convert to decimal.
         return new KeyImpl(bi);
 	}
+
+    private IKey generateKey(InputStream source) {
+        byte[] hashed = hash(source);
+        String hex = Hex.encodeHexString(hashed);
+
+        BigInteger bi = new BigInteger(hex, HEX_BASE);  // Convert to decimal.
+        return new KeyImpl(bi);
+    }
 	
 	/**
 	 * Creates a key with a pseudo-random value.
@@ -101,9 +131,8 @@ public class SHA1KeyFactory {
 	 * @return a key with a pseudo-random value
 	 */
 	public static IKey generateRandomKey() {
-		
-		String seed = String.valueOf(System.currentTimeMillis()) + String.valueOf(Runtime.getRuntime().freeMemory());
-
+		String seed = String.valueOf(System.currentTimeMillis()) +
+                String.valueOf(Runtime.getRuntime().freeMemory());
 		return generateKey(seed);
 	}
 	

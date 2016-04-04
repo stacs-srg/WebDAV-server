@@ -17,13 +17,11 @@ public class PUTTest extends AbstractMethodTest {
         System.out.println("Should be able to lock a non-extant URI with extant parent - result should be 201 CREATED.\n");
 
         String request = makeTestString(TEST_PORT, uri);
-        System.out.println(request);
         System.out.println("---------------");
         // null host should work for loopback! not sure what the prolbem is :(
         String response = processRequest(request, null, TEST_PORT);
 
         showResponse(response, TEST_PORT, TEST_LABEL, "PUT " + uri);
-
     }
 
     public String makeTestString(int port, String uri) {
