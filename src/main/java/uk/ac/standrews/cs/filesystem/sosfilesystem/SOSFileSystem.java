@@ -12,7 +12,7 @@ import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
 import uk.ac.standrews.cs.interfaces.IGUID;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
-import uk.ac.standrews.cs.sos.model.interfaces.SeaOfStuff;
+import uk.ac.standrews.cs.sos.interfaces.SeaOfStuff;
 
 import java.net.URI;
 

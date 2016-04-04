@@ -3,17 +3,18 @@
  */
 package uk.ac.standrews.cs.util;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.math.BigInteger;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test class for KeyImpl.
  * 
  * @author graham
  */
-public class KeyImplTest extends TestCase {
+public class KeyImplTest {
     
     private static KeyImpl k1 = new KeyImpl(new BigInteger("-1"));
     private static KeyImpl k2 = new KeyImpl(BigInteger.ZERO);

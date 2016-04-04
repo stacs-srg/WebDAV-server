@@ -3,7 +3,6 @@
  */
 package uk.ac.standrews.cs.util;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 
 /**
@@ -11,7 +10,7 @@ import org.junit.Test;
  *
  * Test class for util.Assert
  */
-public class AssertTest extends TestCase {
+public class AssertTest {
 
     @Test
     public void testAssertion() {

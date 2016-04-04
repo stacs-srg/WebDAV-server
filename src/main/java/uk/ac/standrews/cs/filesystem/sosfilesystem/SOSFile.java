@@ -5,17 +5,17 @@ import uk.ac.standrews.cs.exceptions.AccessFailureException;
 import uk.ac.standrews.cs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
-import uk.ac.standrews.cs.interfaces.IGUID;
 import uk.ac.standrews.cs.interfaces.IPID;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
-import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AssetManifest;
-import uk.ac.standrews.cs.sos.model.implementations.components.manifests.AtomManifest;
-import uk.ac.standrews.cs.sos.model.implementations.utils.GUID;
-import uk.ac.standrews.cs.sos.model.interfaces.SeaOfStuff;
+import uk.ac.standrews.cs.sos.interfaces.SeaOfStuff;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
+import uk.ac.standrews.cs.util.GUIDFactory;
+import uk.ac.standrews.cs.utils.IGUID;
 
 import java.io.IOException;
 
@@ -25,21 +25,20 @@ import java.io.IOException;
 public class SOSFile extends SOSFileSystemObject implements IFile {
 
 
-    private AssetManifest asset;
+    private Asset asset;
 
     public SOSFile(SeaOfStuff sos, IDirectory logical_parent, String name, IData data) throws PersistenceException {
         super(logical_parent, name, data);
 
         // TODO - create asset or atom?
 
-
         try {
-            AtomManifest atom = sos.addAtom(data.getInputStream()); // NOTE - persist only for atom, otherwise watch for appendToFile!
+            Atom atom = sos.addAtom(data.getInputStream()); // NOTE - persist only for atom, otherwise watch for appendToFile!
 
-            GUID content = atom.getContentGUID();
+            IGUID content = atom.getContentGUID();
             asset = sos.addAsset(content, null, null, null); // TODO - add metadata
 
-            guid = (IGUID) content;
+            guid = GUIDFactory.recreateGUID(content.toString());
 
         } catch (DataStorageException e) {
             e.printStackTrace();
@@ -91,11 +90,6 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
     }
 
     @Override
-    public void initialise(IData data, IPID pid, IGUID guid) {
-        // TODO - it looks like this is needed only for store based storage
-    }
-
-    @Override
     public void persist() throws PersistenceException {
         // Persistance happens via the Sea Of Stuff
         throw new NotImplementedException();
@@ -107,7 +101,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
     }
 
     @Override
-    public IGUID getGUID() {
+    public uk.ac.standrews.cs.interfaces.IGUID getGUID() {
         return null;
     }
 }

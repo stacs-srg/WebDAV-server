@@ -3,7 +3,6 @@
  */
 package uk.ac.standrews.cs.store;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 import uk.ac.standrews.cs.interfaces.IGUID;
 import uk.ac.standrews.cs.interfaces.IPID;
@@ -17,12 +16,14 @@ import uk.ac.standrews.cs.util.PIDFactory;
 
 import java.util.Iterator;
 
+import static org.junit.Assert.*;
+
 /**
  * Test class for FileStore.
  * 
  * @author al, graham
  */
-public class FileStoreTest extends TestCase {
+public class FileStoreTest {
 
     /**
      * Tests IStore functionality:

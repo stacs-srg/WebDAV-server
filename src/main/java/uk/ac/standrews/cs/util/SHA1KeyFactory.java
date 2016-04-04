@@ -10,7 +10,6 @@ import uk.ac.standrews.cs.interfaces.IKey;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
-import java.net.InetSocketAddress;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -135,21 +134,5 @@ public class SHA1KeyFactory {
                 String.valueOf(Runtime.getRuntime().freeMemory());
 		return generateKey(seed);
 	}
-	
-	/**
-	 * Creates a key with a value generated from the given IP address.
-	 * 
-	 * @param ip_address the IP address from which to generate the key's value
-	 * @return a key with a value generated from ip_address
-	 */
-	public static IKey generateKey(InetSocketAddress ip_address) {
-		
-		if (ip_address == null) {
-		    Error.error("InetSocketAddress was null");
-		    return generateKey();
-		}
-		
-		String s = ip_address.getAddress().getHostAddress() + ip_address.getPort();
-		return generateKey(s);
-	}
+
 }

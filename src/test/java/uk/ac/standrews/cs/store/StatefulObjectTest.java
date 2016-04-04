@@ -1,6 +1,5 @@
 package uk.ac.standrews.cs.store;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 import uk.ac.standrews.cs.filesystem.absfilesystem.storebased.StoreBasedFile;
 import uk.ac.standrews.cs.interfaces.IGUID;
@@ -8,6 +7,8 @@ import uk.ac.standrews.cs.interfaces.IPID;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.store.factories.LocalFileBasedStoreFactory;
 import uk.ac.standrews.cs.store.interfaces.IGUIDStore;
+
+import static org.junit.Assert.*;
 
 /**
  * Test class for StatefulObject:
@@ -20,7 +21,7 @@ import uk.ac.standrews.cs.store.interfaces.IGUIDStore;
  * 
  * @author graham
  */
-public class StatefulObjectTest extends TestCase {
+public class StatefulObjectTest {
 	
 	private IData data1 = new StringData("quick brown fox");
 	private IData data2 = new StringData("lazy dog");

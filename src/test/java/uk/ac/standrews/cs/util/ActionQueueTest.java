@@ -3,7 +3,6 @@
  */
 package uk.ac.standrews.cs.util;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 
 /**
@@ -11,7 +10,7 @@ import org.junit.Test;
  *
  * @author graham
  */
-public class ActionQueueTest extends TestCase {
+public class ActionQueueTest {
     
     /**
      * Tests whether all of a set of queued actions are eventually completed.
