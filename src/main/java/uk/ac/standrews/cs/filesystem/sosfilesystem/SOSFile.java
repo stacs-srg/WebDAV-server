@@ -1,11 +1,9 @@
 package uk.ac.standrews.cs.filesystem.sosfilesystem;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.exceptions.AccessFailureException;
 import uk.ac.standrews.cs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
-import uk.ac.standrews.cs.interfaces.IPID;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
@@ -39,7 +37,6 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             asset = sos.addAsset(content, null, null, null); // TODO - add metadata
 
             guid = GUIDFactory.recreateGUID(content.toString());
-
         } catch (DataStorageException e) {
             e.printStackTrace();
         } catch (ManifestPersistException e) {
@@ -82,26 +79,5 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
     @Override
     public void append(IData data) {
 
-    }
-
-    @Override
-    public IData reify() {
-        return null;
-    }
-
-    @Override
-    public void persist() throws PersistenceException {
-        // Persistance happens via the Sea Of Stuff
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public IPID getPID() {
-        return null;
-    }
-
-    @Override
-    public uk.ac.standrews.cs.interfaces.IGUID getGUID() {
-        return null;
     }
 }

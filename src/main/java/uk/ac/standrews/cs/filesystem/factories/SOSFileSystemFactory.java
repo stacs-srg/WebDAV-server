@@ -4,15 +4,14 @@ import uk.ac.standrews.cs.filesystem.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
 import uk.ac.standrews.cs.filesystem.interfaces.IFileSystemFactory;
 import uk.ac.standrews.cs.filesystem.sosfilesystem.SOSFileSystem;
-import uk.ac.standrews.cs.sos.configurations.SeaConfiguration;
-import uk.ac.standrews.cs.sos.exceptions.identity.KeyGenerationException;
-import uk.ac.standrews.cs.sos.exceptions.identity.KeyLoadedException;
-import uk.ac.standrews.cs.sos.managers.Index;
-import uk.ac.standrews.cs.sos.managers.LuceneIndex;
-import uk.ac.standrews.cs.sos.model.implementations.SeaOfStuffImpl;
-import uk.ac.standrews.cs.sos.model.interfaces.SeaOfStuff;
-
-import java.io.IOException;
+import uk.ac.standrews.cs.sos.exceptions.IndexException;
+import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.SeaOfStuffException;
+import uk.ac.standrews.cs.sos.interfaces.SeaOfStuff;
+import uk.ac.standrews.cs.sos.interfaces.index.Index;
+import uk.ac.standrews.cs.sos.model.SeaConfiguration;
+import uk.ac.standrews.cs.sos.model.SeaOfStuffImpl;
+import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -35,7 +34,7 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
             SeaOfStuff sos = new SeaOfStuffImpl(configuration, index);
 
             return new SOSFileSystem(sos);
-        } catch (IOException | KeyGenerationException | KeyLoadedException e) {
+        } catch (SeaOfStuffException | IndexException | SeaConfigurationException e) {
             throw new FileSystemCreationException();
         }
 
