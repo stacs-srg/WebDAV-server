@@ -51,16 +51,6 @@ public abstract class AttributedStatefulObject extends StatefulObject implements
         this.atts = atts;
     }
 
-    public int compare(Object o1, Object o2) {
-        Error.hardError("unimplemented method");
-        return 0;
-    }
-
-    public IPID previous() {
-        Error.hardError("unimplemented method");
-        return null;
-    }
-
     public abstract long getCreationTime() throws AccessFailureException;
 
     public abstract long getModificationTime() throws AccessFailureException;

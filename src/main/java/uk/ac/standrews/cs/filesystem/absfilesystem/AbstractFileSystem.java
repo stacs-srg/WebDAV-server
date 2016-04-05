@@ -225,7 +225,8 @@ public abstract class AbstractFileSystem {
                 return null;  // No object with the current name.
 
 			try {
-				if (iterator.hasNext()) parent = (IDirectory) object;
+				if (iterator.hasNext())
+					parent = (IDirectory) object;
 			} catch (ClassCastException e) {
                 return null;  // Current object isn't a directory, and we haven't reached the end of the path, so invalid path.
             }

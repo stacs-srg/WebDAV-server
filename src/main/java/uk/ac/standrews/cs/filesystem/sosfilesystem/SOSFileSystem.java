@@ -28,15 +28,16 @@ public class SOSFileSystem implements IFileSystem {
     }
 
     // TODO - create compound if large file
+    // maybe have a different call for large files?
     @Override
     public IFile createNewFile(IDirectory parent, String name, String content_type, IData data) throws BindingPresentException, PersistenceException {
 
         // TODO - check if file already exists.
         // if it does, then throw exception BindingPresentException
         // should check against sos. So it will be a check by content, not by name
+        // not sure how this will work because the stream will have to be consumed
 
         IFile file = new SOSFile(sos, parent, name, data);
-
         return file;
     }
 
@@ -95,6 +96,7 @@ public class SOSFileSystem implements IFileSystem {
     public IAttributedStatefulObject resolveObject(URI file_path) {
 
         // TODO - make a call to the sea of stuff to resolve a path
+        // not sure what this should return
         // sos.getManifest(GUID)
         return null;
     }
