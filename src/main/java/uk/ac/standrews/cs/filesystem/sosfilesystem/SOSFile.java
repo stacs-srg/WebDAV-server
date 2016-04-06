@@ -5,10 +5,12 @@ import uk.ac.standrews.cs.exceptions.AccessFailureException;
 import uk.ac.standrews.cs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
+import uk.ac.standrews.cs.filesystem.utils.ConversionHelper;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
+import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.SeaOfStuff;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
@@ -50,6 +52,16 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         super(sos);
         this.isCompoundData = true;
         this.atoms = new ArrayList<>();
+    }
+
+    public SOSFile(SeaOfStuff sos, uk.ac.standrews.cs.interfaces.IGUID guid) {
+        super(sos);
+
+        try {
+            atom = (Atom) sos.getManifest(ConversionHelper.toSOSGUID(guid));
+        } catch (ManifestNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

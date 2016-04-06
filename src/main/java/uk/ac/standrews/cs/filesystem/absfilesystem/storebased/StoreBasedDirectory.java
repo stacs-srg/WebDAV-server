@@ -47,7 +47,6 @@ public class StoreBasedDirectory extends StoreBasedFileSystemObject implements I
 	private static HashMap directoryCache = new HashMap();	 // TODO change this when we go distributed
 
 	public StoreBasedDirectory(INameGUIDMap map, IGUIDStore store, IAttributes atts) {
-		
 		super(store, map.getGUID(), atts);
 		
 		this.map = map;
@@ -79,18 +78,19 @@ public class StoreBasedDirectory extends StoreBasedFileSystemObject implements I
 				if (directoryCache.containsKey(guid.toString())) {
 					Diagnostic.trace("Found directory with name: " + name + " in cache", Diagnostic.RUN);
 					return (IAttributedStatefulObject) directoryCache.get(guid.toString());
-				}
-				else return makeCollection(guid, this, store, atts);
+				} else {
+                    return makeCollection(guid, this, store, atts);
+                }
 
-			}
-			else if (atts.contains(FileSystemConstants.ISFILE))
-				try {
-					return makeFile(guid, store, atts);
-				} catch (StoreGetException e) {
-					Error.exceptionError("couldn't make file for " + name, e);
-					return null;
-				}
-			else {
+			} else if (atts.contains(FileSystemConstants.ISFILE)) {
+                try {
+                    return makeFile(guid, store, atts);
+                } catch (StoreGetException e) {
+                    Error.exceptionError("couldn't make file for " + name, e);
+                    return null;
+                }
+
+            } else {
 				Error.error("Encountered an unknown file type for " + name);
 				return null;
 			}
@@ -153,8 +153,11 @@ public class StoreBasedDirectory extends StoreBasedFileSystemObject implements I
 		map.persist(); // the map does all the work that is necesssary   
 		pid = map.getPID();
 		
-		try { store.put(guid, pid); }
-		catch (StorePutException e) { throw new PersistenceException("couldn't make directory map persistent", e); }
+		try {
+            store.put(guid, pid);
+        } catch (StorePutException e) {
+            throw new PersistenceException("couldn't make directory map persistent", e);
+        }
 	}
 	
 	public IData reify() {
@@ -203,8 +206,8 @@ public class StoreBasedDirectory extends StoreBasedFileSystemObject implements I
 		// Set the attributes for the name.
 		try {
 			map.setAttributes(name, atts);
-		}
-		catch (BindingAbsentException e) {Error.hardExceptionError("Couldn't set attributes for newly added name", e);}
+		} catch (BindingAbsentException e) {Error.hardExceptionError("Couldn't set attributes for newly added name", e);
+        }
 		
 		// Record the modification time.
 		// Obsolete?

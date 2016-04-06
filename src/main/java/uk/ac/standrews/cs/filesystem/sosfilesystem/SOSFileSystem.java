@@ -14,8 +14,11 @@ import uk.ac.standrews.cs.interfaces.IGUID;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.sos.interfaces.SeaOfStuff;
+import uk.ac.standrews.cs.store.interfaces.INameGUIDMap;
+import uk.ac.standrews.cs.util.UriUtil;
 
 import java.net.URI;
+import java.util.Iterator;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -23,10 +26,14 @@ import java.net.URI;
 public class SOSFileSystem implements IFileSystem {
 
     private SeaOfStuff sos;
+    private INameGUIDMap store_root_map;
+
     private uk.ac.standrews.cs.utils.IGUID head;
 
     private IDirectory root_collection;
 
+    // note - head == asset
+    // asset -> compound == root directory
     public SOSFileSystem(SeaOfStuff sos, uk.ac.standrews.cs.utils.IGUID rootGUID) {
         this.sos = sos;
         this.head = rootGUID;
@@ -35,12 +42,8 @@ public class SOSFileSystem implements IFileSystem {
             // TODO - throw exception
         }
 
-        // note - head == asset
-        // asset -> compound == root directory
-
-        // TODO - name-guid mapping (see StoreBasedFileSystem)
-
-        root_collection = new SOSDirectory(sos, real_root_directory);
+        store_root_map = new SOSNameGUIDMap();
+        root_collection = new SOSDirectory(sos, store_root_map);
     }
 
     // TODO - create compound if large file
@@ -70,7 +73,8 @@ public class SOSFileSystem implements IFileSystem {
         // TODO - check if file already exists.
         // see comment above
 
-        IFile file = new SOSFile(sos, parent, name);
+        IFile file = new SOSFile(sos);
+        // TODO - add to parent only when the file is persisted.
         return file;
     }
 
@@ -127,12 +131,33 @@ public class SOSFileSystem implements IFileSystem {
         return ConversionHelper.toWebDAVGUID(this.head);
     }
 
-    @Override
-    public IAttributedStatefulObject resolveObject(URI file_path) {
 
-        // TODO - make a call to the sea of stuff to resolve a path
-        // not sure what this should return
-        // sos.getManifest(GUID)
-        return null;
+    // TODO - duplicate in AbstractFileSystem
+    @Override
+    public IAttributedStatefulObject resolveObject(URI uri) {
+
+        Iterator iterator = UriUtil.pathElementIterator(uri);
+        IDirectory parent = getRootDirectory();
+
+        IAttributedStatefulObject object = parent;
+
+        while (iterator.hasNext()) {
+
+            String name = (String) iterator.next();
+
+            object = parent.get(name);
+
+            if (object == null)
+                return null;  // No object with the current name.
+
+            try {
+                if (iterator.hasNext())
+                    parent = (IDirectory) object;
+            } catch (ClassCastException e) {
+                return null;  // Current object isn't a directory, and we haven't reached the end of the path, so invalid path.
+            }
+        }
+
+        return object;
     }
 }

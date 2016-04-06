@@ -60,7 +60,7 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
         uk.ac.standrews.cs.utils.IGUID sosGUID = ConversionHelper.toSOSGUID(rootGUID);
 
         retval = rootExists(sos, sosGUID);
-        if (retval != null) {
+        if (retval == null) {
             try {
                 Compound compound = sos.addCompound(CompoundType.COLLECTION, Collections.emptyList());
                 retval =  sos.addAsset(compound.getContentGUID(), sosGUID, null, null);

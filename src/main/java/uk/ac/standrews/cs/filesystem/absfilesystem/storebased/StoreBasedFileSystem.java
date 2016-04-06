@@ -41,12 +41,13 @@ public class StoreBasedFileSystem extends AbstractFileSystem implements IFileSys
 	 * @throws PersistenceException if a new map with the given root GUID could not be made persistent
 	 */
 	public StoreBasedFileSystem(IGUIDStore store, IGUID root_GUID) throws StoreIntegrityException, PersistenceException {
-		
 		super(root_GUID);
 		
 		this.store = store;
 		
-		if (root_GUID == null) throw new StoreIntegrityException("supplied root GUID is null");
+		if (root_GUID == null) {
+			throw new StoreIntegrityException("supplied root GUID is null");
+		}
 
 		IAttributes attributes = new Attributes(FileSystemConstants.ISDIRECTORY + Attributes.EQUALS + "true" + Attributes.SEPARATOR);
 
