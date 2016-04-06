@@ -105,6 +105,12 @@ public class PUT extends AbstractHTTPMethod {
         }
     }
 
+    // TODO - re-write the following method considering the following:
+    // a file may have to be created (createNewFile)
+    // use a series of appendToFile calls rather than an update followed by a created
+    // obviously we have the problem of already existing files that have to be updates
+    // in fact, the finder for example, creates an empty file first and then makes another request
+    // sending the actual data
     private void processChunkedRequest(Request request) throws HTTPException {
         URI uri =             request.getUri();
         IDirectory parent =   getParent(uri);                                // Get the parent directory of the location to PUT the data.

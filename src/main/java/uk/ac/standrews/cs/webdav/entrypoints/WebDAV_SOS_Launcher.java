@@ -3,7 +3,9 @@ package uk.ac.standrews.cs.webdav.entrypoints;
 import uk.ac.standrews.cs.filesystem.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.filesystem.factories.SOSFileSystemFactory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
+import uk.ac.standrews.cs.interfaces.IGUID;
 import uk.ac.standrews.cs.util.Error;
+import uk.ac.standrews.cs.util.GUIDFactory;
 import uk.ac.standrews.cs.util.Output;
 
 import java.io.IOException;
@@ -31,7 +33,10 @@ public class WebDAV_SOS_Launcher extends WebDAVLauncher {
             int port = processPort(args);
 
             try {
-                IFileSystem file_system = new SOSFileSystemFactory(root_directory_path).makeFileSystem(); // TODO - should specify root and use rootname (see FileBased luncher)
+                IGUID root_GUID = GUIDFactory.recreateGUID(root_GUID_string);
+                IFileSystem file_system =
+                        new SOSFileSystemFactory(root_directory_path, root_GUID)
+                        .makeFileSystem();
 
                 startWebDAVServer(file_system, port);
             } catch (FileSystemCreationException e) {

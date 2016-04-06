@@ -69,7 +69,7 @@ public class StoreBasedFileSystem extends AbstractFileSystem implements IFileSys
 	 */
 	public synchronized IFile createNewFile(IDirectory parent, String name, String contentType, IData data) throws BindingPresentException, PersistenceException {
 
-			check(parent, name, "file already exists", true);
+		check(parent, name, "file already exists", true);
 
 		// Create the file.
 		IFile new_file = new StoreBasedFile(store, data);

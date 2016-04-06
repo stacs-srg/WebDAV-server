@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.filesystem.exceptions.UpdateException;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
 import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
+import uk.ac.standrews.cs.filesystem.utils.ConversionHelper;
 import uk.ac.standrews.cs.interfaces.IGUID;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
@@ -22,13 +23,29 @@ import java.net.URI;
 public class SOSFileSystem implements IFileSystem {
 
     private SeaOfStuff sos;
+    private uk.ac.standrews.cs.utils.IGUID head;
 
-    public SOSFileSystem(SeaOfStuff sos) {
+    private IDirectory root_collection;
+
+    public SOSFileSystem(SeaOfStuff sos, uk.ac.standrews.cs.utils.IGUID rootGUID) {
         this.sos = sos;
+        this.head = rootGUID;
+
+        if (head == null) {
+            // TODO - throw exception
+        }
+
+        // note - head == asset
+        // asset -> compound == root directory
+
+        // TODO - name-guid mapping (see StoreBasedFileSystem)
+
+        root_collection = new SOSDirectory(sos, real_root_directory);
     }
 
     // TODO - create compound if large file
-    // maybe have a different call for large files?
+    // maybe have a different call for large files
+    // via appendToFile
     @Override
     public IFile createNewFile(IDirectory parent, String name, String content_type, IData data) throws BindingPresentException, PersistenceException {
 
@@ -36,23 +53,39 @@ public class SOSFileSystem implements IFileSystem {
         // if it does, then throw exception BindingPresentException
         // should check against sos. So it will be a check by content, not by name
         // not sure how this will work because the stream will have to be consumed
+        // check(parent, name, ...) // look at StoreBasedFileSystem
 
-        IFile file = new SOSFile(sos, parent, name, data);
+        IFile file = new SOSFile(sos, data);
+
+        // This Operation will create a new compound + asset
+        parent.addFile(name, file, content_type);
+        return file;
+    }
+
+    // TODO - should override
+    // meaning that this should be in IFile system.
+    // This way we could have a uniform way of dealing with large data
+    public IFile createNewFile(IDirectory parent, String name, String content_type) throws BindingPresentException, PersistenceException {
+
+        // TODO - check if file already exists.
+        // see comment above
+
+        IFile file = new SOSFile(sos, parent, name);
         return file;
     }
 
     @Override
-    public void updateFile(IDirectory parent, String name, String content_type, IData data) throws BindingAbsentException, UpdateException, PersistenceException {
+    public synchronized void updateFile(IDirectory parent, String name, String content_type, IData data) throws BindingAbsentException, UpdateException, PersistenceException {
 
         // THIS WILL CREATE A NEW ATOM (under asset)
         // not sure if this will ever be called. it depends on whether we update based on name or not. need to check
+        throw new NotImplementedException();
     }
 
     @Override
-    public void appendToFile(IDirectory parent, String name, String content_type, IData data) throws BindingAbsentException, AppendException, PersistenceException {
-        // This will be used for large data
-        // this should result in a compound of type bigdata
-        // need to have a special call for the last incoming data, so that we can finalise all atoms and create the compound
+    public synchronized void appendToFile(IDirectory parent, String name, String content_type, IData data) throws BindingAbsentException, AppendException, PersistenceException {
+
+        // NOTE call a series of append calls on SOSFile and end it with a persist - behaviour is different from the one in abstract file system
 
     }
 
@@ -84,12 +117,14 @@ public class SOSFileSystem implements IFileSystem {
 
     @Override
     public IDirectory getRootDirectory() {
-        return null;
+        // note: the HEAD could be changed via cli
+        return root_collection;
     }
 
     @Override
     public IGUID getRootId() {
-        return null;
+        // TODO - should this return the asset guid or the compound guid?
+        return ConversionHelper.toWebDAVGUID(this.head);
     }
 
     @Override

@@ -41,7 +41,7 @@ public abstract class AbstractFileSystem {
 	public abstract IDirectory createNewDirectory(IDirectory parent, String name)
             throws BindingPresentException, PersistenceException;
 
-	public void check(IDirectory parent, String name, String error_message, boolean absence) throws BindingPresentException {
+	protected void check(IDirectory parent, String name, String error_message, boolean absence) throws BindingPresentException {
 
 		// If 'absence' check that the name is absent, otherwise check that the name is present.
 		if (!(parent.contains(name) ^ absence)) {
@@ -64,9 +64,9 @@ public abstract class AbstractFileSystem {
 	 * @throws UpdateException if the directory entry with the given name is not a file
 	 * @throws PersistenceException if the updated file cannot be made persistent
 	 */
-	public synchronized void updateFile(IDirectory directory, String name, String content_type, IData data) throws BindingAbsentException, UpdateException, PersistenceException {
+	public synchronized void updateFile(IDirectory parent, String name, String content_type, IData data) throws BindingAbsentException, UpdateException, PersistenceException {
 		
-		IAttributedStatefulObject source_file = directory.get(name);
+		IAttributedStatefulObject source_file = parent.get(name);
 		
 		// Check that the file exists.
 		if (source_file == null) {

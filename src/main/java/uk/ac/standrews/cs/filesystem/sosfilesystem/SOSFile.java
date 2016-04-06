@@ -30,45 +30,26 @@ import java.util.Collection;
 public class SOSFile extends SOSFileSystemObject implements IFile {
 
     private Asset asset;
-    private SeaOfStuff sos;
 
     boolean isCompoundData;
+    private Atom atom;
     private Collection<Content> atoms;
 
-    public SOSFile(SeaOfStuff sos, IDirectory logical_parent, String name, IData data) throws PersistenceException {
-        super(logical_parent, name, data);
-        isCompoundData = false;
-
-        // TODO - what does it mean to have a directory here? is this a pointer to a compound - collection?
-        // then we would have to update the compound too
-
-        this.sos = sos;
+    public SOSFile(SeaOfStuff sos, IData data) throws PersistenceException {
+        super(sos, data);
+        this.isCompoundData = false;
 
         try {
-            Atom atom = sos.addAtom(data.getInputStream()); // TODO - persist only for atom, otherwise watch for appendToFile!
-
-            IGUID content = atom.getContentGUID();
-            asset = sos.addAsset(content, null, null, null); // TODO - add metadata
-
-            guid = GUIDFactory.recreateGUID(content.toString());
-        } catch (DataStorageException e) {
-            e.printStackTrace();
-        } catch (ManifestPersistException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ManifestNotMadeException e) {
-            e.printStackTrace();
+            atom = sos.addAtom(data.getInputStream());
+        } catch (DataStorageException | IOException | ManifestPersistException e) {
+            throw new PersistenceException("SOS atom could not be created");
         }
-
     }
 
-    public SOSFile(SeaOfStuff sos, IDirectory logical_parent, String name) {
-        super(logical_parent, name);
-        isCompoundData = true;
-        atoms = new ArrayList<>();
-
-        this.sos = sos;
+    public SOSFile(SeaOfStuff sos) {
+        super(sos);
+        this.isCompoundData = true;
+        this.atoms = new ArrayList<>();
     }
 
     @Override
@@ -76,7 +57,6 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         Collection<IGUID> metadata = asset.getMetadata();
 
         // TODO - iterate over metadata and build attributes
-
         return null;
     }
 
@@ -119,32 +99,37 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             e.printStackTrace();
         }
 
-
     }
 
     @Override
     public void persist() throws PersistenceException {
-        if (! isCompoundData)
-            return;
-
         try {
-            Compound compound = sos.addCompound(CompoundType.DATA, atoms);
-            asset = sos.addAsset(compound.getContentGUID(), null, null, null); // TODO - add metadata
+            if (! isCompoundData) {
+                IGUID content = atom.getContentGUID();
+                asset = sos.addAsset(content, null, null, null); // TODO - add metadata
 
-            guid = GUIDFactory.recreateGUID(compound.getContentGUID().toString());
+                guid = GUIDFactory.recreateGUID(content.toString());
+            } else {
+                Compound compound = sos.addCompound(CompoundType.DATA, atoms);
+                asset = sos.addAsset(compound.getContentGUID(), null, null, null); // TODO - add metadata
+
+                guid = GUIDFactory.recreateGUID(compound.getContentGUID().toString());
+            }
 
         } catch (ManifestNotMadeException e) {
             e.printStackTrace();
         } catch (ManifestPersistException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
     public IData reify() {
         // TODO - look for guid and return idata
+        // this will differ based on whether it is a single atom or a compound of atoms
+        // sos.getData(guid);
 
+        // NOTE: idea - have a isChunked() method. If that method returns true, then reify returns data until null (no more chunks)
         return null;
     }
 }

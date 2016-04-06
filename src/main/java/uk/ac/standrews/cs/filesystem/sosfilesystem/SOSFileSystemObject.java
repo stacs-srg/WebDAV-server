@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.persistence.impl.AttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
+import uk.ac.standrews.cs.sos.interfaces.SeaOfStuff;
 
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
@@ -13,22 +14,17 @@ import uk.ac.standrews.cs.persistence.interfaces.IData;
 public class SOSFileSystemObject extends AttributedStatefulObject implements IAttributedStatefulObject {
 
     protected String name;
-    protected IDirectory logical_parent;
+    protected SeaOfStuff sos;
 
-    public SOSFileSystemObject() {
+    public SOSFileSystemObject(SeaOfStuff sos) {
         super(null);
-        this.name = "";
+        this.sos = sos;
     }
 
-    public SOSFileSystemObject(IDirectory logical_parent, String name) {
-        super(null);
-        this.name = name;
-        this.logical_parent = logical_parent;
-    }
 
-    public SOSFileSystemObject(IDirectory logical_parent, String name, IData data) {
+    public SOSFileSystemObject(SeaOfStuff sos, IData data) {
         super(data, null);
-        this.name = name;
+        this.sos = sos;
     }
 
     @Override
