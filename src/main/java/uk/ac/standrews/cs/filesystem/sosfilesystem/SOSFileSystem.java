@@ -59,9 +59,11 @@ public class SOSFileSystem implements IFileSystem {
         // check(parent, name, ...) // look at StoreBasedFileSystem
 
         IFile file = new SOSFile(sos, data);
+        file.persist();
 
         // This Operation will create a new compound + asset
         parent.addFile(name, file, content_type);
+        parent.persist();
         return file;
     }
 

@@ -17,6 +17,7 @@ import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.SeaOfStuff;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
@@ -26,6 +27,7 @@ import uk.ac.standrews.cs.store.general.NameGUIDBinding;
 import uk.ac.standrews.cs.store.interfaces.INameGUIDMap;
 import uk.ac.standrews.cs.util.Diagnostic;
 import uk.ac.standrews.cs.util.Error;
+import uk.ac.standrews.cs.util.GUIDFactory;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -57,32 +59,11 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
     public IAttributedStatefulObject get(String name) {
         IGUID guid = map.get(name);
 
-        if (guid == null)
-            return null;
+        return getObject(guid);
 
-        try {
-            Manifest manifest = sos.getManifest(ConversionHelper.toSOSGUID(guid));
-
-            if (manifest instanceof Atom) {
-                return new SOSFile(sos, guid);
-            } else if (manifest instanceof  Compound) {
-                // Still this might be a data compound
-                Compound compound = (Compound) manifest;
-                if (compound.getType() == CompoundType.DATA) {
-                    return null; // Make compound file
-                } else {
-                    return null; // Make collection
-                }
-            }
-        } catch (ManifestNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        // TODO
+        // NOTE
         // check what this is, get it from SOS and then return either another directory or a file
         // see StoreDirectory for hints on how to do this
-
-        return null;
     }
 
     @Override
@@ -111,8 +92,8 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
         map.put(name, object.getGUID());
 
+        // FIXME - do these contents exist ????
         contents.add(new Content(name, ConversionHelper.toSOSGUID(object.getGUID())));
-        // TODO - remember to persist compound
 
         // Set the attributes for the name.
         try {
@@ -136,7 +117,10 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         try {
             Compound compound = sos.addCompound(CompoundType.COLLECTION, contents);
 
-            // TODO - add this to parent via asset ?
+            uk.ac.standrews.cs.utils.IGUID content = compound.getContentGUID();
+            Asset asset = sos.addAsset(content, null, null, null); // TODO - add metadata
+            // FIXME
+            // guid = GUIDFactory.recreateGUID(content.toString());
 
         } catch (ManifestNotMadeException | ManifestPersistException e) {
             e.printStackTrace();
@@ -156,7 +140,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
     @Override
     public Iterator iterator() {
         // iterate over elements of the compound
-        return new CollectionIter(this);
+        return new CompoundIterator();
     }
 
     @Override
@@ -179,69 +163,55 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         return 0;
     }
 
-    /**
-     * This class acts as a type convertor hiding underlying iterator over GUIDs and gives
-     * an iterator over Name_AttributedPersistentObject_Binding.
-     *
-     * @author al
-     */
-    // FIXME - duplicate in StoreBasedDirectory
-    private class CollectionIter implements Iterator {
+    public SOSFileSystemObject getObject(IGUID guid) {
+        if (guid == null)
+            return null;
 
-        Iterator baseIterator;
-        IDirectory owner;
+        try {
+            Manifest manifest = sos.getManifest(ConversionHelper.toSOSGUID(guid));
 
-        public CollectionIter(IDirectory owner) {
-            this.baseIterator = map.iterator();
-            this.owner = owner;
+            if (manifest instanceof Atom) {
+                return new SOSFile(sos, guid);
+            } else if (manifest instanceof  Compound) {
+                // Still this might be a data compound
+                Compound compound = (Compound) manifest;
+                if (compound.getType() == CompoundType.DATA) {
+                    return null; // Make compound file
+                } else {
+                    return null; // Make collection
+                }
+            }
+        } catch (ManifestNotFoundException e) {
+            return null; // FIXME - deal gracefully with this exception
+        }
+        return null;
+    }
+
+
+    private class CompoundIterator implements Iterator {
+
+        Iterator<Content> contentIterator;
+
+        public CompoundIterator() {
+            contentIterator = contents.iterator();
         }
 
         public void remove() {
-            baseIterator.remove();
+            Error.hardError("unimplemented method");
         }
 
         public boolean hasNext() {
-            return baseIterator.hasNext();
+            return contentIterator.hasNext();
         }
 
         public Object next() {
-            Object o = baseIterator.next();
-            if( o instanceof NameGUIDBinding) { // FIXME - should be SOSNameGUIDMap
+            Content content = contentIterator.next();
 
-
-//                NameGUIDBinding binding = (NameGUIDBinding) o;
-//                String name = binding.getName();
-//                IGUID g = binding.getGUID();
-//                try {
-//                    IAttributes atts = map.getAttributes(name);
-//                    IDirectory d;
-//                    if(atts.contains(FileSystemConstants.ISDIRECTORY)) {
-//                        if( directoryCache.containsKey( g.toString() ) ) {
-//                            Diagnostic.trace( "Found directory with name: " + name + " in cache", Diagnostic.RUN );
-//                            d = (IDirectory) directoryCache.get( g.toString() );
-//                        } else {
-//                            d = makeCollection( g, owner, store, atts );
-//                        }
-//                        return new NameAttributedPersistentObjectBinding( name, d );
-//                    }
-//                    else if(atts.contains(FileSystemConstants.ISFILE)) {
-//                        IFile f = makeFile( g, store, atts );
-//                        return new NameAttributedPersistentObjectBinding( name, f );
-//                    }
-//                    else {
-//                        Error.hardError( "encountered unknown file type" );
-//                        // unreached
-//                        return null;
-//                    }
-//                } catch (Exception e) {
-//                    Error.hardError( "cannot extract attributes" );
-//                    return null;
-//                }
+            SOSFileSystemObject obj = getObject(ConversionHelper.toWebDAVGUID(content.getGUID()));
+            if (obj == null)
                 return null;
-            } else {
-                Error.hardError( "encountered an unexpected object in iterator" + o.getClass() );
-                return null;
-            }
+            else
+                return new NameAttributedPersistentObjectBinding(name, obj);
         }
     }
 }
