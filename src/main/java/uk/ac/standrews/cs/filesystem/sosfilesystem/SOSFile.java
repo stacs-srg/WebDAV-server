@@ -16,11 +16,13 @@ import uk.ac.standrews.cs.sos.interfaces.SeaOfStuff;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
+import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.util.Error;
 import uk.ac.standrews.cs.util.GUIDFactory;
 import uk.ac.standrews.cs.utils.IGUID;
+import uk.ac.standrews.cs.webdav.impl.InputStreamData;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -142,6 +144,8 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         // sos.getData(guid);
 
         // NOTE: idea - have a isChunked() method. If that method returns true, then reify returns data until null (no more chunks)
-        return null;
+        IData data = new InputStreamData(sos.getAtomContent(atom), 4092); // FIXME - size of data expected should not be hardcoded
+
+        return data;
     }
 }

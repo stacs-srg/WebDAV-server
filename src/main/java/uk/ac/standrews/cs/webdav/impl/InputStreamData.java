@@ -32,14 +32,15 @@ public class InputStreamData implements IData {
         int bytes_read = 0;
         
         try {
+            int available = 0;
             do {
-                int available = inputStream.available();
+                available = inputStream.available();
                 if (available > expected_byte_count) {
                     available = expected_byte_count;
                 }
                 int read = inputStream.read(state,bytes_read,available);
                 bytes_read += read;
-            } while (bytes_read != expected_byte_count); // TODO Al - need to protect against erroneous clients
+            } while (bytes_read != expected_byte_count && available != 0); // TODO Al - need to protect against erroneous clients
         }
         catch (IOException e) { Error.exceptionError( "I/O error during stream read",e ); }
         

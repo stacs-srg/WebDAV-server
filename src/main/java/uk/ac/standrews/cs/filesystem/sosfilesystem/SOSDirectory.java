@@ -208,6 +208,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
             Content content = contentIterator.next();
 
             SOSFileSystemObject obj = getObject(ConversionHelper.toWebDAVGUID(content.getGUID()));
+            String name = content.getLabel();
             if (obj == null)
                 return null;
             else
