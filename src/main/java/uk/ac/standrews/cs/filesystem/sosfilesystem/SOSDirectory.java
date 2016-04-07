@@ -92,7 +92,6 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
         map.put(name, object.getGUID());
 
-        // FIXME - do these contents exist ????
         contents.add(new Content(name, ConversionHelper.toSOSGUID(object.getGUID())));
 
         // Set the attributes for the name.
@@ -119,8 +118,9 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
             uk.ac.standrews.cs.utils.IGUID content = compound.getContentGUID();
             Asset asset = sos.addAsset(content, null, null, null); // TODO - add metadata
-            // FIXME
-            // guid = GUIDFactory.recreateGUID(content.toString());
+
+            // TODO - maybe return asset GUID
+            guid = GUIDFactory.recreateGUID(asset.getVersionGUID().toString());
 
         } catch (ManifestNotMadeException | ManifestPersistException e) {
             e.printStackTrace();
@@ -169,7 +169,6 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
         try {
             Manifest manifest = sos.getManifest(ConversionHelper.toSOSGUID(guid));
-
             if (manifest instanceof Atom) {
                 return new SOSFile(sos, guid);
             } else if (manifest instanceof  Compound) {
@@ -178,8 +177,11 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
                 if (compound.getType() == CompoundType.DATA) {
                     return null; // Make compound file
                 } else {
-                    return null; // Make collection
+                    return new SOSDirectory(sos, guid);
+                    // return null; // Make collection
                 }
+            } else if (manifest instanceof Asset) {
+                return getObject(ConversionHelper.toWebDAVGUID(manifest.getContentGUID()));
             }
         } catch (ManifestNotFoundException e) {
             return null; // FIXME - deal gracefully with this exception

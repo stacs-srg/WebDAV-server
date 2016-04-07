@@ -270,7 +270,7 @@ public class LOCK extends AbstractHTTPMethod {
 
 		ILock new_lock = lock_manager.newLock(lock_owner, HTTP.HEADER_OPAQUELOCKTOKEN + ":");
 		lock_manager.addResourceToLock(new_lock, resource, scope, type, depth);
-		
+
 		return new_lock;
 	}
 

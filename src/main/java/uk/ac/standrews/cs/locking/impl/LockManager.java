@@ -20,7 +20,7 @@ public class LockManager implements ILockManager {
 	// TODO a lock-null resource (locked non-extant URI) should appear in its parent collection i.e. returned by PROPFIND which needs to be able to locate such resources.
 	// TODO the whole lock management should probably be distributed.
 
-	private Set lock_set = new HashSet();
+	private Set<ILock> lock_set = new HashSet<ILock>();
 	
 	/**
 	 * Creates a new lock.
@@ -113,7 +113,8 @@ public class LockManager implements ILockManager {
 	}
 
 	/**
-	 * Checks whether a given resource is locked with a given lock token. Throws an exception if the resource is not locked or if it is locked with a different lock token.
+	 * Checks whether a given resource is locked with a given lock token.
+	 * Throws an exception if the resource is not locked or if it is locked with a different lock token.
 	 * 
 	 * @param resource the resource to be checked
 	 * @param lock_token the lock token to be checked
@@ -132,7 +133,8 @@ public class LockManager implements ILockManager {
 	}
 	
 	/**
-	 * Checks whether a given resource is locked with a different lock token from the one presented. If so, throws an exception, otherwise does nothing.
+	 * Checks whether a given resource is locked with a different lock token from the one presented.
+	 * If so, throws an exception, otherwise does nothing.
 	 * 
 	 * @param resource the resource to be checked
 	 * @param lock_token the lock token to be checked
@@ -198,7 +200,7 @@ public class LockManager implements ILockManager {
 	 * 
 	 * @return an iterator over all locks currently managed by this lock manager, typed as {@link ILock}
 	 */
-	public Iterator lockIterator() {
+	public Iterator<ILock> lockIterator() {
 		
 		return lock_set.iterator();
 	}
@@ -209,9 +211,9 @@ public class LockManager implements ILockManager {
 	 * @param resource the resource to be matched
 	 * @return an iterator over all locks that contain the given resource currently managed by this lock manager, typed as {@link ILock}
 	 */
-	public Iterator lockIterator(URI resource) {
+	public Iterator<ILock> lockIterator(URI resource) {
 		
-		return new UriFilterIterator(lock_set.iterator(), resource);
+		return new LockUriFilterIterator(lock_set.iterator(), resource);
 	}
 	
 	/**
@@ -244,13 +246,13 @@ public class LockManager implements ILockManager {
 		return false;
 	}
 	
-	class UriFilterIterator implements Iterator {
+	class LockUriFilterIterator implements Iterator {
 		
-		private Iterator iterator;
+		private Iterator<ILock> iterator;
 		private URI resource;
-		private Lock next_lock;
+		private ILock next_lock;
 		
-		protected UriFilterIterator(Iterator iterator, URI resource) {
+		protected LockUriFilterIterator(Iterator<ILock> iterator, URI resource) {
 			
 			this.iterator = iterator;
 			this.resource = resource;
@@ -262,9 +264,8 @@ public class LockManager implements ILockManager {
 			return (next_lock != null);
 		}
 
-		public Object next() {
-			
-			Lock lock = next_lock;
+		public ILock next() {
+            ILock lock = next_lock;
 			next_lock = getNext();
 			return lock;
 		}
@@ -274,15 +275,17 @@ public class LockManager implements ILockManager {
 			Error.hardError("unimplemented method");
 		}
 		
-		private Lock getNext() {
+		private ILock getNext() {
 			
 			while (iterator.hasNext()) {
-				Lock lock = (Lock)iterator.next();
-				Iterator resource_iterator = lock.resourceIterator();
+				ILock lock = iterator.next();
+				Iterator<IResourceLockInfo> resource_iterator = lock.resourceIterator();
 				
 				while (resource_iterator.hasNext()) {
-					IResourceLockInfo resource_lock_info = (IResourceLockInfo)resource_iterator.next();
-					if (resource_lock_info.includes(resource)) return lock;
+					IResourceLockInfo resource_lock_info = resource_iterator.next();
+					if (resource_lock_info.includes(resource)) {
+                        return lock;
+                    }
 				}
 			}
 			return null;

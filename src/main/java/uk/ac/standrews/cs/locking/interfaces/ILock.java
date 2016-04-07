@@ -28,5 +28,5 @@ public interface ILock {
     
     String getTokenPrefix();
 
-    Iterator resourceIterator();   // Over IResourceLockInfo.
+    Iterator<IResourceLockInfo> resourceIterator();
 }

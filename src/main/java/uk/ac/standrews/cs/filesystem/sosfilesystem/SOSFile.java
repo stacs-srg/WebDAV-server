@@ -3,9 +3,11 @@ package uk.ac.standrews.cs.filesystem.sosfilesystem;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.exceptions.AccessFailureException;
 import uk.ac.standrews.cs.exceptions.PersistenceException;
+import uk.ac.standrews.cs.filesystem.FileSystemConstants;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
 import uk.ac.standrews.cs.filesystem.utils.ConversionHelper;
+import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
@@ -19,6 +21,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
+import uk.ac.standrews.cs.util.Attributes;
 import uk.ac.standrews.cs.util.Error;
 import uk.ac.standrews.cs.util.GUIDFactory;
 import uk.ac.standrews.cs.utils.IGUID;
@@ -38,12 +41,14 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
     boolean isCompoundData;
     private Atom atom;
     private Collection<Content> atoms;
+    private IAttributedStatefulObject previous;
 
     public SOSFile(SeaOfStuff sos, IData data) throws PersistenceException {
         super(sos, data);
         this.isCompoundData = false;
 
         try {
+            System.out.println("adding atom to SOS");
             atom = sos.addAtom(data.getInputStream());
         } catch (DataStorageException | IOException | ManifestPersistException e) {
             throw new PersistenceException("SOS atom could not be created");
@@ -66,12 +71,19 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         }
     }
 
+    public SOSFile(SeaOfStuff sos, IData data, IAttributedStatefulObject previous) throws PersistenceException {
+        this(sos, data);
+        this.previous = previous;
+    }
+
     @Override
     public IAttributes getAttributes() {
-        Collection<IGUID> metadata = asset.getMetadata();
 
         // TODO - iterate over metadata and build attributes
-        return null;
+        IAttributes dummyAttributes = new Attributes(FileSystemConstants.ISFILE + Attributes.EQUALS + "true" + Attributes.SEPARATOR +
+                FileSystemConstants.CONTENT + Attributes.EQUALS + "text" + Attributes.SEPARATOR );
+
+        return dummyAttributes;
     }
 
     @Override
@@ -118,16 +130,22 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
     @Override
     public void persist() throws PersistenceException {
         try {
+            // FIXME - this is a bad way of dealing with previous references.
+            Collection<IGUID> prevs = new ArrayList<>();
+            if (previous != null) {
+                prevs.add(ConversionHelper.toSOSGUID(previous.getGUID()));
+            }
+
             if (! isCompoundData) {
                 IGUID content = atom.getContentGUID();
-                asset = sos.addAsset(content, null, null, null); // TODO - add metadata
+                asset = sos.addAsset(content, null, prevs, null); // TODO - add metadata
 
-                guid = GUIDFactory.recreateGUID(content.toString());
+                guid = GUIDFactory.recreateGUID(asset.getVersionGUID().toString());
             } else {
                 Compound compound = sos.addCompound(CompoundType.DATA, atoms);
-                asset = sos.addAsset(compound.getContentGUID(), null, null, null); // TODO - add metadata
+                asset = sos.addAsset(compound.getContentGUID(), null, prevs, null); // TODO - add metadata
 
-                guid = GUIDFactory.recreateGUID(compound.getContentGUID().toString());
+                guid = GUIDFactory.recreateGUID(asset.getVersionGUID().toString());
             }
 
         } catch (ManifestNotMadeException e) {

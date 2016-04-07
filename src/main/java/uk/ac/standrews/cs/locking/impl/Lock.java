@@ -18,14 +18,14 @@ public class Lock implements ILock {
     private String lock_owner;
     private String token_prefix;
     
-    protected Set lock_info_set;
+    protected Set<IResourceLockInfo> lock_info_set;
     
     protected Lock(String lock_owner, String token_prefix) {
 
         this.lock_owner = lock_owner;
         this.token_prefix = token_prefix;
         
-        lock_info_set = new HashSet();
+        lock_info_set = new HashSet<IResourceLockInfo>();
     }
 
     public String getOwner() {
@@ -38,7 +38,7 @@ public class Lock implements ILock {
 		return token_prefix;
 	}
 
-	public Iterator resourceIterator() {
+	public Iterator<IResourceLockInfo> resourceIterator() {
 		
 		return lock_info_set.iterator();
 	}
@@ -52,14 +52,16 @@ public class Lock implements ILock {
 
 	public void removeResource(URI uri, String lock_token) throws LockException {
 
-		Iterator resource_iterator = resourceIterator();
+		Iterator<IResourceLockInfo> resource_iterator = resourceIterator();
 		while (resource_iterator.hasNext()) {
-			
-			IResourceLockInfo resource_lock_info = (IResourceLockInfo)resource_iterator.next();
+			IResourceLockInfo resource_lock_info = resource_iterator.next();
 			
 			if (resource_lock_info.getResource().equals(uri)) {
 				
-				if (!resource_lock_info.getLockToken().equals(lock_token)) throw new LockException("invalid lock token");
+				if (!resource_lock_info.getLockToken().equals(lock_token)) {
+					throw new LockException("invalid lock token");
+				}
+
 				lock_info_set.remove(resource_lock_info);
 				return;
 			}

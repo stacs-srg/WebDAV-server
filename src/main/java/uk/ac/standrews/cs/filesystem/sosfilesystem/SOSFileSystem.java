@@ -83,9 +83,19 @@ public class SOSFileSystem implements IFileSystem {
     @Override
     public synchronized void updateFile(IDirectory parent, String name, String content_type, IData data) throws BindingAbsentException, UpdateException, PersistenceException {
 
-        // THIS WILL CREATE A NEW ATOM (under asset)
-        // not sure if this will ever be called. it depends on whether we update based on name or not. need to check
-        throw new NotImplementedException();
+
+        IAttributedStatefulObject previous = parent.get(name);
+        IFile file = new SOSFile(sos, data, previous);
+        file.persist();
+
+        // This Operation will create a new compound + asset
+        try {
+            parent.addFile(name, file, content_type); // TODO - should add previous
+        } catch (BindingPresentException e) {
+           throw new PersistenceException("Binding exception on update file for SOS");
+        }
+        parent.persist();
+
     }
 
     @Override
@@ -98,9 +108,17 @@ public class SOSFileSystem implements IFileSystem {
     @Override
     public IDirectory createNewDirectory(IDirectory parent, String name) throws BindingPresentException, PersistenceException {
 
-        // TODO - this will create a compound of type collection
+        // TODO - should check if directory already exists
 
-        return null;
+        INameGUIDMap map = new SOSNameGUIDMap();
+        IDirectory directory = new SOSDirectory(sos, map);
+        directory.setParent(parent);
+        directory.persist();
+
+        parent.addDirectory(name, directory);
+        parent.persist();
+
+        return directory;
     }
 
     @Override

@@ -97,9 +97,7 @@ public class StoreBasedFileSystem extends AbstractFileSystem implements IFileSys
 		check(parent, name, "directory already exists", true);
 
 		INameGUIDMap map = new NameGUIDMap(store);
-		IDirectory new_directory;
-		
-		new_directory = new StoreBasedDirectory(map, store, null);
+		IDirectory new_directory = new StoreBasedDirectory(map, store, null);
 		new_directory.setParent(parent);
 		
 		Diagnostic.trace( "Directory created with GUID =" + new_directory.getGUID() + " and pid =" + new_directory.getPID(), Diagnostic.FULL );
