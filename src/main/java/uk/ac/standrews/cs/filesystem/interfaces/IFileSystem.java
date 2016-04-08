@@ -3,12 +3,12 @@
  */
 package uk.ac.standrews.cs.filesystem.interfaces;
 
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.exceptions.BindingPresentException;
 import uk.ac.standrews.cs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.filesystem.exceptions.AppendException;
 import uk.ac.standrews.cs.filesystem.exceptions.UpdateException;
-import uk.ac.standrews.cs.interfaces.IGUID;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 

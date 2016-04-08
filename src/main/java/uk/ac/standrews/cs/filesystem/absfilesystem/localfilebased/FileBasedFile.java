@@ -3,16 +3,17 @@
  */
 package uk.ac.standrews.cs.filesystem.absfilesystem.localfilebased;
 
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.filesystem.FileSystemConstants;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
+import uk.ac.standrews.cs.impl.KeyImpl;
+import uk.ac.standrews.cs.impl.SHA1KeyFactory;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.util.Attributes;
 import uk.ac.standrews.cs.util.Error;
-import uk.ac.standrews.cs.util.KeyImpl;
-import uk.ac.standrews.cs.util.SHA1KeyFactory;
 import uk.ac.standrews.cs.webdav.impl.MIME;
 
 import java.io.File;
@@ -43,10 +44,12 @@ public class FileBasedFile extends FileBasedFileSystemObject implements IFile {
         try {
 			guid = (KeyImpl) SHA1KeyFactory.generateKey(real_file.getCanonicalPath());    // generate GUID based on file path
 		} catch (IOException e) {
-			throw new PersistenceException("can't obtain file path for backing file");
-		} 
-        
-        persist();
+			throw new PersistenceException("Can't obtain file path for backing file");
+		} catch (GUIDGenerationException e) {
+			throw new PersistenceException("Can't generate key for backing file");
+		}
+
+		persist();
     }
 
 	public long getCreationTime() {

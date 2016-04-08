@@ -4,8 +4,8 @@
 package uk.ac.standrews.cs.persistence.impl;
 
 import org.apache.commons.lang3.ArrayUtils;
-import uk.ac.standrews.cs.interfaces.IGUID;
-import uk.ac.standrews.cs.interfaces.IPID;
+import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.IPID;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.persistence.interfaces.IStatefulObject;
 import uk.ac.standrews.cs.store.impl.localfilebased.ByteData;

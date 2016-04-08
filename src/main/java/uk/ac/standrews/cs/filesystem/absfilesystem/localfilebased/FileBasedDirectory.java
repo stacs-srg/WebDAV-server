@@ -29,9 +29,7 @@ import java.util.Iterator;
 public class FileBasedDirectory extends FileBasedFileSystemObject implements IDirectory {
 
     public FileBasedDirectory(IDirectory logical_parent, String name) {
-    	
         super(logical_parent, name);
-        
         real_file = new File(((FileBasedDirectory)logical_parent).getRealFile(), name);
     }
 
@@ -39,11 +37,8 @@ public class FileBasedDirectory extends FileBasedFileSystemObject implements IDi
      * Used for creating the logical root directory.
      */
     public FileBasedDirectory(File real_directory) {
-    	
         super();
-        
         logical_parent = null;
-        
         real_file = real_directory;
     }
 

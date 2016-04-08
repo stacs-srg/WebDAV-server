@@ -3,8 +3,8 @@
  */
 package uk.ac.standrews.cs.store.interfaces;
 
-import uk.ac.standrews.cs.interfaces.IGUID;
-import uk.ac.standrews.cs.interfaces.IPID;
+import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.IPID;
 import uk.ac.standrews.cs.store.exceptions.StoreGetException;
 import uk.ac.standrews.cs.store.exceptions.StorePutException;
 

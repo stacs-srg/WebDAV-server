@@ -3,6 +3,7 @@
  */
 package uk.ac.standrews.cs.filesystem.absfilesystem;
 
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.exceptions.BindingPresentException;
 import uk.ac.standrews.cs.exceptions.PersistenceException;
@@ -10,7 +11,6 @@ import uk.ac.standrews.cs.filesystem.exceptions.AppendException;
 import uk.ac.standrews.cs.filesystem.exceptions.UpdateException;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
-import uk.ac.standrews.cs.interfaces.IGUID;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.persistence.interfaces.INameAttributedPersistentObjectBinding;
@@ -55,7 +55,7 @@ public abstract class AbstractFileSystem {
 	/**
 	 * Updates an existing file.
 	 * 
-	 * @param directory the directory containing an entry for the file
+	 * @param parent the directory containing an entry for the file
 	 * @param name the name for the directory entry
 	 * @param content_type the new content type of the file
 	 * @param data the new contents of the file

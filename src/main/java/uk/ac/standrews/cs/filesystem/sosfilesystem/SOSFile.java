@@ -1,12 +1,13 @@
 package uk.ac.standrews.cs.filesystem.sosfilesystem;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.AccessFailureException;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.filesystem.FileSystemConstants;
-import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
-import uk.ac.standrews.cs.filesystem.utils.ConversionHelper;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
@@ -18,13 +19,10 @@ import uk.ac.standrews.cs.sos.interfaces.SeaOfStuff;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
-import uk.ac.standrews.cs.sos.model.manifests.AtomManifest;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.util.Attributes;
 import uk.ac.standrews.cs.util.Error;
-import uk.ac.standrews.cs.util.GUIDFactory;
-import uk.ac.standrews.cs.utils.IGUID;
 import uk.ac.standrews.cs.webdav.impl.InputStreamData;
 
 import java.io.IOException;
@@ -48,24 +46,23 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         this.isCompoundData = false;
 
         try {
-            System.out.println("adding atom to SOS");
             atom = sos.addAtom(data.getInputStream());
         } catch (DataStorageException | IOException | ManifestPersistException e) {
             throw new PersistenceException("SOS atom could not be created");
         }
     }
 
-    public SOSFile(SeaOfStuff sos) {
+    public SOSFile(SeaOfStuff sos)  {
         super(sos);
         this.isCompoundData = true;
         this.atoms = new ArrayList<>();
     }
 
-    public SOSFile(SeaOfStuff sos, uk.ac.standrews.cs.interfaces.IGUID guid) {
+    public SOSFile(SeaOfStuff sos, IGUID guid) {
         super(sos);
 
         try {
-            atom = (Atom) sos.getManifest(ConversionHelper.toSOSGUID(guid));
+            atom = (Atom) sos.getManifest(guid);
         } catch (ManifestNotFoundException e) {
             e.printStackTrace();
         }
@@ -133,7 +130,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             // FIXME - this is a bad way of dealing with previous references.
             Collection<IGUID> prevs = new ArrayList<>();
             if (previous != null) {
-                prevs.add(ConversionHelper.toSOSGUID(previous.getGUID()));
+                prevs.add(previous.getGUID());
             }
 
             if (! isCompoundData) {
@@ -151,6 +148,8 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         } catch (ManifestNotMadeException e) {
             e.printStackTrace();
         } catch (ManifestPersistException e) {
+            e.printStackTrace();
+        } catch (GUIDGenerationException e) {
             e.printStackTrace();
         }
     }

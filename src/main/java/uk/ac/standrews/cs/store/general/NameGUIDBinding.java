@@ -3,7 +3,7 @@
  */
 package uk.ac.standrews.cs.store.general;
 
-import uk.ac.standrews.cs.interfaces.IGUID;
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.store.interfaces.INameGUIDBinding;
 
 /**

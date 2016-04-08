@@ -3,14 +3,15 @@
  */
 package uk.ac.standrews.cs.webdav.entrypoints;
 
+import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.filesystem.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.filesystem.factories.StoreFileSystemFactory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
-import uk.ac.standrews.cs.interfaces.IGUID;
 import uk.ac.standrews.cs.store.factories.LocalFileBasedStoreFactory;
 import uk.ac.standrews.cs.store.interfaces.IGUIDStore;
 import uk.ac.standrews.cs.util.Error;
-import uk.ac.standrews.cs.util.GUIDFactory;
 import uk.ac.standrews.cs.util.Output;
 
 import java.io.IOException;
@@ -49,8 +50,10 @@ public class WebDAV_StoreBased_Launcher extends WebDAVLauncher {
 				Error.exceptionError("couldn't create file system", e);
 			} catch (IOException e) {
 				Error.exceptionError("socket error", e);
+			} catch (GUIDGenerationException e) {
+				e.printStackTrace();
 			}
-	    } else {
+		} else {
 			Output.getSingleton().println("Usage: java WebDAV_StoreBased_Launcher -r<store root guid> [-p<port>] [-d<store root directory>] [-s<store name>] [-D]");
 		}
 	}

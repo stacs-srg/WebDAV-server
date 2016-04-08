@@ -3,9 +3,9 @@
  */
 package uk.ac.standrews.cs.store.interfaces;
 
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.exceptions.BindingPresentException;
-import uk.ac.standrews.cs.interfaces.IGUID;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.persistence.interfaces.IPersistentObject;
 

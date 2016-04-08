@@ -4,15 +4,15 @@
 package uk.ac.standrews.cs.store;
 
 import org.junit.Test;
-import uk.ac.standrews.cs.interfaces.IGUID;
-import uk.ac.standrews.cs.interfaces.IPID;
+import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.IPID;
+import uk.ac.standrews.cs.PIDFactory;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.store.exceptions.StoreGetException;
 import uk.ac.standrews.cs.store.exceptions.StorePutException;
 import uk.ac.standrews.cs.store.factories.LocalFileBasedStoreFactory;
 import uk.ac.standrews.cs.store.interfaces.IGUIDStore;
-import uk.ac.standrews.cs.util.GUIDFactory;
-import uk.ac.standrews.cs.util.PIDFactory;
 
 import java.util.Iterator;
 
@@ -92,7 +92,7 @@ public class FileStoreTest {
     	
       	try {
             store.put(guid1, pid1);
-        	store.put(guid1, pid2);
+        	store.put(guid1, pid2); // FIXME - the behaviour in this test is not deterministic
         	store.put(guid2, pid3);
         	
         	assertEquals(pid2, store.getLatestPID(guid1));         // The latest PID for GUID guid1 should be pid2.

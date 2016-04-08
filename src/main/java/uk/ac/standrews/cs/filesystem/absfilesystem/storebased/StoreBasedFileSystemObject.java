@@ -3,10 +3,11 @@
  */
 package uk.ac.standrews.cs.filesystem.absfilesystem.storebased;
 
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.AccessFailureException;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.exceptions.PersistenceException;
-import uk.ac.standrews.cs.interfaces.IGUID;
-import uk.ac.standrews.cs.interfaces.IPID;
+import uk.ac.standrews.cs.IPID;
 import uk.ac.standrews.cs.persistence.impl.AttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributes;
@@ -45,12 +46,12 @@ public abstract class StoreBasedFileSystemObject extends AttributedStatefulObjec
     }
     
     public void persist() throws PersistenceException {
-
         try {
             pid = store.put(reify());
             store.put(guid, pid);
-		}
-        catch (StorePutException e) { throw new PersistenceException(e.getMessage()); }
+		} catch (StorePutException e) {
+            throw new PersistenceException(e.getMessage());
+        }
 	}
     
     public long getCreationTime() throws AccessFailureException {

@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.filesystem.sosfilesystem;
 
 import uk.ac.standrews.cs.exceptions.AccessFailureException;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.persistence.impl.AttributedStatefulObject;

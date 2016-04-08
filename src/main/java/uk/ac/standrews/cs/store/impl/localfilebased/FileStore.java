@@ -3,8 +3,10 @@
  */
 package uk.ac.standrews.cs.store.impl.localfilebased;
 
-import uk.ac.standrews.cs.interfaces.IGUID;
-import uk.ac.standrews.cs.interfaces.IPID;
+import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
+import uk.ac.standrews.cs.impl.KeyImpl;
+import uk.ac.standrews.cs.IPID;
 import uk.ac.standrews.cs.persistence.impl.PIDGenerator;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.persistence.interfaces.IPIDGenerator;
@@ -13,7 +15,6 @@ import uk.ac.standrews.cs.store.interfaces.IGUIDStore;
 import uk.ac.standrews.cs.store.interfaces.IManagedGUIDStore;
 import uk.ac.standrews.cs.util.Diagnostic;
 import uk.ac.standrews.cs.util.Error;
-import uk.ac.standrews.cs.util.KeyImpl;
 
 import java.io.*;
 import java.util.Iterator;
@@ -166,11 +167,15 @@ public class FileStore implements IGUIDStore, IManagedGUIDStore {
             InputStream stream = new FileInputStream(latest_PID_file);
             BufferedReader br = new BufferedReader( new InputStreamReader( stream ) );
             String pid_rep = br.readLine();
-            return new KeyImpl( pid_rep );
+            return new KeyImpl(pid_rep);
+        } catch (FileNotFoundException e) {
+            Error.exceptionError( "Cannot open file: " + latest_PID_file_name, e );
+        } catch (IOException e) {
+            Error.exceptionError( "IO exception reading from stream from: " + latest_PID_file_name, e );
+        } catch (GUIDGenerationException e) {
+            Error.exceptionError( "GUIDGeneration exception on file: " + latest_PID_file_name, e );
         }
-        catch (FileNotFoundException e) { Error.exceptionError( "Cannot open file: " + latest_PID_file_name, e ); }
-        catch (IOException e)           { Error.exceptionError( "IO exception reading from stream from: " + latest_PID_file_name, e ); }
-        
+
         return null;
     }
 
@@ -408,7 +413,12 @@ public class FileStore implements IGUIDStore, IManagedGUIDStore {
         	
             String thisOne = next;
             nextString();
-            return new KeyImpl( thisOne  );
+            try {
+                return new KeyImpl( thisOne  );
+            } catch (GUIDGenerationException e) {
+                Error.exceptionError( "GUIDGenerationException in PIDIterator", e );
+                throw new NoSuchElementException();
+            }
         }
         
         private void nextString() {

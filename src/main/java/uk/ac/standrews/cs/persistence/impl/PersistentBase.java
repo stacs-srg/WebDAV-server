@@ -3,11 +3,11 @@
  */
 package uk.ac.standrews.cs.persistence.impl;
 
+import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.IPID;
 import uk.ac.standrews.cs.exceptions.PersistenceException;
-import uk.ac.standrews.cs.interfaces.IGUID;
-import uk.ac.standrews.cs.interfaces.IPID;
 import uk.ac.standrews.cs.persistence.interfaces.IPersistentObject;
-import uk.ac.standrews.cs.util.GUIDFactory;
 
 /**
  * Skeleton implementation of IPersistentObject.
@@ -75,7 +75,6 @@ public abstract class PersistentBase implements IPersistentObject {
     public abstract void persist() throws PersistenceException;
     
     public static IGUID generateRandomGUID() {
-    	
-    	return GUIDFactory.generateRandomGUID();
+        return GUIDFactory.generateRandomGUID();
     }
 }

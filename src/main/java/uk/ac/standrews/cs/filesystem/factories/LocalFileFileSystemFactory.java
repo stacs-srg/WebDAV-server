@@ -3,11 +3,12 @@
  */
 package uk.ac.standrews.cs.filesystem.factories;
 
+import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.filesystem.absfilesystem.localfilebased.FileBasedFileSystem;
 import uk.ac.standrews.cs.filesystem.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
 import uk.ac.standrews.cs.filesystem.interfaces.IFileSystemFactory;
-import uk.ac.standrews.cs.interfaces.IGUID;
 
 import java.io.File;
 
@@ -31,7 +32,6 @@ public class LocalFileFileSystemFactory implements IFileSystemFactory {
      }
    
    public IFileSystem makeFileSystem() throws FileSystemCreationException {
-	   
-	   return new FileBasedFileSystem(real_root_directory, root_GUID);
+       return new FileBasedFileSystem(real_root_directory, root_GUID);
    }
 }

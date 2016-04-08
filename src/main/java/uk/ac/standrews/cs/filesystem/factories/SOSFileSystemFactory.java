@@ -1,11 +1,10 @@
 package uk.ac.standrews.cs.filesystem.factories;
 
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.filesystem.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
 import uk.ac.standrews.cs.filesystem.interfaces.IFileSystemFactory;
 import uk.ac.standrews.cs.filesystem.sosfilesystem.SOSFileSystem;
-import uk.ac.standrews.cs.filesystem.utils.ConversionHelper;
-import uk.ac.standrews.cs.interfaces.IGUID;
 import uk.ac.standrews.cs.sos.exceptions.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
 import uk.ac.standrews.cs.sos.exceptions.SeaOfStuffException;
@@ -57,14 +56,12 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
     private Asset createRoot(SeaOfStuff sos) {
 
         Asset retval = null;
-        uk.ac.standrews.cs.utils.IGUID sosGUID = ConversionHelper.toSOSGUID(rootGUID);
 
-        retval = rootExists(sos, sosGUID);
+        retval = rootExists(sos, rootGUID);
         if (retval == null) {
             try {
                 Compound compound = sos.addCompound(CompoundType.COLLECTION, Collections.emptyList());
-                retval =  sos.addAsset(compound.getContentGUID(), sosGUID, null, null);
-
+                retval =  sos.addAsset(compound.getContentGUID(), rootGUID, null, null);
             } catch (ManifestNotMadeException | ManifestPersistException e) {
                 e.printStackTrace();
             }
@@ -74,7 +71,7 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
 
     }
 
-    private Asset rootExists(SeaOfStuff sos, uk.ac.standrews.cs.utils.IGUID root) {
+    private Asset rootExists(SeaOfStuff sos, IGUID root) {
         Asset retval = null;
         try {
             retval = (Asset) sos.getManifest(root);

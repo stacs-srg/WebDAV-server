@@ -3,6 +3,7 @@
  */
 package uk.ac.standrews.cs.filesystem.absfilesystem.localfilebased;
 
+import uk.ac.standrews.cs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.persistence.impl.AttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;

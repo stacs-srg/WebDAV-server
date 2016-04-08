@@ -2,13 +2,13 @@ package uk.ac.standrews.cs.store.impl.localfilebased;
 
 import junit.framework.TestCase;
 import org.junit.Test;
-import uk.ac.standrews.cs.interfaces.IGUID;
+import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.store.StoreConstants;
 import uk.ac.standrews.cs.store.factories.LocalFileBasedStoreFactory;
 import uk.ac.standrews.cs.store.general.NameGUIDBinding;
 import uk.ac.standrews.cs.store.interfaces.IGUIDStore;
 import uk.ac.standrews.cs.store.interfaces.INameGUIDMap;
-import uk.ac.standrews.cs.util.GUIDFactory;
 
 import java.util.Iterator;
 

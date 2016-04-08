@@ -1,15 +1,11 @@
 package uk.ac.standrews.cs.filesystem.sosfilesystem;
 
-import uk.ac.standrews.cs.exceptions.AccessFailureException;
-import uk.ac.standrews.cs.exceptions.BindingAbsentException;
-import uk.ac.standrews.cs.exceptions.BindingPresentException;
-import uk.ac.standrews.cs.exceptions.PersistenceException;
-import uk.ac.standrews.cs.filesystem.FileSystemConstants;
-import uk.ac.standrews.cs.filesystem.absfilesystem.storebased.StoreBasedDirectory;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.exceptions.*;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
-import uk.ac.standrews.cs.filesystem.utils.ConversionHelper;
-import uk.ac.standrews.cs.interfaces.IGUID;
 import uk.ac.standrews.cs.persistence.impl.NameAttributedPersistentObjectBinding;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributes;
@@ -23,11 +19,7 @@ import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
-import uk.ac.standrews.cs.store.general.NameGUIDBinding;
-import uk.ac.standrews.cs.store.interfaces.INameGUIDMap;
-import uk.ac.standrews.cs.util.Diagnostic;
 import uk.ac.standrews.cs.util.Error;
-import uk.ac.standrews.cs.util.GUIDFactory;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -38,18 +30,14 @@ import java.util.Iterator;
  */
 public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
-    private INameGUIDMap map;
-
     private Collection<Content> contents;
 
-    public SOSDirectory(SeaOfStuff sos, INameGUIDMap map) {
+    public SOSDirectory(SeaOfStuff sos) throws GUIDGenerationException {
         super(sos);
-        this.map = map;
-
         contents = new HashSet<>();
     }
 
-    public SOSDirectory(SeaOfStuff sos, IGUID guid) {
+    public SOSDirectory(SeaOfStuff sos, IGUID guid) throws GUIDGenerationException {
         // TODO - create a directory that already exists - needed from the #get() method in this class
         super(sos);
     }
@@ -57,13 +45,13 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
     @Override
     public IAttributedStatefulObject get(String name) {
-        IGUID guid = map.get(name);
+        Content content = getContent(name);
+        IGUID guid = null;
+        if (content != null) {
+            guid = content.getGUID();
+        }
 
         return getObject(guid);
-
-        // NOTE
-        // check what this is, get it from SOS and then return either another directory or a file
-        // see StoreDirectory for hints on how to do this
     }
 
     @Override
@@ -84,23 +72,24 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         // same as above - from the compound perspective it does not matter whether it is a compound or an atom that we add
         // result in new version
         addObject(name, directory, null);
-        directory.setParent(this); // TODO - in SOS what does it mean for a directory to know its parent?
     }
 
-    // FIXME - mostly duplicated code in StoreBasedDirectory
     private void addObject(String name, IAttributedStatefulObject object, IAttributes atts) throws BindingPresentException {
-
-        map.put(name, object.getGUID());
-
-        contents.add(new Content(name, ConversionHelper.toSOSGUID(object.getGUID())));
-
-        // Set the attributes for the name.
-        try {
-            map.setAttributes(name, atts);
-        } catch (BindingAbsentException e) {
-            Error.hardExceptionError("Couldn't set attributes for newly added name", e);
+        if (contains(name)) {
+            throw new BindingPresentException("Object already exists");
+        } else {
+            contents.add(new Content(name, object.getGUID()));
         }
 
+    }
+
+    private Content getContent(String name) {
+        for(Content content:contents) {
+            if (content.getLabel().equals(name)) {
+                return content;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -109,6 +98,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         // result in new version
         // iterate over collection and remove element with given name
         // then persist
+        contents.remove(getContent(name));
     }
 
     @Override
@@ -116,13 +106,14 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         try {
             Compound compound = sos.addCompound(CompoundType.COLLECTION, contents);
 
-            uk.ac.standrews.cs.utils.IGUID content = compound.getContentGUID();
+            IGUID content = compound.getContentGUID();
             Asset asset = sos.addAsset(content, null, null, null); // TODO - add metadata
 
-            // TODO - maybe return asset GUID
-            guid = GUIDFactory.recreateGUID(asset.getVersionGUID().toString());
-
+            IGUID version = asset.getVersionGUID();
+            guid = GUIDFactory.recreateGUID(version.toString());
         } catch (ManifestNotMadeException | ManifestPersistException e) {
+            throw new PersistenceException("Manifest could not be created or persisted");
+        } catch (GUIDGenerationException e) {
             e.printStackTrace();
         }
     }
@@ -134,7 +125,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
     @Override
     public void setParent(IDirectory parent) {
-
+        throw new NotImplementedException();
     }
 
     @Override
@@ -168,7 +159,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
             return null;
 
         try {
-            Manifest manifest = sos.getManifest(ConversionHelper.toSOSGUID(guid));
+            Manifest manifest = sos.getManifest(guid);
             if (manifest instanceof Atom) {
                 return new SOSFile(sos, guid);
             } else if (manifest instanceof  Compound) {
@@ -181,10 +172,13 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
                     // return null; // Make collection
                 }
             } else if (manifest instanceof Asset) {
-                return getObject(ConversionHelper.toWebDAVGUID(manifest.getContentGUID()));
+                return getObject(manifest.getContentGUID());
             }
         } catch (ManifestNotFoundException e) {
             return null; // FIXME - deal gracefully with this exception
+        } catch (GUIDGenerationException e) {
+            e.printStackTrace();
+            return null;
         }
         return null;
     }
@@ -209,7 +203,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         public Object next() {
             Content content = contentIterator.next();
 
-            SOSFileSystemObject obj = getObject(ConversionHelper.toWebDAVGUID(content.getGUID()));
+            SOSFileSystemObject obj = getObject(content.getGUID());
             String name = content.getLabel();
             if (obj == null)
                 return null;

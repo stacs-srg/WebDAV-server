@@ -3,7 +3,7 @@
  */
 package uk.ac.standrews.cs.persistence.interfaces;
 
-import uk.ac.standrews.cs.interfaces.IGUID;
+import uk.ac.standrews.cs.IGUID;
 
 /**
  * An object with a GUID that is fixed for all time.

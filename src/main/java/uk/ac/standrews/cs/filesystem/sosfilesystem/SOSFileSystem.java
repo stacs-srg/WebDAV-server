@@ -1,20 +1,19 @@
 package uk.ac.standrews.cs.filesystem.sosfilesystem;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.exceptions.BindingPresentException;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.filesystem.exceptions.AppendException;
 import uk.ac.standrews.cs.filesystem.exceptions.UpdateException;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
 import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
-import uk.ac.standrews.cs.filesystem.utils.ConversionHelper;
-import uk.ac.standrews.cs.interfaces.IGUID;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.sos.interfaces.SeaOfStuff;
-import uk.ac.standrews.cs.store.interfaces.INameGUIDMap;
 import uk.ac.standrews.cs.util.UriUtil;
 
 import java.net.URI;
@@ -26,15 +25,11 @@ import java.util.Iterator;
 public class SOSFileSystem implements IFileSystem {
 
     private SeaOfStuff sos;
-    private INameGUIDMap store_root_map;
 
-    private uk.ac.standrews.cs.utils.IGUID head;
-
+    private IGUID head; // TODO - have to us this!
     private IDirectory root_collection;
 
-    // note - head == asset
-    // asset -> compound == root directory
-    public SOSFileSystem(SeaOfStuff sos, uk.ac.standrews.cs.utils.IGUID rootGUID) {
+    public SOSFileSystem(SeaOfStuff sos, IGUID rootGUID) {
         this.sos = sos;
         this.head = rootGUID;
 
@@ -42,8 +37,11 @@ public class SOSFileSystem implements IFileSystem {
             // TODO - throw exception
         }
 
-        store_root_map = new SOSNameGUIDMap();
-        root_collection = new SOSDirectory(sos, store_root_map);
+        try {
+            root_collection = new SOSDirectory(sos);
+        } catch (GUIDGenerationException e) {
+            e.printStackTrace();
+        }
     }
 
     // TODO - create compound if large file
@@ -68,8 +66,8 @@ public class SOSFileSystem implements IFileSystem {
     }
 
     // TODO - should override
-    // meaning that this should be in IFile system.
-    // This way we could have a uniform way of dealing with large data
+    //  this should be in IFile system
+    // This way we could have a uniform way of dealing with large data (chunked)
     public IFile createNewFile(IDirectory parent, String name, String content_type) throws BindingPresentException, PersistenceException {
 
         // TODO - check if file already exists.
@@ -82,7 +80,6 @@ public class SOSFileSystem implements IFileSystem {
 
     @Override
     public synchronized void updateFile(IDirectory parent, String name, String content_type, IData data) throws BindingAbsentException, UpdateException, PersistenceException {
-
 
         IAttributedStatefulObject previous = parent.get(name);
         IFile file = new SOSFile(sos, data, previous);
@@ -110,9 +107,12 @@ public class SOSFileSystem implements IFileSystem {
 
         // TODO - should check if directory already exists
 
-        INameGUIDMap map = new SOSNameGUIDMap();
-        IDirectory directory = new SOSDirectory(sos, map);
-        directory.setParent(parent);
+        IDirectory directory = null;
+        try {
+            directory = new SOSDirectory(sos);
+        } catch (GUIDGenerationException e) {
+            e.printStackTrace();
+        }
         directory.persist();
 
         parent.addDirectory(name, directory);
@@ -148,7 +148,7 @@ public class SOSFileSystem implements IFileSystem {
     @Override
     public IGUID getRootId() {
         // TODO - should this return the asset guid or the compound guid?
-        return ConversionHelper.toWebDAVGUID(this.head);
+        return this.head;
     }
 
 

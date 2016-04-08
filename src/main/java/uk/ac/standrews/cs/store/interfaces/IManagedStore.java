@@ -3,7 +3,7 @@
  */
 package uk.ac.standrews.cs.store.interfaces;
 
-import uk.ac.standrews.cs.interfaces.IPID;
+import uk.ac.standrews.cs.IPID;
 
 /**
  * Version of IStore that allows PIDs to be removed.

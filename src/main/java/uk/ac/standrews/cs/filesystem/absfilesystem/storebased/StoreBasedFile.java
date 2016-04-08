@@ -3,11 +3,11 @@
  */
 package uk.ac.standrews.cs.filesystem.absfilesystem.storebased;
 
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
-import uk.ac.standrews.cs.interfaces.IGUID;
-import uk.ac.standrews.cs.interfaces.IPID;
+import uk.ac.standrews.cs.IPID;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.store.interfaces.IGUIDStore;
@@ -34,13 +34,11 @@ public class StoreBasedFile extends StoreBasedFileSystemObject implements IFile 
      * Used to create a new file.
      */
     public StoreBasedFile(IGUIDStore store, IData data, IAttributes atts) throws PersistenceException {
-    	
         super(store, data, atts);
         persist();
     }
     
     public StoreBasedFile(IGUIDStore store, IData data) throws PersistenceException {
-    	
         this(store, data, null);
     }
 }

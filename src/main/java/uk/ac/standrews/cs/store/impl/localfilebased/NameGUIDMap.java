@@ -3,11 +3,14 @@
  */
 package uk.ac.standrews.cs.store.impl.localfilebased;
 
+import uk.ac.standrews.cs.GUIDFactory;
+import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.exceptions.BindingPresentException;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.exceptions.PersistenceException;
-import uk.ac.standrews.cs.interfaces.IGUID;
-import uk.ac.standrews.cs.interfaces.IPID;
+import uk.ac.standrews.cs.impl.KeyImpl;
+import uk.ac.standrews.cs.IPID;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.store.exceptions.StoreGetException;
@@ -51,7 +54,7 @@ public class NameGUIDMap extends Properties implements INameGUIDMap {
     public NameGUIDMap(IGUIDStore store) {
         super();
         backing_store = store;
-        
+
         guid = GUIDFactory.generateRandomGUID();
         pid = null;
     }
@@ -334,8 +337,13 @@ public class NameGUIDMap extends Properties implements INameGUIDMap {
             Error.hardError( "internal inconsistency in mapping, found " + st.countTokens() + " expected 2" );
             // not reached
             return null;
-        } else {    
-            return new KeyImpl(st.nextToken()); // first token is the GUID
+        } else {
+            try {
+                return new KeyImpl(st.nextToken()); // first token is the GUID
+            } catch (GUIDGenerationException e) {
+                Error.hardError( "Could not extract GUID");
+                return null;
+            }
         }
     }
    
