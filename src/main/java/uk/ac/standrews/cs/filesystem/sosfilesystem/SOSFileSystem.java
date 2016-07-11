@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.filesystem.sosfilesystem;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.exceptions.BindingPresentException;
@@ -26,20 +27,28 @@ public class SOSFileSystem implements IFileSystem {
 
     private SeaOfStuff sos;
 
-    private IGUID head; // TODO - have to us this!
+    private IGUID invariant;
+    private IGUID head; // FIXME - head is never updated, but it should.
     private IDirectory root_collection;
 
     public SOSFileSystem(SeaOfStuff sos, IGUID rootGUID) {
         this.sos = sos;
-        this.head = rootGUID;
+        this.invariant = rootGUID;
 
-        if (head == null) {
-            // TODO - throw exception
+        if (invariant == null) {
+            invariant = GUIDFactory.generateRandomGUID();
+        } else {
+            // TODO - check if there assets with this invariant and load the latest?
         }
 
         try {
             root_collection = new SOSDirectory(sos);
+            ((SOSDirectory) root_collection).setInvariant(invariant);
+            root_collection.persist();
+            head = root_collection.getGUID();
         } catch (GUIDGenerationException e) {
+            e.printStackTrace();
+        } catch (PersistenceException e) {
             e.printStackTrace();
         }
     }
@@ -60,7 +69,10 @@ public class SOSFileSystem implements IFileSystem {
         file.persist();
 
         // This Operation will create a new compound + asset
+        ((SOSDirectory) parent).setInvariant(((SOSDirectory) parent).getInvariant());
+        ((SOSDirectory) parent).setPrevious(parent.getGUID());
         parent.addFile(name, file, content_type);
+
         parent.persist();
         return file;
     }

@@ -107,7 +107,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
             Compound compound = sos.addCompound(CompoundType.COLLECTION, contents);
 
             IGUID content = compound.getContentGUID();
-            Asset asset = sos.addAsset(content, null, null, null); // TODO - add metadata
+            Asset asset = sos.addAsset(content, getInvariant(), null, null); // TODO - add metadata
 
             IGUID version = asset.getVersionGUID();
             guid = GUIDFactory.recreateGUID(version.toString());
@@ -182,7 +182,6 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         }
         return null;
     }
-
 
     private class CompoundIterator implements Iterator {
 
