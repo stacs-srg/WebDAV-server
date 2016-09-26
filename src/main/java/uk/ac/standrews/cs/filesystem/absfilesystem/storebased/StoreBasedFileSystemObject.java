@@ -4,10 +4,9 @@
 package uk.ac.standrews.cs.filesystem.absfilesystem.storebased;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.exceptions.AccessFailureException;
-import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.IPID;
+import uk.ac.standrews.cs.exceptions.AccessFailureException;
+import uk.ac.standrews.cs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.persistence.impl.AttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributes;

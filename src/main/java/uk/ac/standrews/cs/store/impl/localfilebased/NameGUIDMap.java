@@ -5,12 +5,12 @@ package uk.ac.standrews.cs.store.impl.localfilebased;
 
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.IPID;
 import uk.ac.standrews.cs.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.exceptions.BindingPresentException;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.exceptions.PersistenceException;
-import uk.ac.standrews.cs.impl.KeyImpl;
-import uk.ac.standrews.cs.IPID;
+import uk.ac.standrews.cs.impl.keys.KeyImpl;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.store.exceptions.StoreGetException;
@@ -18,7 +18,8 @@ import uk.ac.standrews.cs.store.exceptions.StorePutException;
 import uk.ac.standrews.cs.store.general.NameGUIDBinding;
 import uk.ac.standrews.cs.store.interfaces.IGUIDStore;
 import uk.ac.standrews.cs.store.interfaces.INameGUIDMap;
-import uk.ac.standrews.cs.util.*;
+import uk.ac.standrews.cs.util.Attributes;
+import uk.ac.standrews.cs.util.Diagnostic;
 import uk.ac.standrews.cs.util.Error;
 
 import java.io.ByteArrayOutputStream;

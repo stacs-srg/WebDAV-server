@@ -9,16 +9,17 @@ import uk.ac.standrews.cs.filesystem.interfaces.IFile;
 import uk.ac.standrews.cs.persistence.impl.NameAttributedPersistentObjectBinding;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributes;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
-import uk.ac.standrews.cs.sos.interfaces.SeaOfStuff;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Manifest;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
+import uk.ac.standrews.cs.sos.interfaces.sos.Client;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
+import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.util.Error;
 
 import java.util.Collection;
@@ -32,12 +33,12 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
     private Collection<Content> contents;
 
-    public SOSDirectory(SeaOfStuff sos) throws GUIDGenerationException {
+    public SOSDirectory(Client sos) throws GUIDGenerationException {
         super(sos);
         contents = new HashSet<>();
     }
 
-    public SOSDirectory(SeaOfStuff sos, IGUID guid) throws GUIDGenerationException {
+    public SOSDirectory(Client sos, IGUID guid) throws GUIDGenerationException {
         // TODO - create a directory that already exists - needed from the #get() method in this class
         super(sos);
     }
@@ -107,14 +108,13 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
             Compound compound = sos.addCompound(CompoundType.COLLECTION, contents);
 
             IGUID content = compound.getContentGUID();
-            Asset asset = sos.addAsset(content, getInvariant(), null, null); // TODO - add metadata
+            Version asset = sos.addVersion(new VersionBuilder(content)
+                    .setInvariant(getInvariant())); // TODO - metadata
 
             IGUID version = asset.getVersionGUID();
             guid = GUIDFactory.recreateGUID(version.toString());
-        } catch (ManifestNotMadeException | ManifestPersistException e) {
+        } catch (ManifestNotMadeException | GUIDGenerationException | ManifestPersistException e) {
             throw new PersistenceException("Manifest could not be created or persisted");
-        } catch (GUIDGenerationException e) {
-            e.printStackTrace();
         }
     }
 
@@ -171,12 +171,13 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
                     return new SOSDirectory(sos, guid);
                     // return null; // Make collection
                 }
-            } else if (manifest instanceof Asset) {
+            } else if (manifest instanceof Version) {
                 return getObject(manifest.getContentGUID());
             }
-        } catch (ManifestNotFoundException e) {
-            return null; // FIXME - deal gracefully with this exception
         } catch (GUIDGenerationException e) {
+            e.printStackTrace();
+            return null;
+        } catch (ManifestNotFoundException e) {
             e.printStackTrace();
             return null;
         }

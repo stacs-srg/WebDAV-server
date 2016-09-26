@@ -1,25 +1,34 @@
 package uk.ac.standrews.cs.filesystem.factories;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.filesystem.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
 import uk.ac.standrews.cs.filesystem.interfaces.IFileSystemFactory;
 import uk.ac.standrews.cs.filesystem.sosfilesystem.SOSFileSystem;
-import uk.ac.standrews.cs.sos.exceptions.IndexException;
-import uk.ac.standrews.cs.sos.exceptions.SeaConfigurationException;
-import uk.ac.standrews.cs.sos.exceptions.SeaOfStuffException;
+import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
+import uk.ac.standrews.cs.sos.exceptions.SOSException;
+import uk.ac.standrews.cs.sos.exceptions.configuration.SOSConfigurationException;
+import uk.ac.standrews.cs.sos.exceptions.index.IndexException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
-import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
-import uk.ac.standrews.cs.sos.interfaces.SeaOfStuff;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
+import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.index.Index;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
-import uk.ac.standrews.cs.sos.model.SeaConfiguration;
-import uk.ac.standrews.cs.sos.model.SeaOfStuffImpl;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
+import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
+import uk.ac.standrews.cs.sos.interfaces.sos.Client;
 import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
+import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
+import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
+import uk.ac.standrews.cs.sos.node.SOSLocalNode;
+import uk.ac.standrews.cs.storage.StorageFactory;
+import uk.ac.standrews.cs.storage.StorageType;
+import uk.ac.standrews.cs.storage.exceptions.StorageException;
 
+import java.io.File;
 import java.util.Collections;
 
 /**
@@ -27,10 +36,15 @@ import java.util.Collections;
  */
 public class SOSFileSystemFactory implements IFileSystemFactory {
 
+    private String configurationPath;
     private String rootName;
     private IGUID rootGUID;
 
-    public SOSFileSystemFactory(String rootName, IGUID rootGUID) {
+    private Index index;
+    private InternalStorage internalStorage;
+
+    public SOSFileSystemFactory(String configurationPath, String rootName, IGUID rootGUID) {
+        this.configurationPath = configurationPath;
         this.rootName = rootName;
         this.rootGUID = rootGUID;
     }
@@ -38,30 +52,62 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
     @Override
     public IFileSystem makeFileSystem() throws FileSystemCreationException {
 
-        try {
-            SeaConfiguration.setRootName(rootName);
-            SeaConfiguration configuration = SeaConfiguration.getInstance();
-            Index index = LuceneIndex.getInstance(configuration);
-            SeaOfStuff sos = new SeaOfStuffImpl(configuration, index);
+            try {
+                SOSConfiguration configuration = createConfiguration();
+                createNodeDependencies(configuration);
 
-            Asset rootAsset = createRoot(sos);
+                SOSLocalNode.Builder builder = new SOSLocalNode.Builder();
+                LocalNode localSOSNode = builder.configuration(configuration)
+                        .index(index)
+                        .internalStorage(internalStorage)
+                        .build();
 
-            return new SOSFileSystem(sos, rootAsset.getInvariantGUID());
-        } catch (SeaOfStuffException | IndexException | SeaConfigurationException e) {
-            throw new FileSystemCreationException();
-        }
+                Client client = localSOSNode.getClient();
 
+                Version rootAsset = createRoot(client);
+
+                return new SOSFileSystem(client, rootAsset.getInvariantGUID());
+            } catch (GUIDGenerationException | SOSException e) {
+                e.printStackTrace();
+            }
+
+            return null;
     }
 
-    private Asset createRoot(SeaOfStuff sos) {
+    private SOSConfiguration createConfiguration() throws SOSConfigurationException {
+        File file = new File(configurationPath);
+        return new SOSConfiguration(file);
+    }
 
-        Asset retval = null;
+    private void createNodeDependencies(SOSConfiguration configuration) throws SOSException {
+        try {
 
-        retval = rootExists(sos, rootGUID);
+            StorageType storageType = configuration.getStorageType();
+            String root = configuration.getStorageLocation();
+
+            internalStorage =
+                    new InternalStorage(StorageFactory
+                            .createStorage(storageType, root, true)); // FIXME - storage have very different behaviours if mutable or not
+        } catch (StorageException | DataStorageException e) {
+            throw new SOSException(e);
+        }
+
+        try {
+            index = LuceneIndex.getInstance(internalStorage);
+        } catch (IndexException e) {
+            throw new SOSException(e);
+        }
+    }
+
+    private Version createRoot(Client sos) {
+
+        Version retval = rootExists(sos, rootGUID);
         if (retval == null) {
             try {
+
                 Compound compound = sos.addCompound(CompoundType.COLLECTION, Collections.emptyList());
-                retval =  sos.addAsset(compound.getContentGUID(), rootGUID, null, null);
+                retval =  sos.addVersion(new VersionBuilder(compound.getContentGUID())
+                        .setInvariant(rootGUID));
             } catch (ManifestNotMadeException | ManifestPersistException e) {
                 e.printStackTrace();
             }
@@ -71,10 +117,10 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
 
     }
 
-    private Asset rootExists(SeaOfStuff sos, IGUID root) {
-        Asset retval = null;
+    private Version rootExists(Client sos, IGUID root) {
+        Version retval = null;
         try {
-            retval = (Asset) sos.getManifest(root);
+            retval = (Version) sos.getManifest(root);
         } catch (ManifestNotFoundException e) {
             return retval;
         }

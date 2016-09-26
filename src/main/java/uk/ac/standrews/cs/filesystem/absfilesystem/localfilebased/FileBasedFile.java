@@ -8,8 +8,8 @@ import uk.ac.standrews.cs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.filesystem.FileSystemConstants;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
-import uk.ac.standrews.cs.impl.KeyImpl;
-import uk.ac.standrews.cs.impl.SHA1KeyFactory;
+import uk.ac.standrews.cs.impl.SHAKeyFactory;
+import uk.ac.standrews.cs.impl.keys.KeyImpl;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.util.Attributes;
@@ -42,7 +42,7 @@ public class FileBasedFile extends FileBasedFileSystemObject implements IFile {
         real_file = new File(((FileBasedDirectory)logical_parent).getRealFile(), name);
         
         try {
-			guid = (KeyImpl) SHA1KeyFactory.generateKey(real_file.getCanonicalPath());    // generate GUID based on file path
+			guid = (KeyImpl) SHAKeyFactory.generateKey(real_file.getCanonicalPath());    // generate GUID based on file path
 		} catch (IOException e) {
 			throw new PersistenceException("Can't obtain file path for backing file");
 		} catch (GUIDGenerationException e) {

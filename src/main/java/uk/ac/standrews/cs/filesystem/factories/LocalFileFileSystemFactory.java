@@ -4,7 +4,6 @@
 package uk.ac.standrews.cs.filesystem.factories;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.filesystem.absfilesystem.localfilebased.FileBasedFileSystem;
 import uk.ac.standrews.cs.filesystem.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;

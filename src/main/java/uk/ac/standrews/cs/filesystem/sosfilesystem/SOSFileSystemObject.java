@@ -6,9 +6,8 @@ import uk.ac.standrews.cs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.persistence.impl.AttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.persistence.interfaces.IVersionableObject;
-import uk.ac.standrews.cs.sos.interfaces.SeaOfStuff;
+import uk.ac.standrews.cs.sos.interfaces.sos.Client;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -17,18 +16,18 @@ import java.util.Collection;
 public class SOSFileSystemObject extends AttributedStatefulObject implements IVersionableObject {
 
     protected String name;
-    protected SeaOfStuff sos;
+    protected Client sos;
 
     private IGUID invariant;
-    private IGUID previous; // TODO - this should be a collection
+    private Collection<IGUID> previous;
 
-    public SOSFileSystemObject(SeaOfStuff sos) {
+    public SOSFileSystemObject(Client sos) {
         super(null);
         this.sos = sos;
     }
 
 
-    public SOSFileSystemObject(SeaOfStuff sos, IData data) {
+    public SOSFileSystemObject(Client sos, IData data) {
         super(data, null);
         this.sos = sos;
     }
@@ -50,14 +49,12 @@ public class SOSFileSystemObject extends AttributedStatefulObject implements IVe
 
     @Override
     public void setPrevious(IGUID previous) {
-
+        // TODO
     }
 
     @Override
     public Collection<IGUID> getPrevious() {
-        Collection<IGUID> retval =  new ArrayList<IGUID>();
-        retval.add(previous);
-        return retval;
+        return previous;
     }
 
     @Override

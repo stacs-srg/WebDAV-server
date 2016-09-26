@@ -36,7 +36,7 @@ public class WebDAV_SOS_Launcher extends WebDAVLauncher {
             try {
                 IGUID root_GUID = GUIDFactory.recreateGUID(root_GUID_string);
                 IFileSystem file_system =
-                        new SOSFileSystemFactory(root_directory_path, root_GUID)
+                        new SOSFileSystemFactory("CONFIG-FILE-PATH", root_directory_path, root_GUID)
                         .makeFileSystem();
 
                 startWebDAVServer(file_system, port);

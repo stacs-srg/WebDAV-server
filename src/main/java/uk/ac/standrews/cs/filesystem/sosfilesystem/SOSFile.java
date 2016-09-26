@@ -11,16 +11,19 @@ import uk.ac.standrews.cs.filesystem.interfaces.IFile;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
-import uk.ac.standrews.cs.sos.exceptions.storage.ManifestNotFoundException;
-import uk.ac.standrews.cs.sos.exceptions.storage.ManifestPersistException;
-import uk.ac.standrews.cs.sos.interfaces.SeaOfStuff;
-import uk.ac.standrews.cs.sos.interfaces.manifests.Asset;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
+import uk.ac.standrews.cs.sos.interfaces.sos.Client;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
+import uk.ac.standrews.cs.sos.model.manifests.builders.AtomBuilder;
+import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
+import uk.ac.standrews.cs.storage.exceptions.StorageException;
 import uk.ac.standrews.cs.util.Attributes;
 import uk.ac.standrews.cs.util.Error;
 import uk.ac.standrews.cs.webdav.impl.InputStreamData;
@@ -34,31 +37,31 @@ import java.util.Collection;
  */
 public class SOSFile extends SOSFileSystemObject implements IFile {
 
-    private Asset asset;
+    private Version version;
 
     boolean isCompoundData;
     private Atom atom;
     private Collection<Content> atoms;
     private IAttributedStatefulObject previous;
 
-    public SOSFile(SeaOfStuff sos, IData data) throws PersistenceException {
+    public SOSFile(Client sos, IData data) throws PersistenceException {
         super(sos, data);
         this.isCompoundData = false;
 
         try {
-            atom = sos.addAtom(data.getInputStream());
-        } catch (DataStorageException | IOException | ManifestPersistException e) {
+            atom = sos.addAtom(new AtomBuilder().setInputStream(data.getInputStream()));
+        } catch (StorageException | IOException | ManifestPersistException e) {
             throw new PersistenceException("SOS atom could not be created");
         }
     }
 
-    public SOSFile(SeaOfStuff sos)  {
+    public SOSFile(Client sos)  {
         super(sos);
         this.isCompoundData = true;
         this.atoms = new ArrayList<>();
     }
 
-    public SOSFile(SeaOfStuff sos, IGUID guid) {
+    public SOSFile(Client sos, IGUID guid) {
         super(sos);
 
         try {
@@ -68,7 +71,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         }
     }
 
-    public SOSFile(SeaOfStuff sos, IData data, IAttributedStatefulObject previous) throws PersistenceException {
+    public SOSFile(Client sos, IData data, IAttributedStatefulObject previous) throws PersistenceException {
         this(sos, data);
         this.previous = previous;
     }
@@ -86,7 +89,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
     @Override
     public void setAttributes(IAttributes attributes) {
         // This will allow to explitly set new attributes, resulting in a new version of the data
-        // or we could have the data pointing an asset, so the file does not need to change as the metadata does
+        // or we could have the data pointing an version, so the file does not need to change as the metadata does
         Error.hardError("unimplemented method");
     }
 
@@ -113,12 +116,12 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             return;
 
         try {
-            Atom atom = sos.addAtom(data.getInputStream());
+            Atom atom = sos.addAtom(new AtomBuilder().setInputStream(data.getInputStream()));
             IGUID guid = atom.getContentGUID();
             Content content = new Content(guid);
             atoms.add(content);
 
-        } catch (DataStorageException | ManifestPersistException | IOException e) {
+        } catch (ManifestPersistException | IOException | StorageException e) {
             e.printStackTrace();
         }
 
@@ -135,21 +138,19 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
 
             if (! isCompoundData) {
                 IGUID content = atom.getContentGUID();
-                asset = sos.addAsset(content, null, prevs, null); // TODO - add metadata
+                version = sos.addVersion(new VersionBuilder(content)
+                        .setPrevious(prevs)); // TODO - add metadata
 
-                guid = GUIDFactory.recreateGUID(asset.getVersionGUID().toString());
+                guid = GUIDFactory.recreateGUID(version.getVersionGUID().toString());
             } else {
                 Compound compound = sos.addCompound(CompoundType.DATA, atoms);
-                asset = sos.addAsset(compound.getContentGUID(), null, prevs, null); // TODO - add metadata
+                version = sos.addVersion(new VersionBuilder(compound.getContentGUID())
+                        .setPrevious(prevs)); // TODO - add metadata
 
-                guid = GUIDFactory.recreateGUID(asset.getVersionGUID().toString());
+                guid = GUIDFactory.recreateGUID(version.getVersionGUID().toString());
             }
 
-        } catch (ManifestNotMadeException e) {
-            e.printStackTrace();
-        } catch (ManifestPersistException e) {
-            e.printStackTrace();
-        } catch (GUIDGenerationException e) {
+        } catch (ManifestNotMadeException | ManifestPersistException | GUIDGenerationException e) {
             e.printStackTrace();
         }
     }

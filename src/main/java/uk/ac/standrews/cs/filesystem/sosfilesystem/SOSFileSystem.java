@@ -14,7 +14,7 @@ import uk.ac.standrews.cs.filesystem.interfaces.IFile;
 import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
-import uk.ac.standrews.cs.sos.interfaces.SeaOfStuff;
+import uk.ac.standrews.cs.sos.interfaces.sos.Client;
 import uk.ac.standrews.cs.util.UriUtil;
 
 import java.net.URI;
@@ -25,13 +25,13 @@ import java.util.Iterator;
  */
 public class SOSFileSystem implements IFileSystem {
 
-    private SeaOfStuff sos;
+    private Client sos;
 
     private IGUID invariant;
     private IGUID head; // FIXME - head is never updated, but it should.
     private IDirectory root_collection;
 
-    public SOSFileSystem(SeaOfStuff sos, IGUID rootGUID) {
+    public SOSFileSystem(Client sos, IGUID rootGUID) {
         this.sos = sos;
         this.invariant = rootGUID;
 
