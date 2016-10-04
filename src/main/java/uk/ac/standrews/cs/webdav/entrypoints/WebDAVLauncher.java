@@ -45,6 +45,10 @@ public abstract class WebDAVLauncher {
         return port;
     }
 
+    protected static String processConfigFile(String[] args) {
+        return CommandLineArgs.getArg(args, "-c");
+    }
+
     protected static void startWebDAVServer(IFileSystem file_system, int port) throws IOException {
         WebDAVServer server;
         if (port == 0) {

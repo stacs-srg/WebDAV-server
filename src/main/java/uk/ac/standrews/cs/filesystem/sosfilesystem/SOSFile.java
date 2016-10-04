@@ -14,7 +14,6 @@ import uk.ac.standrews.cs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
-import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
@@ -29,6 +28,7 @@ import uk.ac.standrews.cs.util.Error;
 import uk.ac.standrews.cs.webdav.impl.InputStreamData;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -49,7 +49,10 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         this.isCompoundData = false;
 
         try {
-            atom = sos.addAtom(new AtomBuilder().setInputStream(data.getInputStream()));
+            InputStream stream = data.getInputStream();
+
+            AtomBuilder builder = new AtomBuilder().setInputStream(stream);
+            atom = sos.addAtom(builder);
         } catch (StorageException | IOException | ManifestPersistException e) {
             throw new PersistenceException("SOS atom could not be created");
         }

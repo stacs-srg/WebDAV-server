@@ -19,7 +19,10 @@ public class WebDAV_SOS_Launcher extends WebDAVLauncher {
     /**
      * Creates a store and file system, and runs a WebDAV server over it.
      *
-     * Usage: java WebDAV_StoreBased_Launcher -r<store root guid> [-p<port>] [-d<store root directory>] [-s<store name>] [-D]
+     * Usage: java WebDAV_StoreBased_Launcher -r<store root guid>
+     *          [-p<port>] [-d<store root directory>]
+     *          [-s<store name>] [-D]
+     *          -c<configurationFilePath>
      *
      * @param args optional command line arguments
      */
@@ -32,11 +35,12 @@ public class WebDAV_SOS_Launcher extends WebDAVLauncher {
         if (root_GUID_string != null) {
             processDiagnostic(args);
             int port = processPort(args);
+            String configFilePath = processConfigFile(args);
 
             try {
                 IGUID root_GUID = GUIDFactory.recreateGUID(root_GUID_string);
                 IFileSystem file_system =
-                        new SOSFileSystemFactory("CONFIG-FILE-PATH", root_directory_path, root_GUID)
+                        new SOSFileSystemFactory(configFilePath, root_directory_path, root_GUID)
                         .makeFileSystem();
 
                 startWebDAVServer(file_system, port);
@@ -48,7 +52,10 @@ public class WebDAV_SOS_Launcher extends WebDAVLauncher {
                 e.printStackTrace();
             }
         } else {
-            Output.getSingleton().println("Usage: java WebDAV_SOS_Launcher -r<store root guid> [-p<port>] [-d<store root directory>] [-s<store name>] [-D]");
+            Output.getSingleton().println("Usage: java WebDAV_SOS_Launcher -r<store root guid> " +
+                    "[-p<port>] [-d<store root directory>] " +
+                    "[-s<store name>] [-D] " +
+                    "-c<configurationFilePath>");
         }
     }
 }

@@ -9,17 +9,14 @@ import uk.ac.standrews.cs.filesystem.sosfilesystem.SOSFileSystem;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.configuration.SOSConfigurationException;
-import uk.ac.standrews.cs.sos.exceptions.index.IndexException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
-import uk.ac.standrews.cs.sos.interfaces.index.Index;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Compound;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.node.LocalNode;
 import uk.ac.standrews.cs.sos.interfaces.sos.Client;
-import uk.ac.standrews.cs.sos.model.index.LuceneIndex;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
@@ -40,7 +37,6 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
     private String rootName;
     private IGUID rootGUID;
 
-    private Index index;
     private InternalStorage internalStorage;
 
     public SOSFileSystemFactory(String configurationPath, String rootName, IGUID rootGUID) {
@@ -58,7 +54,6 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
 
                 SOSLocalNode.Builder builder = new SOSLocalNode.Builder();
                 LocalNode localSOSNode = builder.configuration(configuration)
-                        .index(index)
                         .internalStorage(internalStorage)
                         .build();
 
@@ -92,11 +87,6 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
             throw new SOSException(e);
         }
 
-        try {
-            index = LuceneIndex.getInstance(internalStorage);
-        } catch (IndexException e) {
-            throw new SOSException(e);
-        }
     }
 
     private Version createRoot(Client sos) {

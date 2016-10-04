@@ -3,7 +3,6 @@ package uk.ac.standrews.cs.webdav.entrypoints;
 import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
 import uk.ac.standrews.cs.locking.impl.LockManager;
 import uk.ac.standrews.cs.locking.interfaces.ILockManager;
-import uk.ac.standrews.cs.util.Action;
 import uk.ac.standrews.cs.util.ActionQueue;
 import uk.ac.standrews.cs.util.Diagnostic;
 import uk.ac.standrews.cs.webdav.impl.RequestHandler;
@@ -60,12 +59,7 @@ public class WebDAVServer {
 				Diagnostic.trace("request queue full", Diagnostic.INIT);
 			}
 
-			request_queue.enqueue(new Action() {
-
-				public void performAction() {
-					handler.run();
-				}
-			});
+			request_queue.enqueue(() -> handler.run());
 		}
 	}
 }
