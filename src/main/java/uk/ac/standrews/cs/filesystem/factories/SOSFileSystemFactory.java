@@ -10,7 +10,8 @@ import uk.ac.standrews.cs.filesystem.sosfilesystem.SOSFileSystem;
 import uk.ac.standrews.cs.sos.configuration.SOSConfiguration;
 import uk.ac.standrews.cs.sos.exceptions.SOSException;
 import uk.ac.standrews.cs.sos.exceptions.configuration.SOSConfigurationException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
+import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.exceptions.storage.DataStorageException;
@@ -47,7 +48,6 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
 
     @Override
     public IFileSystem makeFileSystem() throws FileSystemCreationException {
-
         LOG.log(LEVEL.INFO, "WEBDAV - Factory - Making the File System");
 
         Client client = getSOSClient();
@@ -101,32 +101,36 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
     }
 
     private Version createRoot(Client sos) {
-        Version retval = rootExists(sos, rootGUID);
+        Version retval = getRoot(sos, rootGUID);
 
         LOG.log(LEVEL.INFO, "WEBDAV - Creating ROOT " + rootGUID + " Exist: " + (retval != null));
         if (retval == null) {
             try {
+                Compound compound = createRootCompound(sos);
+                VersionBuilder builder = new VersionBuilder(compound.getContentGUID()).setInvariant(rootGUID);
 
-                Compound compound = sos.addCompound(CompoundType.COLLECTION, Collections.emptyList());
-                retval =  sos.addVersion(new VersionBuilder(compound.getContentGUID())
-                        .setInvariant(rootGUID));
-            } catch (ManifestNotMadeException | ManifestPersistException e) {
+                retval = sos.addVersion(builder);
+                sos.setHEAD(retval.getVersionGUID());
+            } catch (ManifestNotMadeException | ManifestPersistException | HEADNotSetException e) {
                 e.printStackTrace();
             }
         }
 
         return retval;
-
     }
 
-    private Version rootExists(Client sos, IGUID root) {
-        Version retval = null;
+    private Version getRoot(Client sos, IGUID root) {
+        Version retval;
         try {
             retval = sos.getHEAD(root);
-        } catch (ManifestNotFoundException e) {
-            return retval;
+        } catch (HEADNotFoundException e) {
+            return null;
         }
         return retval;
+    }
+
+    private Compound createRootCompound(Client sos) throws ManifestPersistException, ManifestNotMadeException {
+        return sos.addCompound(CompoundType.COLLECTION, Collections.emptyList());
     }
 
 }

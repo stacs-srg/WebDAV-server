@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.filesystem.sosfilesystem;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.BindingAbsentException;
@@ -36,13 +35,6 @@ public class SOSFileSystem implements IFileSystem {
     public SOSFileSystem(Client sos, IGUID rootGUID) {
         this.sos = sos;
         this.invariant = rootGUID;
-
-        if (invariant == null) {
-            invariant = GUIDFactory.generateRandomGUID();
-        } else {
-            // TODO - check if there are assets with this invariant and load the latest?
-            // Version version = sos.getHEAD(invariant);
-        }
 
         try {
             root_collection = new SOSDirectory(sos);
