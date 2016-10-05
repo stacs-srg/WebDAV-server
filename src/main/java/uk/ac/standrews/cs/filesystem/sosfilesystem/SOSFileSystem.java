@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.filesystem.sosfilesystem;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.BindingAbsentException;
 import uk.ac.standrews.cs.exceptions.BindingPresentException;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
@@ -15,6 +16,7 @@ import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.sos.interfaces.sos.Client;
+import uk.ac.standrews.cs.sos.utils.LOG;
 import uk.ac.standrews.cs.util.UriUtil;
 
 import java.net.URI;
@@ -38,7 +40,8 @@ public class SOSFileSystem implements IFileSystem {
         if (invariant == null) {
             invariant = GUIDFactory.generateRandomGUID();
         } else {
-            // TODO - check if there assets with this invariant and load the latest?
+            // TODO - check if there are assets with this invariant and load the latest?
+            // Version version = sos.getHEAD(invariant);
         }
 
         try {
@@ -51,6 +54,8 @@ public class SOSFileSystem implements IFileSystem {
         } catch (PersistenceException e) {
             e.printStackTrace();
         }
+
+        LOG.log(LEVEL.INFO, "WEBDAV - File System Created");
     }
 
     // TODO - create compound if large file
@@ -58,6 +63,7 @@ public class SOSFileSystem implements IFileSystem {
     // via appendToFile
     @Override
     public IFile createNewFile(IDirectory parent, String name, String content_type, IData data) throws BindingPresentException, PersistenceException {
+        LOG.log(LEVEL.INFO, "WEBDAV - Create new file " + name);
 
         // TODO - check if file already exists.
         // if it does, then throw exception BindingPresentException
@@ -92,8 +98,9 @@ public class SOSFileSystem implements IFileSystem {
 
     @Override
     public synchronized void updateFile(IDirectory parent, String name, String content_type, IData data) throws BindingAbsentException, UpdateException, PersistenceException {
+        LOG.log(LEVEL.INFO, "WEBDAV - Update file " + name);
 
-        IAttributedStatefulObject previous = parent.get(name);
+        SOSFile previous = (SOSFile) parent.get(name);
         IFile file = new SOSFile(sos, data, previous);
         file.persist();
 
@@ -109,19 +116,19 @@ public class SOSFileSystem implements IFileSystem {
 
     @Override
     public synchronized void appendToFile(IDirectory parent, String name, String content_type, IData data) throws BindingAbsentException, AppendException, PersistenceException {
-
+        LOG.log(LEVEL.INFO, "WEBDAV - Append to file " + name);
         // NOTE call a series of append calls on SOSFile and end it with a persist - behaviour is different from the one in abstract file system
 
     }
 
     @Override
     public IDirectory createNewDirectory(IDirectory parent, String name) throws BindingPresentException, PersistenceException {
-
+        LOG.log(LEVEL.INFO, "WEBDAV - Create new directory " + name);
         // TODO - should check if directory already exists
 
         IDirectory directory = null;
         try {
-            directory = new SOSDirectory(sos);
+            directory = new SOSDirectory(sos, name);
         } catch (GUIDGenerationException e) {
             e.printStackTrace();
         }
@@ -135,7 +142,7 @@ public class SOSFileSystem implements IFileSystem {
 
     @Override
     public void deleteObject(IDirectory parent, String name) throws BindingAbsentException {
-
+        LOG.log(LEVEL.INFO, "WEBDAV - Delete object " + name);
         // TODO - This will add a version to the asset with no content
 
         throw new NotImplementedException();
@@ -143,11 +150,15 @@ public class SOSFileSystem implements IFileSystem {
 
     @Override
     public void moveObject(IDirectory source_parent, String source_name, IDirectory destination_parent, String destination_name, boolean overwrite) throws BindingAbsentException, BindingPresentException {
+        LOG.log(LEVEL.INFO, "WEBDAV - Move object " + source_name + " TO " + destination_name);
+
         throw new NotImplementedException();
     }
 
     @Override
     public void copyObject(IDirectory source_parent, String source_name, IDirectory destination_parent, String destination_name, boolean overwrite) throws BindingAbsentException, BindingPresentException, PersistenceException {
+        LOG.log(LEVEL.INFO, "WEBDAV - Copy object " + source_name + " TO " + destination_name);
+
         throw new NotImplementedException();
     }
 
@@ -167,6 +178,7 @@ public class SOSFileSystem implements IFileSystem {
     // TODO - duplicate in AbstractFileSystem
     @Override
     public IAttributedStatefulObject resolveObject(URI uri) {
+        // LOG.log(LEVEL.INFO, "WEBDAV - Resolving object with URI " + uri.toString());
 
         Iterator iterator = UriUtil.pathElementIterator(uri);
         IDirectory parent = getRootDirectory();

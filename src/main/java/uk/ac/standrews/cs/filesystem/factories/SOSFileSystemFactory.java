@@ -1,6 +1,7 @@
 package uk.ac.standrews.cs.filesystem.factories;
 
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.filesystem.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
@@ -21,6 +22,7 @@ import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.model.storage.InternalStorage;
 import uk.ac.standrews.cs.sos.node.SOSLocalNode;
+import uk.ac.standrews.cs.sos.utils.LOG;
 import uk.ac.standrews.cs.storage.StorageFactory;
 import uk.ac.standrews.cs.storage.StorageType;
 import uk.ac.standrews.cs.storage.exceptions.StorageException;
@@ -34,39 +36,49 @@ import java.util.Collections;
 public class SOSFileSystemFactory implements IFileSystemFactory {
 
     private String configurationPath;
-    private String rootName;
     private IGUID rootGUID;
 
     private InternalStorage internalStorage;
 
-    public SOSFileSystemFactory(String configurationPath, String rootName, IGUID rootGUID) {
+    public SOSFileSystemFactory(String configurationPath, IGUID rootGUID) {
         this.configurationPath = configurationPath;
-        this.rootName = rootName;
         this.rootGUID = rootGUID;
     }
 
     @Override
     public IFileSystem makeFileSystem() throws FileSystemCreationException {
 
-            try {
-                SOSConfiguration configuration = createConfiguration();
-                createNodeDependencies(configuration);
+        LOG.log(LEVEL.INFO, "WEBDAV - Factory - Making the File System");
 
-                SOSLocalNode.Builder builder = new SOSLocalNode.Builder();
-                LocalNode localSOSNode = builder.configuration(configuration)
-                        .internalStorage(internalStorage)
-                        .build();
+        Client client = getSOSClient();
 
-                Client client = localSOSNode.getClient();
-
-                Version rootAsset = createRoot(client);
-
-                return new SOSFileSystem(client, rootAsset.getInvariantGUID());
-            } catch (GUIDGenerationException | SOSException e) {
-                e.printStackTrace();
-            }
-
+        if (client != null) {
+            Version rootAsset = createRoot(client);
+            return new SOSFileSystem(client, rootAsset.getInvariantGUID());
+        } else {
+            LOG.log(LEVEL.ERROR, "WEBDAV - Unable to create file system");
             return null;
+        }
+    }
+
+    private Client getSOSClient() {
+        Client client = null;
+        try {
+            SOSConfiguration configuration = createConfiguration();
+            createNodeDependencies(configuration);
+
+            SOSLocalNode.Builder builder = new SOSLocalNode.Builder();
+            LocalNode localSOSNode = builder
+                    .configuration(configuration)
+                    .internalStorage(internalStorage)
+                    .build();
+
+            client = localSOSNode.getClient();
+        } catch (GUIDGenerationException | SOSException e) {
+            e.printStackTrace();
+        }
+
+        return client;
     }
 
     private SOSConfiguration createConfiguration() throws SOSConfigurationException {
@@ -80,8 +92,7 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
             StorageType storageType = configuration.getStorageType();
             String root = configuration.getStorageLocation();
 
-            internalStorage =
-                    new InternalStorage(StorageFactory
+            internalStorage = new InternalStorage(StorageFactory
                             .createStorage(storageType, root, true)); // FIXME - storage have very different behaviours if mutable or not
         } catch (StorageException | DataStorageException e) {
             throw new SOSException(e);
@@ -90,8 +101,9 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
     }
 
     private Version createRoot(Client sos) {
-
         Version retval = rootExists(sos, rootGUID);
+
+        LOG.log(LEVEL.INFO, "WEBDAV - Creating ROOT " + rootGUID + " Exist: " + (retval != null));
         if (retval == null) {
             try {
 
@@ -110,7 +122,7 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
     private Version rootExists(Client sos, IGUID root) {
         Version retval = null;
         try {
-            retval = (Version) sos.getManifest(root);
+            retval = sos.getHEAD(root);
         } catch (ManifestNotFoundException e) {
             return retval;
         }

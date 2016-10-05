@@ -2,6 +2,8 @@ package uk.ac.standrews.cs.webdav.entrypoints;
 
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.LOG;
+import uk.ac.standrews.cs.Logger;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.filesystem.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.filesystem.factories.SOSFileSystemFactory;
@@ -16,6 +18,9 @@ import java.io.IOException;
  */
 public class WebDAV_SOS_Launcher extends WebDAVLauncher {
 
+    // Initialise the LOGGER
+    private LOG log = Logger.LOG();
+
     /**
      * Creates a store and file system, and runs a WebDAV server over it.
      *
@@ -28,7 +33,6 @@ public class WebDAV_SOS_Launcher extends WebDAVLauncher {
      */
     public static void main(String[] args) {
 
-        String root_directory_path = processDirectoryRoot(args);
         String root_GUID_string = processStoreRoot(args);
 
         // Can't continue if no root GUID string supplied.
@@ -40,7 +44,7 @@ public class WebDAV_SOS_Launcher extends WebDAVLauncher {
             try {
                 IGUID root_GUID = GUIDFactory.recreateGUID(root_GUID_string);
                 IFileSystem file_system =
-                        new SOSFileSystemFactory(configFilePath, root_directory_path, root_GUID)
+                        new SOSFileSystemFactory(configFilePath, root_GUID)
                         .makeFileSystem();
 
                 startWebDAVServer(file_system, port);

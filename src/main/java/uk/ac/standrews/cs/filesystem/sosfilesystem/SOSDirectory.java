@@ -3,6 +3,7 @@ package uk.ac.standrews.cs.filesystem.sosfilesystem;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
+import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.*;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
@@ -20,6 +21,7 @@ import uk.ac.standrews.cs.sos.interfaces.sos.Client;
 import uk.ac.standrews.cs.sos.model.manifests.CompoundType;
 import uk.ac.standrews.cs.sos.model.manifests.Content;
 import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
+import uk.ac.standrews.cs.sos.utils.LOG;
 import uk.ac.standrews.cs.util.Error;
 
 import java.util.Collection;
@@ -33,6 +35,12 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
     private Collection<Content> contents;
 
+    public SOSDirectory(Client sos, String name) throws GUIDGenerationException {
+        super(sos);
+        this.name = name;
+        contents = new HashSet<>();
+    }
+
     public SOSDirectory(Client sos) throws GUIDGenerationException {
         super(sos);
         contents = new HashSet<>();
@@ -42,7 +50,6 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         // TODO - create a directory that already exists - needed from the #get() method in this class
         super(sos);
     }
-
 
     @Override
     public IAttributedStatefulObject get(String name) {
@@ -64,6 +71,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
     public void addFile(String name, IFile file, String content_type) throws BindingPresentException {
         // create new compound with given file
         // result in new version
+        LOG.log(LEVEL.INFO, "WEBDAV - Add file " + name + " to folder " + this.name);
 
         addObject(name, file, null);
     }
@@ -72,6 +80,8 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
     public void addDirectory(String name, IDirectory directory) throws BindingPresentException {
         // same as above - from the compound perspective it does not matter whether it is a compound or an atom that we add
         // result in new version
+        LOG.log(LEVEL.INFO, "WEBDAV - Add directory " + name + " to folder " + this.name);
+
         addObject(name, directory, null);
     }
 
@@ -99,6 +109,8 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         // result in new version
         // iterate over collection and remove element with given name
         // then persist
+        LOG.log(LEVEL.INFO, "WEBDAV - Remove object " + name + " from folder " + this.name);
+
         contents.remove(getContent(name));
     }
 
@@ -109,7 +121,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
             IGUID content = compound.getContentGUID();
             Version asset = sos.addVersion(new VersionBuilder(content)
-                    .setInvariant(getInvariant())); // TODO - metadata
+                    .setInvariant(getInvariant())); // TODO - metadata + previous
 
             IGUID version = asset.getVersionGUID();
             guid = GUIDFactory.recreateGUID(version.toString());
@@ -161,16 +173,12 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         try {
             Manifest manifest = sos.getManifest(guid);
             if (manifest instanceof Atom) {
+                LOG.log(LEVEL.INFO, "WEBDAV - returning file"); // FIXME - give asset for file too!
                 return new SOSFile(sos, guid);
+
             } else if (manifest instanceof  Compound) {
-                // Still this might be a data compound
-                Compound compound = (Compound) manifest;
-                if (compound.getType() == CompoundType.DATA) {
-                    return null; // Make compound file
-                } else {
-                    return new SOSDirectory(sos, guid);
-                    // return null; // Make collection
-                }
+                return getCompoundObject((Compound) manifest);
+
             } else if (manifest instanceof Version) {
                 return getObject(manifest.getContentGUID());
             }
@@ -184,6 +192,19 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         return null;
     }
 
+    private SOSDirectory getCompoundObject(Compound compound) throws GUIDGenerationException {
+        // Still this might be a data compound
+        if (compound.getType() == CompoundType.DATA) {
+            return null; // Make compound file
+        } else {
+            return new SOSDirectory(sos, guid);
+            // return null; // Make collection
+        }
+    }
+
+    /**
+     * Iterator for the compound. The iterator returns Contents until hasNext returns false.
+     */
     private class CompoundIterator implements Iterator {
 
         Iterator<Content> contentIterator;
