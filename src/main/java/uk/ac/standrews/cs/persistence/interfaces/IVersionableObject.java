@@ -9,11 +9,7 @@ import java.util.Collection;
  */
 public interface IVersionableObject extends IAttributedStatefulObject {
 
-    void setPrevious(IGUID previous);
-
     Collection<IGUID> getPrevious();
-
-    void setInvariant(IGUID guid);
 
     IGUID getInvariant();
 

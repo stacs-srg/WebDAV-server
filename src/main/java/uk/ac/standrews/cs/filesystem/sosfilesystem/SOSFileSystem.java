@@ -14,6 +14,7 @@ import uk.ac.standrews.cs.filesystem.interfaces.IFile;
 import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.sos.Client;
 import uk.ac.standrews.cs.sos.utils.LOG;
 import uk.ac.standrews.cs.util.UriUtil;
@@ -28,21 +29,18 @@ public class SOSFileSystem implements IFileSystem {
 
     private Client sos;
 
-    private IGUID invariant;
     private IGUID head; // FIXME - head is never updated, but it should.
     private IDirectory root_collection;
 
-    public SOSFileSystem(Client sos, IGUID rootGUID) {
+    public SOSFileSystem(Client sos, Version root) {
         this.sos = sos;
-        this.invariant = rootGUID;
 
         try {
-            root_collection = new SOSDirectory(sos);
-            ((SOSDirectory) root_collection).setInvariant(invariant);
+            root_collection = new SOSDirectory(sos, root); // TODO - if root exist, then get directory from there
+            //((SOSDirectory) root_collection).setInvariant(invariant);
             root_collection.persist();
             head = root_collection.getGUID();
-        } catch (GUIDGenerationException e) {
-            e.printStackTrace();
+
         } catch (PersistenceException e) {
             e.printStackTrace();
         }
@@ -67,8 +65,8 @@ public class SOSFileSystem implements IFileSystem {
         file.persist();
 
         // This Operation will create a new compound + asset
-        ((SOSDirectory) parent).setInvariant(((SOSDirectory) parent).getInvariant());
-        ((SOSDirectory) parent).setPrevious(parent.getGUID());
+        //((SOSDirectory) parent).setInvariant(((SOSDirectory) parent).getInvariant());
+        //((SOSDirectory) parent).setPrevious(parent.getGUID());
         parent.addFile(name, file, content_type);
 
         parent.persist();
@@ -84,7 +82,7 @@ public class SOSFileSystem implements IFileSystem {
         // see comment above
 
         IFile file = new SOSFile(sos);
-        // TODO - add to parent only when the file is persisted.
+        // NOTE - add to parent only when the file is persisted.
         return file;
     }
 
@@ -110,7 +108,6 @@ public class SOSFileSystem implements IFileSystem {
     public synchronized void appendToFile(IDirectory parent, String name, String content_type, IData data) throws BindingAbsentException, AppendException, PersistenceException {
         LOG.log(LEVEL.INFO, "WEBDAV - Append to file " + name);
         // NOTE call a series of append calls on SOSFile and end it with a persist - behaviour is different from the one in abstract file system
-
     }
 
     @Override
@@ -166,8 +163,6 @@ public class SOSFileSystem implements IFileSystem {
         return this.head;
     }
 
-
-    // TODO - duplicate in AbstractFileSystem
     @Override
     public IAttributedStatefulObject resolveObject(URI uri) {
         // LOG.log(LEVEL.INFO, "WEBDAV - Resolving object with URI " + uri.toString());
@@ -180,7 +175,6 @@ public class SOSFileSystem implements IFileSystem {
         while (iterator.hasNext()) {
 
             String name = (String) iterator.next();
-
             object = parent.get(name);
 
             if (object == null)

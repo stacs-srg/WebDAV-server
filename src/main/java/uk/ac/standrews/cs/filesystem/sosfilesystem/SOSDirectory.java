@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.filesystem.sosfilesystem;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.*;
@@ -10,6 +9,7 @@ import uk.ac.standrews.cs.filesystem.interfaces.IFile;
 import uk.ac.standrews.cs.persistence.impl.NameAttributedPersistentObjectBinding;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributes;
+import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
@@ -46,9 +46,27 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         contents = new HashSet<>();
     }
 
-    public SOSDirectory(Client sos, IGUID guid) throws GUIDGenerationException {
-        // TODO - create a directory that already exists - needed from the #get() method in this class
+    public SOSDirectory(Client sos, IGUID guid) {
         super(sos);
+
+        try {
+            Compound compound = (Compound) sos.getManifest(guid);
+            contents = compound.getContents();
+        } catch (ManifestNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public SOSDirectory(Client sos, Version version) {
+        super(sos);
+        this.version = version;
+
+        try {
+            Compound compound = (Compound) sos.getManifest(version.getContentGUID());
+            contents = compound.getContents();
+        } catch (ManifestNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -120,13 +138,19 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
             Compound compound = sos.addCompound(CompoundType.COLLECTION, contents);
 
             IGUID content = compound.getContentGUID();
-            Version asset = sos.addVersion(new VersionBuilder(content)
-                    .setInvariant(getInvariant())); // TODO - metadata + previous
+            IGUID invariant = getInvariant();
+            IGUID versionGUID = version.getVersionGUID();
 
-            IGUID version = asset.getVersionGUID();
-            guid = GUIDFactory.recreateGUID(version.toString());
-        } catch (ManifestNotMadeException | GUIDGenerationException | ManifestPersistException e) {
+            version = sos.addVersion(new VersionBuilder(content)
+                    .setInvariant(invariant)); // TODO - metadata + previous
+
+            sos.setHEAD(version.getVersionGUID());
+
+            guid = versionGUID;
+        } catch (ManifestNotMadeException | ManifestPersistException e) {
             throw new PersistenceException("Manifest could not be created or persisted");
+        } catch (HEADNotSetException e) {
+            e.printStackTrace();
         }
     }
 
@@ -173,7 +197,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         try {
             Manifest manifest = sos.getManifest(guid);
             if (manifest instanceof Atom) {
-                LOG.log(LEVEL.INFO, "WEBDAV - returning file"); // FIXME - give asset for file too!
+                // LOG.log(LEVEL.INFO, "WEBDAV - returning file"); // FIXME - give asset for file too!
                 return new SOSFile(sos, guid);
 
             } else if (manifest instanceof  Compound) {

@@ -54,7 +54,7 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
 
         if (client != null) {
             Version rootAsset = createRoot(client);
-            return new SOSFileSystem(client, rootAsset.getInvariantGUID());
+            return new SOSFileSystem(client, rootAsset);
         } else {
             LOG.log(LEVEL.ERROR, "WEBDAV - Unable to create file system");
             return null;
@@ -93,7 +93,7 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
             String root = configuration.getStorageLocation();
 
             internalStorage = new InternalStorage(StorageFactory
-                            .createStorage(storageType, root, true)); // FIXME - storage have very different behaviours if mutable or not
+                            .createStorage(storageType, root, false)); // FIXME - storage have very different behaviours if mutable or not
         } catch (StorageException | DataStorageException e) {
             throw new SOSException(e);
         }

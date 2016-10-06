@@ -11,6 +11,7 @@ import uk.ac.standrews.cs.filesystem.FileSystemConstants;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
+import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
@@ -38,8 +39,6 @@ import java.util.Collection;
  */
 public class SOSFile extends SOSFileSystemObject implements IFile {
 
-    private Version version;
-
     boolean isCompoundData;
     private Atom atom;
     private Collection<Content> atoms;
@@ -51,10 +50,13 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
 
         try {
             InputStream stream = data.getInputStream();
-
             AtomBuilder builder = new AtomBuilder().setInputStream(stream);
+
             atom = sos.addAtom(builder);
-        } catch (StorageException | IOException | ManifestPersistException e) {
+            // version = sos.addVersion(new VersionBuilder(atom.getContentGUID()));
+
+        } catch (StorageException | IOException |
+                ManifestPersistException e) {
             throw new PersistenceException("SOS atom could not be created");
         }
     }
@@ -65,8 +67,11 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
 
         this.isCompoundData = true;
         this.atoms = new ArrayList<>();
+        // TODO - set version
     }
 
+
+    // NOTE: this method is used by the SOSDirectory class to get SOSFile
     public SOSFile(Client sos, IGUID guid) {
         super(sos);
 
@@ -75,11 +80,15 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         } catch (ManifestNotFoundException e) {
             e.printStackTrace();
         }
+
+        // TODO - set version
     }
 
     public SOSFile(Client sos, IData data, SOSFile previous) throws PersistenceException {
         this(sos, data);
         this.previous = previous;
+
+        // TODO - set version
     }
 
     @Override
@@ -118,7 +127,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
 
     @Override
     public void append(IData data) {
-        if (! isCompoundData)
+        if (!isCompoundData)
             return;
 
         try {
@@ -139,15 +148,20 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             VersionBuilder builder = getVersionBuilder();
             version = sos.addVersion(builder);
 
+            sos.setHEAD(version.getVersionGUID());
+
             guid = GUIDFactory.recreateGUID(version.getVersionGUID().toString());
 
         } catch (ManifestNotMadeException | ManifestPersistException | GUIDGenerationException e) {
+            e.printStackTrace();
+        } catch (HEADNotSetException e) {
             e.printStackTrace();
         }
     }
 
     private VersionBuilder getVersionBuilder() throws ManifestPersistException, ManifestNotMadeException {
         // FIXME - this is a bad way of dealing with previous references.
+        // It should be possible to deal with multiple previous. Not sure how this works with webdav integration however
         Collection<IGUID> prevs = new ArrayList<>();
         if (previous != null) {
             prevs.add(previous.getGUID());
@@ -162,7 +176,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             builder = new VersionBuilder(compound.getContentGUID());
         }
 
-        if (prevs != null && prevs.size() > 0) {
+        if (prevs.size() > 0) {
             builder.setInvariant(previous.getInvariant())
                     .setPrevious(prevs);
 

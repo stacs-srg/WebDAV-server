@@ -6,6 +6,7 @@ import uk.ac.standrews.cs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.persistence.impl.AttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.persistence.interfaces.IVersionableObject;
+import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.sos.Client;
 
 import java.util.Collection;
@@ -15,11 +16,10 @@ import java.util.Collection;
  */
 public class SOSFileSystemObject extends AttributedStatefulObject implements IVersionableObject {
 
-    protected String name;
     protected Client sos;
 
-    private IGUID invariant;
-    private Collection<IGUID> previous;
+    protected String name;
+    protected Version version;
 
     public SOSFileSystemObject(Client sos) {
         super(null);
@@ -43,27 +43,15 @@ public class SOSFileSystemObject extends AttributedStatefulObject implements IVe
     }
 
     @Override
-    public void persist() throws PersistenceException {
-
-    }
-
-    @Override
-    public void setPrevious(IGUID previous) {
-        // TODO
-    }
+    public void persist() throws PersistenceException {}
 
     @Override
     public Collection<IGUID> getPrevious() {
-        return previous;
-    }
-
-    @Override
-    public void setInvariant(IGUID guid) {
-        this.invariant = guid;
+        return version.getPreviousVersions();
     }
 
     @Override
     public IGUID getInvariant() {
-        return invariant;
+        return version.getInvariantGUID();
     }
 }
