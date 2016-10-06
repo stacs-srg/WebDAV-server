@@ -1,18 +1,15 @@
 package uk.ac.standrews.cs.filesystem.sosfilesystem;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
 import uk.ac.standrews.cs.exceptions.AccessFailureException;
-import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.filesystem.FileSystemConstants;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
-import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
@@ -44,8 +41,9 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
     private Collection<Content> atoms;
     private SOSFile previous;
 
-    public SOSFile(Client sos, IData data) throws PersistenceException {
+    public SOSFile(Client sos, SOSDirectory parent, IData data) throws PersistenceException {
         super(sos, data);
+        this.parent = parent;
         this.isCompoundData = false;
 
         try {
@@ -53,11 +51,13 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             AtomBuilder builder = new AtomBuilder().setInputStream(stream);
 
             atom = sos.addAtom(builder);
-            // version = sos.addVersion(new VersionBuilder(atom.getContentGUID()));
+            version = sos.addVersion(new VersionBuilder(atom.getContentGUID()));
 
         } catch (StorageException | IOException |
                 ManifestPersistException e) {
             throw new PersistenceException("SOS atom could not be created");
+        } catch (ManifestNotMadeException e) {
+            e.printStackTrace();
         }
     }
 
@@ -70,23 +70,38 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         // TODO - set version
     }
 
-
-    // NOTE: this method is used by the SOSDirectory class to get SOSFile
-    public SOSFile(Client sos, IGUID guid) {
+    public SOSFile(Client sos, Version version, Atom atom) {
         super(sos);
 
-        try {
-            atom = (Atom) sos.getManifest(guid);
-        } catch (ManifestNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        // TODO - set version
+        this.version = version;
+        this.atom = atom;
     }
 
-    public SOSFile(Client sos, IData data, SOSFile previous) throws PersistenceException {
-        this(sos, data);
-        this.previous = previous;
+    public SOSFile(Client sos, SOSDirectory parent, IData data, SOSFile previous) throws PersistenceException {
+        super(sos, data);
+        this.parent = parent;
+        this.isCompoundData = false;
+
+        try {
+            InputStream stream = data.getInputStream();
+            AtomBuilder builder = new AtomBuilder().setInputStream(stream);
+            atom = sos.addAtom(builder);
+
+            Collection<IGUID> previousVersion = new ArrayList<>();
+            previousVersion.add(previous.getVersion().getVersionGUID());
+            VersionBuilder versionBuilder = new VersionBuilder(atom.getContentGUID())
+                    .setInvariant(previous.getInvariant())
+                    .setPrevious(previousVersion);
+
+            version = sos.addVersion(versionBuilder);
+
+            this.previous = previous;
+        } catch (StorageException | IOException |
+                ManifestPersistException e) {
+            throw new PersistenceException("SOS atom could not be created");
+        } catch (ManifestNotMadeException e) {
+            e.printStackTrace();
+        }
 
         // TODO - set version
     }
@@ -146,15 +161,12 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
     public void persist() throws PersistenceException {
         try {
             VersionBuilder builder = getVersionBuilder();
-            version = sos.addVersion(builder);
+            version = sos.addVersion(builder); // TODO - not sure if this is needed, since we create it in constructor too
 
             sos.setHEAD(version.getVersionGUID());
+            guid = version.getVersionGUID();
 
-            guid = GUIDFactory.recreateGUID(version.getVersionGUID().toString());
-
-        } catch (ManifestNotMadeException | ManifestPersistException | GUIDGenerationException e) {
-            e.printStackTrace();
-        } catch (HEADNotSetException e) {
+        } catch (ManifestNotMadeException | ManifestPersistException | HEADNotSetException e) {
             e.printStackTrace();
         }
     }
@@ -177,7 +189,7 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         }
 
         if (prevs.size() > 0) {
-            builder.setInvariant(previous.getInvariant())
+            builder.setInvariant(version.getInvariantGUID())
                     .setPrevious(prevs);
 
             LOG.log(LEVEL.INFO, "WEBDAT - SOSFile - Previous: " + previous.toString());
@@ -200,14 +212,12 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         // TODO - look for guid and return idata
         // this will differ based on whether it is a single atom or a compound of atoms
         // sos.getData(guid);
-
         // NOTE: idea - have a isChunked() method. If that method returns true, then reify returns data until null (no more chunks)
-        IData data = new InputStreamData(sos.getAtomContent(atom), 4092); // FIXME - size of data expected should not be hardcoded
+
+        InputStream stream = sos.getAtomContent(atom);
+        IData data = new InputStreamData(stream, 4092); // FIXME - size of data expected should not be hardcoded
 
         return data;
     }
 
-    public Version getVersion() {
-        return version;
-    }
 }

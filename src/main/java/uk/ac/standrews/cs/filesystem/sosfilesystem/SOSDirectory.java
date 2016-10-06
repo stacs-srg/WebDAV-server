@@ -24,6 +24,7 @@ import uk.ac.standrews.cs.sos.model.manifests.builders.VersionBuilder;
 import uk.ac.standrews.cs.sos.utils.LOG;
 import uk.ac.standrews.cs.util.Error;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -34,32 +35,27 @@ import java.util.Iterator;
 public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
     private Collection<Content> contents;
+    private SOSDirectory previous;
 
-    public SOSDirectory(Client sos, String name) throws GUIDGenerationException {
+    public SOSDirectory(Client sos, SOSDirectory parent, String name) throws GUIDGenerationException {
         super(sos);
         this.name = name;
+        this.parent = parent;
         contents = new HashSet<>();
     }
 
-    public SOSDirectory(Client sos) throws GUIDGenerationException {
+    public SOSDirectory(Client sos, Version version, Compound compound) {
         super(sos);
-        contents = new HashSet<>();
+        // TODO - name
+        contents = compound.getContents();
+        this.version = version;
     }
 
-    public SOSDirectory(Client sos, IGUID guid) {
-        super(sos);
-
-        try {
-            Compound compound = (Compound) sos.getManifest(guid);
-            contents = compound.getContents();
-        } catch (ManifestNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
+    // Use this constructor for the root folder only
     public SOSDirectory(Client sos, Version version) {
         super(sos);
         this.version = version;
+        this.name = null;
 
         try {
             Compound compound = (Compound) sos.getManifest(version.getContentGUID());
@@ -67,6 +63,32 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         } catch (ManifestNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public SOSDirectory(Client sos, SOSDirectory previous, String name, SOSFileSystemObject object) {
+        super(sos);
+
+        try {
+            this.name = previous.name;
+            contents = new ArrayList<>(previous.getContents());
+            addOrUpdate(name, new Content(name, object.getGUID()));
+
+            Compound compound = sos.addCompound(CompoundType.COLLECTION, contents);
+
+            Collection<IGUID> previousVersion = new ArrayList<>();
+            previousVersion.add(previous.getVersion().getVersionGUID());
+            VersionBuilder versionBuilder = new VersionBuilder(compound.getContentGUID())
+                    .setInvariant(previous.getInvariant())
+                    .setPrevious(previousVersion);
+
+            version = sos.addVersion(versionBuilder);
+
+            this.previous = previous;
+
+        } catch (ManifestNotMadeException | ManifestPersistException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -121,6 +143,19 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         return null;
     }
 
+    private void addOrUpdate(String name, Content newContent) {
+        for(Content content:contents) {
+            if (content.getLabel().equals(name)) {
+                contents.remove(content);
+                contents.add(newContent);
+
+                return;
+            }
+        }
+
+        contents.add(newContent);
+    }
+
     @Override
     public void remove(String name) throws BindingAbsentException {
         // remove an element from the compound
@@ -135,23 +170,40 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
     @Override
     public void persist() throws PersistenceException {
         try {
-            Compound compound = sos.addCompound(CompoundType.COLLECTION, contents);
-
-            IGUID content = compound.getContentGUID();
-            IGUID invariant = getInvariant();
-            IGUID versionGUID = version.getVersionGUID();
-
-            version = sos.addVersion(new VersionBuilder(content)
-                    .setInvariant(invariant)); // TODO - metadata + previous
+            VersionBuilder builder = getVersionBuilder();
+            version = sos.addVersion(builder);
 
             sos.setHEAD(version.getVersionGUID());
 
-            guid = versionGUID;
+            guid = version.getVersionGUID();
         } catch (ManifestNotMadeException | ManifestPersistException e) {
             throw new PersistenceException("Manifest could not be created or persisted");
         } catch (HEADNotSetException e) {
             e.printStackTrace();
         }
+    }
+
+    private VersionBuilder getVersionBuilder() throws ManifestPersistException, ManifestNotMadeException {
+
+        Collection<IGUID> prevs = new ArrayList<>();
+        if (previous != null) {
+            prevs.add(previous.getGUID());
+        }
+
+        Compound compound = sos.addCompound(CompoundType.COLLECTION, contents);
+        VersionBuilder builder = new VersionBuilder(compound.getContentGUID());
+
+        if (prevs.size() > 0) {
+            builder.setInvariant(version.getInvariantGUID())
+                    .setPrevious(prevs);
+
+            LOG.log(LEVEL.INFO, "WEBDAT - SOSFile - Previous: " + previous.toString());
+            LOG.log(LEVEL.INFO, "WEBDAV - SOSFile - Set prev for asset with invariant " + previous.getInvariant());
+        }
+
+        // TODO - add metadata
+
+        return builder;
     }
 
     @Override
@@ -168,6 +220,10 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
     public Iterator iterator() {
         // iterate over elements of the compound
         return new CompoundIterator();
+    }
+
+    public Collection<Content> getContents() {
+        return contents;
     }
 
     @Override
@@ -196,19 +252,11 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
         try {
             Manifest manifest = sos.getManifest(guid);
-            if (manifest instanceof Atom) {
-                // LOG.log(LEVEL.INFO, "WEBDAV - returning file"); // FIXME - give asset for file too!
-                return new SOSFile(sos, guid);
-
-            } else if (manifest instanceof  Compound) {
-                return getCompoundObject((Compound) manifest);
-
-            } else if (manifest instanceof Version) {
-                return getObject(manifest.getContentGUID());
+            if (manifest instanceof Version) {
+                return getObject((Version) manifest);
+            } else {
+                LOG.log(LEVEL.ERROR, "WEBDAV - attempting to retrieve manifest of wrong type");
             }
-        } catch (GUIDGenerationException e) {
-            e.printStackTrace();
-            return null;
         } catch (ManifestNotFoundException e) {
             e.printStackTrace();
             return null;
@@ -216,13 +264,31 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         return null;
     }
 
-    private SOSDirectory getCompoundObject(Compound compound) throws GUIDGenerationException {
+    public SOSFileSystemObject getObject(Version version) {
+
+        try {
+            IGUID contentGUID = version.getContentGUID();
+            Manifest manifest = sos.getManifest(contentGUID);
+            if (manifest instanceof Atom) {
+                return new SOSFile(sos, version, (Atom) manifest);
+
+            } else if (manifest instanceof  Compound) {
+                return getCompoundObject(version, (Compound) manifest);
+            }
+        } catch (GUIDGenerationException | ManifestNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return null;
+    }
+
+    private SOSDirectory getCompoundObject(Version version, Compound compound) throws GUIDGenerationException {
         // Still this might be a data compound
         if (compound.getType() == CompoundType.DATA) {
             return null; // Make compound file
         } else {
-            return new SOSDirectory(sos, guid);
-            // return null; // Make collection
+            return new SOSDirectory(sos, version, compound);
         }
     }
 

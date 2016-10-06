@@ -20,6 +20,7 @@ public class SOSFileSystemObject extends AttributedStatefulObject implements IVe
 
     protected String name;
     protected Version version;
+    protected SOSDirectory parent;
 
     public SOSFileSystemObject(Client sos) {
         super(null);
@@ -53,5 +54,10 @@ public class SOSFileSystemObject extends AttributedStatefulObject implements IVe
     @Override
     public IGUID getInvariant() {
         return version.getInvariantGUID();
+    }
+
+    @Override
+    public Version getVersion() {
+        return version;
     }
 }

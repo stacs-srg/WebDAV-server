@@ -14,6 +14,7 @@ import uk.ac.standrews.cs.filesystem.interfaces.IFile;
 import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
+import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotFoundException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Version;
 import uk.ac.standrews.cs.sos.interfaces.sos.Client;
 import uk.ac.standrews.cs.sos.utils.LOG;
@@ -28,19 +29,15 @@ import java.util.Iterator;
 public class SOSFileSystem implements IFileSystem {
 
     private Client sos;
-
-    private IGUID head; // FIXME - head is never updated, but it should.
-    private IDirectory root_collection;
+    private IGUID invariant;
 
     public SOSFileSystem(Client sos, Version root) {
         this.sos = sos;
+        this.invariant = root.getInvariantGUID();
 
         try {
-            root_collection = new SOSDirectory(sos, root); // TODO - if root exist, then get directory from there
-            //((SOSDirectory) root_collection).setInvariant(invariant);
+            SOSDirectory root_collection = new SOSDirectory(sos, root);
             root_collection.persist();
-            head = root_collection.getGUID();
-
         } catch (PersistenceException e) {
             e.printStackTrace();
         }
@@ -61,15 +58,11 @@ public class SOSFileSystem implements IFileSystem {
         // not sure how this will work because the stream will have to be consumed
         // check(parent, name, ...) // look at StoreBasedFileSystem
 
-        IFile file = new SOSFile(sos, data);
+        SOSFile file = new SOSFile(sos, (SOSDirectory) parent, data);
         file.persist();
 
-        // This Operation will create a new compound + asset
-        //((SOSDirectory) parent).setInvariant(((SOSDirectory) parent).getInvariant());
-        //((SOSDirectory) parent).setPrevious(parent.getGUID());
-        parent.addFile(name, file, content_type);
+        updateParent((SOSDirectory) parent, name, file);
 
-        parent.persist();
         return file;
     }
 
@@ -77,12 +70,9 @@ public class SOSFileSystem implements IFileSystem {
     //  this should be in IFile system
     // This way we could have a uniform way of dealing with large data (chunked)
     public IFile createNewFile(IDirectory parent, String name, String content_type) throws BindingPresentException, PersistenceException {
-
         // TODO - check if file already exists.
-        // see comment above
-
+        // NOTE - add file to parent only when the file is persisted.
         IFile file = new SOSFile(sos);
-        // NOTE - add to parent only when the file is persisted.
         return file;
     }
 
@@ -91,17 +81,10 @@ public class SOSFileSystem implements IFileSystem {
         LOG.log(LEVEL.INFO, "WEBDAV - Update file " + name);
 
         SOSFile previous = (SOSFile) parent.get(name);
-        IFile file = new SOSFile(sos, data, previous);
+        SOSFile file = new SOSFile(sos, (SOSDirectory) parent, data, previous);
         file.persist();
 
-        // This Operation will create a new compound + asset
-        try {
-            parent.addFile(name, file, content_type); // TODO - should add previous
-        } catch (BindingPresentException e) {
-           throw new PersistenceException("Binding exception on update file for SOS");
-        }
-        parent.persist();
-
+        updateParent((SOSDirectory) parent, name, file);
     }
 
     @Override
@@ -115,25 +98,35 @@ public class SOSFileSystem implements IFileSystem {
         LOG.log(LEVEL.INFO, "WEBDAV - Create new directory " + name);
         // TODO - should check if directory already exists
 
-        IDirectory directory = null;
+        SOSDirectory directory = null;
         try {
-            directory = new SOSDirectory(sos, name);
+            directory = new SOSDirectory(sos, (SOSDirectory) parent, name);
         } catch (GUIDGenerationException e) {
             e.printStackTrace();
         }
         directory.persist();
 
-        parent.addDirectory(name, directory);
-        parent.persist();
+        updateParent((SOSDirectory) parent, name, directory);
 
         return directory;
+    }
+
+    private void updateParent(SOSDirectory parent, String name, SOSFileSystemObject object) throws PersistenceException {
+        if (parent == null) {
+            return;
+        }
+
+        LOG.log(LEVEL.INFO, "WEBDAV - update directory (invariant) " + parent.getInvariant());
+        SOSDirectory directory = new SOSDirectory(sos, parent, name, object);
+        directory.persist();
+
+        updateParent((SOSDirectory) parent.getParent(), parent.name, directory);
     }
 
     @Override
     public void deleteObject(IDirectory parent, String name) throws BindingAbsentException {
         LOG.log(LEVEL.INFO, "WEBDAV - Delete object " + name);
         // TODO - This will add a version to the asset with no content
-
         throw new NotImplementedException();
     }
 
@@ -153,14 +146,21 @@ public class SOSFileSystem implements IFileSystem {
 
     @Override
     public IDirectory getRootDirectory() {
-        // note: the HEAD could be changed via cli
-        return root_collection;
+        // LOG.log(LEVEL.INFO, "WEBDAV - Get root");
+
+        try {
+            Version head = sos.getHEAD(invariant);
+            return new SOSDirectory(sos, head);
+        } catch (HEADNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     @Override
     public IGUID getRootId() {
-        // TODO - should this return the asset guid or the compound guid?
-        return this.head;
+        return invariant;
     }
 
     @Override
