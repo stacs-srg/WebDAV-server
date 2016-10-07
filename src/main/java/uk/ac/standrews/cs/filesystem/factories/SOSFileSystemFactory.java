@@ -46,11 +46,27 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
         this.rootGUID = rootGUID;
     }
 
+    public SOSFileSystemFactory(IGUID rootGUID) {
+        this.rootGUID = rootGUID;
+    }
+
     @Override
     public IFileSystem makeFileSystem() throws FileSystemCreationException {
         LOG.log(LEVEL.INFO, "WEBDAV - Factory - Making the File System");
 
         Client client = getSOSClient();
+
+        if (client != null) {
+            Version rootAsset = createRoot(client);
+            return new SOSFileSystem(client, rootAsset);
+        } else {
+            LOG.log(LEVEL.ERROR, "WEBDAV - Unable to create file system");
+            return null;
+        }
+    }
+
+    public IFileSystem makeFileSystem(Client client) throws FileSystemCreationException {
+        LOG.log(LEVEL.INFO, "WEBDAV - Factory - Making the File System");
 
         if (client != null) {
             Version rootAsset = createRoot(client);
@@ -107,10 +123,12 @@ public class SOSFileSystemFactory implements IFileSystemFactory {
         if (retval == null) {
             try {
                 Compound compound = createRootCompound(sos);
-                VersionBuilder builder = new VersionBuilder(compound.getContentGUID()).setInvariant(rootGUID);
+                IGUID compoundGUID = compound.getContentGUID();
+                VersionBuilder builder = new VersionBuilder(compoundGUID).setInvariant(rootGUID);
 
                 retval = sos.addVersion(builder);
-                sos.setHEAD(retval.getVersionGUID());
+                IGUID versionGUID = retval.getVersionGUID();
+                sos.setHEAD(versionGUID);
             } catch (ManifestNotMadeException | ManifestPersistException | HEADNotSetException e) {
                 e.printStackTrace();
             }

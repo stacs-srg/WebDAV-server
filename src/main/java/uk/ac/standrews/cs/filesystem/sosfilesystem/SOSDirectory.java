@@ -3,13 +3,15 @@ package uk.ac.standrews.cs.filesystem.sosfilesystem;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
-import uk.ac.standrews.cs.exceptions.*;
+import uk.ac.standrews.cs.exceptions.AccessFailureException;
+import uk.ac.standrews.cs.exceptions.BindingAbsentException;
+import uk.ac.standrews.cs.exceptions.BindingPresentException;
+import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
 import uk.ac.standrews.cs.persistence.impl.NameAttributedPersistentObjectBinding;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributes;
-import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotFoundException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
@@ -35,19 +37,26 @@ import java.util.Iterator;
 public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
 
     private Collection<Content> contents;
-    private SOSDirectory previous;
+    private Compound compound;
 
     public SOSDirectory(Client sos, SOSDirectory parent, String name) throws GUIDGenerationException {
         super(sos);
         this.name = name;
         this.parent = parent;
         contents = new HashSet<>();
+
+        try {
+            compound = sos.addCompound(CompoundType.COLLECTION, contents);
+        } catch (ManifestNotMadeException | ManifestPersistException e) {
+            e.printStackTrace();
+        }
     }
 
     public SOSDirectory(Client sos, Version version, Compound compound) {
         super(sos);
-        // TODO - name
+
         contents = compound.getContents();
+        this.compound = compound;
         this.version = version;
     }
 
@@ -58,7 +67,7 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         this.name = null;
 
         try {
-            Compound compound = (Compound) sos.getManifest(version.getContentGUID());
+            compound = (Compound) sos.getManifest(version.getContentGUID());
             contents = compound.getContents();
         } catch (ManifestNotFoundException e) {
             e.printStackTrace();
@@ -73,17 +82,26 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
             contents = new ArrayList<>(previous.getContents());
             addOrUpdate(name, new Content(name, object.getGUID()));
 
-            Compound compound = sos.addCompound(CompoundType.COLLECTION, contents);
+            compound = sos.addCompound(CompoundType.COLLECTION, contents);
 
-            Collection<IGUID> previousVersion = new ArrayList<>();
-            previousVersion.add(previous.getVersion().getVersionGUID());
-            VersionBuilder versionBuilder = new VersionBuilder(compound.getContentGUID())
-                    .setInvariant(previous.getInvariant())
-                    .setPrevious(previousVersion);
+            boolean previousVersionDiffers = checkPreviousDiffers(compound.getContentGUID());
+            if (previousVersionDiffers) {
 
-            version = sos.addVersion(versionBuilder);
+                Collection<IGUID> previousVersion = new ArrayList<>();
+                previousVersion.add(previous.getVersion().getVersionGUID());
+                VersionBuilder versionBuilder = new VersionBuilder(compound.getContentGUID())
+                        .setInvariant(previous.getInvariant())
+                        .setPrevious(previousVersion);
 
-            this.previous = previous;
+                version = sos.addVersion(versionBuilder);
+
+                this.previous = previous;
+            } else {
+                System.out.println("This create an identical new object to previous. Can be optimised to occupy less memory");
+                this.previous = previous.getPreviousDIR();
+            }
+
+
 
         } catch (ManifestNotMadeException | ManifestPersistException e) {
             e.printStackTrace();
@@ -131,7 +149,6 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         } else {
             contents.add(new Content(name, object.getGUID()));
         }
-
     }
 
     private Content getContent(String name) {
@@ -167,43 +184,8 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         contents.remove(getContent(name));
     }
 
-    @Override
-    public void persist() throws PersistenceException {
-        try {
-            VersionBuilder builder = getVersionBuilder();
-            version = sos.addVersion(builder);
-
-            sos.setHEAD(version.getVersionGUID());
-
-            guid = version.getVersionGUID();
-        } catch (ManifestNotMadeException | ManifestPersistException e) {
-            throw new PersistenceException("Manifest could not be created or persisted");
-        } catch (HEADNotSetException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private VersionBuilder getVersionBuilder() throws ManifestPersistException, ManifestNotMadeException {
-
-        Collection<IGUID> prevs = new ArrayList<>();
-        if (previous != null) {
-            prevs.add(previous.getGUID());
-        }
-
-        Compound compound = sos.addCompound(CompoundType.COLLECTION, contents);
-        VersionBuilder builder = new VersionBuilder(compound.getContentGUID());
-
-        if (prevs.size() > 0) {
-            builder.setInvariant(version.getInvariantGUID())
-                    .setPrevious(prevs);
-
-            LOG.log(LEVEL.INFO, "WEBDAT - SOSFile - Previous: " + previous.toString());
-            LOG.log(LEVEL.INFO, "WEBDAV - SOSFile - Set prev for asset with invariant " + previous.getInvariant());
-        }
-
-        // TODO - add metadata
-
-        return builder;
+    protected IGUID getContentGUID() {
+        return compound.getContentGUID();
     }
 
     @Override
@@ -290,6 +272,10 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
         } else {
             return new SOSDirectory(sos, version, compound);
         }
+    }
+
+    private SOSDirectory getPreviousDIR() {
+        return (SOSDirectory) previous;
     }
 
     /**

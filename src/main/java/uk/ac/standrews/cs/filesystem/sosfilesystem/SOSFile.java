@@ -9,7 +9,6 @@ import uk.ac.standrews.cs.filesystem.FileSystemConstants;
 import uk.ac.standrews.cs.filesystem.interfaces.IFile;
 import uk.ac.standrews.cs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.persistence.interfaces.IData;
-import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
 import uk.ac.standrews.cs.sos.interfaces.manifests.Atom;
@@ -39,7 +38,6 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
     boolean isCompoundData;
     private Atom atom;
     private Collection<Content> atoms;
-    private SOSFile previous;
 
     public SOSFile(Client sos, SOSDirectory parent, IData data) throws PersistenceException {
         super(sos, data);
@@ -87,15 +85,23 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             AtomBuilder builder = new AtomBuilder().setInputStream(stream);
             atom = sos.addAtom(builder);
 
-            Collection<IGUID> previousVersion = new ArrayList<>();
-            previousVersion.add(previous.getVersion().getVersionGUID());
-            VersionBuilder versionBuilder = new VersionBuilder(atom.getContentGUID())
-                    .setInvariant(previous.getInvariant())
-                    .setPrevious(previousVersion);
+            boolean previousVersionDiffers = checkPreviousDiffers(atom.getContentGUID());
+            if (previousVersionDiffers) {
 
-            version = sos.addVersion(versionBuilder);
+                Collection<IGUID> previousVersion = new ArrayList<>();
+                previousVersion.add(previous.getVersion().getVersionGUID());
+                VersionBuilder versionBuilder = new VersionBuilder(atom.getContentGUID())
+                        .setInvariant(previous.getInvariant())
+                        .setPrevious(previousVersion);
 
-            this.previous = previous;
+                version = sos.addVersion(versionBuilder);
+
+                this.previous = previous;
+            } else {
+                System.out.println("This create an identical new object to previous. Can be optimised to occupy less memory");
+                this.previous = previous.getPreviousFILE();
+            }
+
         } catch (StorageException | IOException |
                 ManifestPersistException e) {
             throw new PersistenceException("SOS atom could not be created");
@@ -103,7 +109,6 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
             e.printStackTrace();
         }
 
-        // TODO - set version
     }
 
     @Override
@@ -154,51 +159,20 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
         } catch (ManifestPersistException | IOException | StorageException e) {
             e.printStackTrace();
         }
-
     }
 
-    @Override
-    public void persist() throws PersistenceException {
-        try {
-            VersionBuilder builder = getVersionBuilder();
-            version = sos.addVersion(builder); // TODO - not sure if this is needed, since we create it in constructor too
+    protected IGUID getContentGUID() {
+        IGUID retval = null;
 
-            sos.setHEAD(version.getVersionGUID());
-            guid = version.getVersionGUID();
-
-        } catch (ManifestNotMadeException | ManifestPersistException | HEADNotSetException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private VersionBuilder getVersionBuilder() throws ManifestPersistException, ManifestNotMadeException {
-        // FIXME - this is a bad way of dealing with previous references.
-        // It should be possible to deal with multiple previous. Not sure how this works with webdav integration however
-        Collection<IGUID> prevs = new ArrayList<>();
-        if (previous != null) {
-            prevs.add(previous.getGUID());
-        }
-
-        VersionBuilder builder;
         if (! isCompoundData) {
-            IGUID content = atom.getContentGUID();
-            builder = new VersionBuilder(content);
+            retval = atom.getContentGUID();
         } else {
-            Compound compound = addAtomsInCompound(atoms);
-            builder = new VersionBuilder(compound.getContentGUID());
+            // TODO
+            //Compound compound = addAtomsInCompound(atoms);
+            //builder = new VersionBuilder(compound.getContentGUID());
         }
 
-        if (prevs.size() > 0) {
-            builder.setInvariant(version.getInvariantGUID())
-                    .setPrevious(prevs);
-
-            LOG.log(LEVEL.INFO, "WEBDAT - SOSFile - Previous: " + previous.toString());
-            LOG.log(LEVEL.INFO, "WEBDAV - SOSFile - Set prev for asset with invariant " + previous.getInvariant());
-        }
-
-        // TODO - add metadata
-
-        return builder;
+        return retval;
     }
 
     private Compound addAtomsInCompound(Collection<Content> atoms) throws ManifestPersistException, ManifestNotMadeException {
@@ -209,15 +183,17 @@ public class SOSFile extends SOSFileSystemObject implements IFile {
     public IData reify() {
         // LOG.log(LEVEL.INFO, "WEBDAV - SOSFile - Reify file with name " + name);
 
-        // TODO - look for guid and return idata
-        // this will differ based on whether it is a single atom or a compound of atoms
-        // sos.getData(guid);
+        // this will differ based on whether it is a single atom or a compound of atoms sos.getData(guid);
         // NOTE: idea - have a isChunked() method. If that method returns true, then reify returns data until null (no more chunks)
 
         InputStream stream = sos.getAtomContent(atom);
         IData data = new InputStreamData(stream, 4092); // FIXME - size of data expected should not be hardcoded
 
         return data;
+    }
+
+    public SOSFile getPreviousFILE() {
+        return (SOSFile) previous;
     }
 
 }

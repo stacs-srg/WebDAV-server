@@ -7,6 +7,7 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.filesystem.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.filesystem.factories.SOSFileSystemFactory;
 import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
+import uk.ac.standrews.cs.sos.interfaces.sos.Client;
 import uk.ac.standrews.cs.util.Error;
 import uk.ac.standrews.cs.util.Output;
 
@@ -42,7 +43,7 @@ public class WebDAV_SOS_Launcher extends WebDAVLauncher {
                 IGUID root_GUID = GUIDFactory.recreateGUID(root_GUID_string);
                 IFileSystem file_system =
                         new SOSFileSystemFactory(configFilePath, root_GUID)
-                        .makeFileSystem();
+                                .makeFileSystem();
 
                 startWebDAVServer(file_system, port);
             } catch (FileSystemCreationException e) {
@@ -58,5 +59,21 @@ public class WebDAV_SOS_Launcher extends WebDAVLauncher {
                     "[-s<store name>] [-D] " +
                     "-c<configurationFilePath>");
         }
+    }
+
+    public static void Lunch(IGUID root, int port, Client client) {
+
+        try {
+            IFileSystem file_system =
+                    new SOSFileSystemFactory(root)
+                            .makeFileSystem(client);
+
+            startWebDAVServer(file_system, port);
+        } catch (FileSystemCreationException e) {
+            Error.exceptionError("couldn't create file system", e);
+        } catch (IOException e) {
+            Error.exceptionError("socket error", e);
+        }
+
     }
 }
