@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.webdav.impl;
 
-import uk.ac.standrews.cs.util.Diagnostic;
-import uk.ac.standrews.cs.util.StringUtil;
+import uk.ac.standrews.cs.utils.Diagnostic;
+import uk.ac.standrews.cs.utils.StringUtil;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 
 import java.io.BufferedInputStream;

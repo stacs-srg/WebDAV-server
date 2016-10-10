@@ -11,8 +11,8 @@ import uk.ac.standrews.cs.fs.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.fs.store.factories.LocalFileBasedStoreFactory;
 import uk.ac.standrews.cs.fs.store.interfaces.IGUIDStore;
-import uk.ac.standrews.cs.util.Error;
-import uk.ac.standrews.cs.util.Output;
+import uk.ac.standrews.cs.utils.Error;
+import uk.ac.standrews.cs.utils.Output;
 
 import java.io.IOException;
 

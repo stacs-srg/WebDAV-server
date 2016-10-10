@@ -9,8 +9,8 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.filesystem.factories.LocalFileFileSystemFactory;
 import uk.ac.standrews.cs.fs.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
-import uk.ac.standrews.cs.util.Error;
-import uk.ac.standrews.cs.util.Output;
+import uk.ac.standrews.cs.utils.Error;
+import uk.ac.standrews.cs.utils.Output;
 
 import java.io.File;
 import java.io.IOException;

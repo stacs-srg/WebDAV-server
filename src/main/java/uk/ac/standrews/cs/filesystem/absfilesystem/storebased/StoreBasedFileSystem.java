@@ -20,8 +20,8 @@ import uk.ac.standrews.cs.fs.store.impl.localfilebased.NameGUIDMap;
 import uk.ac.standrews.cs.fs.store.interfaces.IGUIDStore;
 import uk.ac.standrews.cs.fs.store.interfaces.INameGUIDMap;
 import uk.ac.standrews.cs.fs.util.Attributes;
-import uk.ac.standrews.cs.util.Diagnostic;
-import uk.ac.standrews.cs.util.Error;
+import uk.ac.standrews.cs.utils.Diagnostic;
+import uk.ac.standrews.cs.utils.Error;
 
 /**
  * File system implementation using a given IGUIDStore. Knows about stores but not how they're implemented.

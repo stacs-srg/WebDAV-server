@@ -7,8 +7,8 @@ import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.persistence.impl.AttributedStatefulObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
-import uk.ac.standrews.cs.util.Error;
-import uk.ac.standrews.cs.util.UriUtil;
+import uk.ac.standrews.cs.utils.Error;
+import uk.ac.standrews.cs.utils.UriUtil;
 
 import java.io.File;
 import java.io.IOException;

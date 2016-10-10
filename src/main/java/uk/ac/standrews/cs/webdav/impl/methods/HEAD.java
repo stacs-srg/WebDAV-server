@@ -4,7 +4,7 @@ import uk.ac.standrews.cs.filesystem.exceptions.InvalidPathException;
 import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
-import uk.ac.standrews.cs.util.Error;
+import uk.ac.standrews.cs.utils.Error;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.impl.HTTP;
 import uk.ac.standrews.cs.webdav.impl.Request;

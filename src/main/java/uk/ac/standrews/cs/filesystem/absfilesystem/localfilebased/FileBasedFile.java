@@ -13,7 +13,7 @@ import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.fs.util.Attributes;
 import uk.ac.standrews.cs.impl.SHAKeyFactory;
 import uk.ac.standrews.cs.impl.keys.KeyImpl;
-import uk.ac.standrews.cs.util.Error;
+import uk.ac.standrews.cs.utils.Error;
 import uk.ac.standrews.cs.webdav.impl.MIME;
 
 import java.io.File;

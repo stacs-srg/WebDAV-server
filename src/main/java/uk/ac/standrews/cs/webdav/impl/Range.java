@@ -3,7 +3,7 @@
  */
 package uk.ac.standrews.cs.webdav.impl;
 
-import uk.ac.standrews.cs.util.Error;
+import uk.ac.standrews.cs.utils.Error;
 
 /**
  * Represents a range - duh

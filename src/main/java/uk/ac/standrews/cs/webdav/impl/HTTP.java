@@ -4,7 +4,7 @@ import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.params.HttpMethodParams;
-import uk.ac.standrews.cs.util.Error;
+import uk.ac.standrews.cs.utils.Error;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.impl.methods.*;
 import uk.ac.standrews.cs.webdav.interfaces.HTTPMethod;

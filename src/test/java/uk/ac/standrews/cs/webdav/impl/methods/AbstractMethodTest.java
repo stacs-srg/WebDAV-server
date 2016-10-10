@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.webdav.impl.methods;
 
 import org.junit.Before;
-import uk.ac.standrews.cs.util.Error;
+import uk.ac.standrews.cs.utils.Error;
 import uk.ac.standrews.cs.webdav.entrypoints.WebDAV_FileBased_Launcher;
 import uk.ac.standrews.cs.webdav.impl.HTTP;
 

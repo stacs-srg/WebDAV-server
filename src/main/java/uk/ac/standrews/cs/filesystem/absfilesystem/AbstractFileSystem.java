@@ -10,8 +10,8 @@ import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.fs.persistence.interfaces.INameAttributedPersistentObjectBinding;
-import uk.ac.standrews.cs.util.Error;
-import uk.ac.standrews.cs.util.UriUtil;
+import uk.ac.standrews.cs.utils.Error;
+import uk.ac.standrews.cs.utils.UriUtil;
 
 import java.net.URI;
 import java.util.Iterator;

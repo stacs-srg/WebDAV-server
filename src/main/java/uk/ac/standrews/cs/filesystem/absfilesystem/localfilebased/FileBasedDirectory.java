@@ -15,8 +15,8 @@ import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.fs.store.impl.localfilebased.FileData;
 import uk.ac.standrews.cs.fs.util.Attributes;
-import uk.ac.standrews.cs.util.Diagnostic;
-import uk.ac.standrews.cs.util.Error;
+import uk.ac.standrews.cs.utils.Diagnostic;
+import uk.ac.standrews.cs.utils.Error;
 
 import java.io.File;
 import java.util.Iterator;

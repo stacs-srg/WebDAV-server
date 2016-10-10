@@ -13,7 +13,7 @@ import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.fs.persistence.interfaces.INameAttributedPersistentObjectBinding;
 import uk.ac.standrews.cs.locking.interfaces.ILockManager;
-import uk.ac.standrews.cs.util.UriUtil;
+import uk.ac.standrews.cs.utils.UriUtil;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.impl.*;
 import uk.ac.standrews.cs.webdav.util.ISO8601Format;

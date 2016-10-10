@@ -1,10 +1,10 @@
 package uk.ac.standrews.cs.webdav.entrypoints;
 
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
-import uk.ac.standrews.cs.util.CommandLineArgs;
-import uk.ac.standrews.cs.util.CommandLineInput;
-import uk.ac.standrews.cs.util.Diagnostic;
-import uk.ac.standrews.cs.util.Output;
+import uk.ac.standrews.cs.utils.CommandLineArgs;
+import uk.ac.standrews.cs.utils.CommandLineInput;
+import uk.ac.standrews.cs.utils.Diagnostic;
+import uk.ac.standrews.cs.utils.Output;
 
 import java.io.IOException;
 
