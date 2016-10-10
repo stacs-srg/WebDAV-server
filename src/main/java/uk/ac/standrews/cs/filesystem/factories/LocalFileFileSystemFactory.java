@@ -5,9 +5,9 @@ package uk.ac.standrews.cs.filesystem.factories;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.filesystem.absfilesystem.localfilebased.FileBasedFileSystem;
-import uk.ac.standrews.cs.filesystem.exceptions.FileSystemCreationException;
-import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
-import uk.ac.standrews.cs.filesystem.interfaces.IFileSystemFactory;
+import uk.ac.standrews.cs.fs.exceptions.FileSystemCreationException;
+import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
+import uk.ac.standrews.cs.fs.interfaces.IFileSystemFactory;
 
 import java.io.File;
 

@@ -3,7 +3,7 @@
  */
 package uk.ac.standrews.cs.store;
 
-import uk.ac.standrews.cs.persistence.interfaces.IData;
+import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;

@@ -5,15 +5,15 @@ package uk.ac.standrews.cs.filesystem.absfilesystem.storebased;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.IPID;
-import uk.ac.standrews.cs.exceptions.AccessFailureException;
-import uk.ac.standrews.cs.exceptions.PersistenceException;
-import uk.ac.standrews.cs.persistence.impl.AttributedStatefulObject;
-import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
-import uk.ac.standrews.cs.persistence.interfaces.IAttributes;
-import uk.ac.standrews.cs.persistence.interfaces.IData;
-import uk.ac.standrews.cs.store.exceptions.StoreGetException;
-import uk.ac.standrews.cs.store.exceptions.StorePutException;
-import uk.ac.standrews.cs.store.interfaces.IGUIDStore;
+import uk.ac.standrews.cs.fs.exceptions.AccessFailureException;
+import uk.ac.standrews.cs.fs.exceptions.PersistenceException;
+import uk.ac.standrews.cs.fs.persistence.impl.AttributedStatefulObject;
+import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
+import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
+import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
+import uk.ac.standrews.cs.fs.store.exceptions.StoreGetException;
+import uk.ac.standrews.cs.fs.store.exceptions.StorePutException;
+import uk.ac.standrews.cs.fs.store.interfaces.IGUIDStore;
 
 /**
  * Attributed stateful object that uses a store as its persistence mechanism.

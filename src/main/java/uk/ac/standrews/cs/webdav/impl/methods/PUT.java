@@ -1,13 +1,9 @@
 package uk.ac.standrews.cs.webdav.impl.methods;
 
-import uk.ac.standrews.cs.exceptions.BindingAbsentException;
-import uk.ac.standrews.cs.exceptions.BindingPresentException;
 import uk.ac.standrews.cs.exceptions.LockUseException;
-import uk.ac.standrews.cs.exceptions.PersistenceException;
-import uk.ac.standrews.cs.filesystem.exceptions.AppendException;
-import uk.ac.standrews.cs.filesystem.exceptions.UpdateException;
-import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
-import uk.ac.standrews.cs.persistence.interfaces.IData;
+import uk.ac.standrews.cs.fs.exceptions.*;
+import uk.ac.standrews.cs.fs.interfaces.IDirectory;
+import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.util.Diagnostic;
 import uk.ac.standrews.cs.util.UriUtil;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;

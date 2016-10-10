@@ -4,9 +4,9 @@ import org.junit.Test;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.IPID;
 import uk.ac.standrews.cs.filesystem.absfilesystem.storebased.StoreBasedFile;
-import uk.ac.standrews.cs.persistence.interfaces.IData;
-import uk.ac.standrews.cs.store.factories.LocalFileBasedStoreFactory;
-import uk.ac.standrews.cs.store.interfaces.IGUIDStore;
+import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
+import uk.ac.standrews.cs.fs.store.factories.LocalFileBasedStoreFactory;
+import uk.ac.standrews.cs.fs.store.interfaces.IGUIDStore;
 
 import static org.junit.Assert.*;
 

@@ -3,10 +3,10 @@
  */
 package uk.ac.standrews.cs.filesystem.absfilesystem.localfilebased;
 
-import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
-import uk.ac.standrews.cs.persistence.impl.AttributedStatefulObject;
-import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
-import uk.ac.standrews.cs.persistence.interfaces.IData;
+import uk.ac.standrews.cs.fs.interfaces.IDirectory;
+import uk.ac.standrews.cs.fs.persistence.impl.AttributedStatefulObject;
+import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
+import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.util.Error;
 import uk.ac.standrews.cs.util.UriUtil;
 

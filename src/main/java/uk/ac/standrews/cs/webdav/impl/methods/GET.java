@@ -1,13 +1,13 @@
 package uk.ac.standrews.cs.webdav.impl.methods;
 
-import uk.ac.standrews.cs.exceptions.AccessFailureException;
 import uk.ac.standrews.cs.filesystem.FileSystemConstants;
 import uk.ac.standrews.cs.filesystem.exceptions.InvalidPathException;
-import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
-import uk.ac.standrews.cs.filesystem.interfaces.IFile;
-import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
-import uk.ac.standrews.cs.persistence.interfaces.IData;
-import uk.ac.standrews.cs.persistence.interfaces.INameAttributedPersistentObjectBinding;
+import uk.ac.standrews.cs.fs.exceptions.AccessFailureException;
+import uk.ac.standrews.cs.fs.interfaces.IDirectory;
+import uk.ac.standrews.cs.fs.interfaces.IFile;
+import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
+import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
+import uk.ac.standrews.cs.fs.persistence.interfaces.INameAttributedPersistentObjectBinding;
 import uk.ac.standrews.cs.util.Diagnostic;
 import uk.ac.standrews.cs.util.Error;
 import uk.ac.standrews.cs.util.UriUtil;

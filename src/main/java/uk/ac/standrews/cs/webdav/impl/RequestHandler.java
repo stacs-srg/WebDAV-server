@@ -3,7 +3,7 @@
  */
 package uk.ac.standrews.cs.webdav.impl;
 
-import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
+import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.locking.interfaces.ILockManager;
 import uk.ac.standrews.cs.util.Diagnostic;
 import uk.ac.standrews.cs.util.Error;

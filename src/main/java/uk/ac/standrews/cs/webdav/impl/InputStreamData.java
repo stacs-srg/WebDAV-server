@@ -3,7 +3,7 @@
  */
 package uk.ac.standrews.cs.webdav.impl;
 
-import uk.ac.standrews.cs.persistence.interfaces.IData;
+import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.util.Diagnostic;
 import uk.ac.standrews.cs.util.Error;
 

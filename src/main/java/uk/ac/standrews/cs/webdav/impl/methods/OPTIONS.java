@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.webdav.impl.methods;
 
-import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
+import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.locking.interfaces.ILockManager;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.impl.HTTP;

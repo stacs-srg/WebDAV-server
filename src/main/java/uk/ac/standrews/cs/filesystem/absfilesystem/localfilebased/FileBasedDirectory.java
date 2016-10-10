@@ -3,18 +3,18 @@
  */
 package uk.ac.standrews.cs.filesystem.absfilesystem.localfilebased;
 
-import uk.ac.standrews.cs.exceptions.BindingAbsentException;
-import uk.ac.standrews.cs.exceptions.BindingPresentException;
-import uk.ac.standrews.cs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.filesystem.FileSystemConstants;
-import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
-import uk.ac.standrews.cs.filesystem.interfaces.IFile;
-import uk.ac.standrews.cs.persistence.impl.NameAttributedPersistentObjectBinding;
-import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
-import uk.ac.standrews.cs.persistence.interfaces.IAttributes;
-import uk.ac.standrews.cs.persistence.interfaces.IData;
-import uk.ac.standrews.cs.store.impl.localfilebased.FileData;
-import uk.ac.standrews.cs.util.Attributes;
+import uk.ac.standrews.cs.fs.exceptions.BindingAbsentException;
+import uk.ac.standrews.cs.fs.exceptions.BindingPresentException;
+import uk.ac.standrews.cs.fs.exceptions.PersistenceException;
+import uk.ac.standrews.cs.fs.interfaces.IDirectory;
+import uk.ac.standrews.cs.fs.interfaces.IFile;
+import uk.ac.standrews.cs.fs.persistence.impl.NameAttributedPersistentObjectBinding;
+import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
+import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
+import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
+import uk.ac.standrews.cs.fs.store.impl.localfilebased.FileData;
+import uk.ac.standrews.cs.fs.util.Attributes;
 import uk.ac.standrews.cs.util.Diagnostic;
 import uk.ac.standrews.cs.util.Error;
 

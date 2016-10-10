@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.webdav.entrypoints;
 
-import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
+import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.locking.impl.LockManager;
 import uk.ac.standrews.cs.locking.interfaces.ILockManager;
 import uk.ac.standrews.cs.util.ActionQueue;

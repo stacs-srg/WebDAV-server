@@ -4,16 +4,12 @@
 package uk.ac.standrews.cs.filesystem.absfilesystem;
 
 import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.exceptions.BindingAbsentException;
-import uk.ac.standrews.cs.exceptions.BindingPresentException;
-import uk.ac.standrews.cs.exceptions.PersistenceException;
-import uk.ac.standrews.cs.filesystem.exceptions.AppendException;
-import uk.ac.standrews.cs.filesystem.exceptions.UpdateException;
-import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
-import uk.ac.standrews.cs.filesystem.interfaces.IFile;
-import uk.ac.standrews.cs.persistence.interfaces.IAttributedStatefulObject;
-import uk.ac.standrews.cs.persistence.interfaces.IData;
-import uk.ac.standrews.cs.persistence.interfaces.INameAttributedPersistentObjectBinding;
+import uk.ac.standrews.cs.fs.exceptions.*;
+import uk.ac.standrews.cs.fs.interfaces.IDirectory;
+import uk.ac.standrews.cs.fs.interfaces.IFile;
+import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
+import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
+import uk.ac.standrews.cs.fs.persistence.interfaces.INameAttributedPersistentObjectBinding;
 import uk.ac.standrews.cs.util.Error;
 import uk.ac.standrews.cs.util.UriUtil;
 

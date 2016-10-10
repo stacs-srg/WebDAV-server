@@ -2,11 +2,11 @@ package uk.ac.standrews.cs.filesystem.sosfilesystem;
 
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.LEVEL;
-import uk.ac.standrews.cs.exceptions.AccessFailureException;
-import uk.ac.standrews.cs.exceptions.PersistenceException;
-import uk.ac.standrews.cs.persistence.impl.AttributedStatefulObject;
-import uk.ac.standrews.cs.persistence.interfaces.IData;
-import uk.ac.standrews.cs.persistence.interfaces.IVersionableObject;
+import uk.ac.standrews.cs.fs.exceptions.AccessFailureException;
+import uk.ac.standrews.cs.fs.exceptions.PersistenceException;
+import uk.ac.standrews.cs.fs.persistence.impl.AttributedStatefulObject;
+import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
+import uk.ac.standrews.cs.fs.persistence.interfaces.IVersionableObject;
 import uk.ac.standrews.cs.sos.exceptions.manifest.HEADNotSetException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestNotMadeException;
 import uk.ac.standrews.cs.sos.exceptions.manifest.ManifestPersistException;
@@ -21,7 +21,7 @@ import java.util.Collection;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public class SOSFileSystemObject extends AttributedStatefulObject implements IVersionableObject {
+public class SOSFileSystemObject extends AttributedStatefulObject implements IVersionableObject, SOSVersionableObject {
 
     protected Client sos;
 

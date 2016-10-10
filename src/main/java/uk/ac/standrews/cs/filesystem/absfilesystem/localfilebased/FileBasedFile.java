@@ -4,15 +4,15 @@
 package uk.ac.standrews.cs.filesystem.absfilesystem.localfilebased;
 
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.filesystem.FileSystemConstants;
-import uk.ac.standrews.cs.filesystem.interfaces.IDirectory;
-import uk.ac.standrews.cs.filesystem.interfaces.IFile;
+import uk.ac.standrews.cs.fs.exceptions.PersistenceException;
+import uk.ac.standrews.cs.fs.interfaces.IDirectory;
+import uk.ac.standrews.cs.fs.interfaces.IFile;
+import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
+import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
+import uk.ac.standrews.cs.fs.util.Attributes;
 import uk.ac.standrews.cs.impl.SHAKeyFactory;
 import uk.ac.standrews.cs.impl.keys.KeyImpl;
-import uk.ac.standrews.cs.persistence.interfaces.IAttributes;
-import uk.ac.standrews.cs.persistence.interfaces.IData;
-import uk.ac.standrews.cs.util.Attributes;
 import uk.ac.standrews.cs.util.Error;
 import uk.ac.standrews.cs.webdav.impl.MIME;
 

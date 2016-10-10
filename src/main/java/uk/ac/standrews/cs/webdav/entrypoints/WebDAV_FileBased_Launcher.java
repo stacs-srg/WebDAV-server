@@ -6,9 +6,9 @@ package uk.ac.standrews.cs.webdav.entrypoints;
 import uk.ac.standrews.cs.GUIDFactory;
 import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
-import uk.ac.standrews.cs.filesystem.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.filesystem.factories.LocalFileFileSystemFactory;
-import uk.ac.standrews.cs.filesystem.interfaces.IFileSystem;
+import uk.ac.standrews.cs.fs.exceptions.FileSystemCreationException;
+import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.util.Error;
 import uk.ac.standrews.cs.util.Output;
 
