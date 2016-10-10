@@ -101,8 +101,6 @@ public class SOSDirectory extends SOSFileSystemObject implements IDirectory {
                 this.previous = previous.getPreviousDIR();
             }
 
-
-
         } catch (ManifestNotMadeException | ManifestPersistException e) {
             e.printStackTrace();
         }
