@@ -4,10 +4,14 @@ import uk.ac.standrews.cs.exceptions.LockUseException;
 import uk.ac.standrews.cs.fs.exceptions.*;
 import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
+import uk.ac.standrews.cs.fs.store.impl.localfilebased.InputStreamData;
 import uk.ac.standrews.cs.util.Diagnostic;
 import uk.ac.standrews.cs.util.UriUtil;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
-import uk.ac.standrews.cs.webdav.impl.*;
+import uk.ac.standrews.cs.webdav.impl.HTTP;
+import uk.ac.standrews.cs.webdav.impl.MIME;
+import uk.ac.standrews.cs.webdav.impl.Request;
+import uk.ac.standrews.cs.webdav.impl.Response;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

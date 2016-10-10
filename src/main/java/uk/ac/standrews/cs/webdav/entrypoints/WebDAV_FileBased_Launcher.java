@@ -44,7 +44,7 @@ public class WebDAV_FileBased_Launcher extends WebDAVLauncher {
 				File root_directory = new File(root_directory_path);
 				IFileSystem file_system = new LocalFileFileSystemFactory(root_directory, root_GUID).makeFileSystem();
 
-				startWebDAVServer(file_system, port);
+				StartWebDAVServer(file_system, port);
 			} catch (FileSystemCreationException e) {
 				Error.exceptionError("couldn't create file system", e);
 			} catch (IOException e) {

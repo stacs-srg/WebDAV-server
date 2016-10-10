@@ -45,7 +45,7 @@ public class WebDAV_StoreBased_Launcher extends WebDAVLauncher {
 				IGUIDStore store = new LocalFileBasedStoreFactory(args).makeStore();
 		        IFileSystem file_system = new StoreFileSystemFactory(store, root_GUID).makeFileSystem();
 
-				startWebDAVServer(file_system, port);
+				StartWebDAVServer(file_system, port);
 			} catch (FileSystemCreationException e) {
 				Error.exceptionError("couldn't create file system", e);
 			} catch (IOException e) {

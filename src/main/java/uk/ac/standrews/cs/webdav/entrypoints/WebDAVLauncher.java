@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * @author Simone I. Conte "sic2@st-andrews.ac.uk"
  */
-public abstract class WebDAVLauncher {
+public class WebDAVLauncher {
 
     protected static String processStoreRoot(String[] args) {
         return CommandLineArgs.getArg(args, "-r");
@@ -49,7 +49,7 @@ public abstract class WebDAVLauncher {
         return CommandLineArgs.getArg(args, "-c");
     }
 
-    protected static void startWebDAVServer(IFileSystem file_system, int port) throws IOException {
+    public static void StartWebDAVServer(IFileSystem file_system, int port) throws IOException {
         WebDAVServer server;
         if (port == 0) {
             server = new WebDAVServer(file_system);
