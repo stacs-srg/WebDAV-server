@@ -65,7 +65,7 @@
     </dependencies>
 
     <build>
-        <finalName>sos-webdav</finalName>
+        <finalName>webdav</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -92,7 +92,7 @@
 
                     <archive>
                         <manifest>
-                            <mainClass>uk.ac.standrews.cs.webdav.entrypoints.WebDAV_SOS_Launcher</mainClass>
+                            <mainClass>uk.ac.standrews.cs.webdav.entrypoints.WebDAV_FileBased_Launcher_Launcher</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
