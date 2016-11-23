@@ -12,6 +12,7 @@ import uk.ac.standrews.cs.fs.exceptions.BindingPresentException;
 import uk.ac.standrews.cs.fs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
+import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.impl.NameAttributedPersistentObjectBinding;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
@@ -59,6 +60,16 @@ public class StoreBasedDirectory extends StoreBasedFileSystemObject implements I
 		// else					  mod_time = store.getPIDPutDate( map.getPID() );
 	}
 
+	@Override
+	public void setName(String s) {
+		//
+	}
+
+	@Override
+	public String getName() {
+		return "N/A";
+	}
+
 	public IDirectory getParent() {
 		return parent;
 	}
@@ -67,7 +78,7 @@ public class StoreBasedDirectory extends StoreBasedFileSystemObject implements I
 		this.parent = parent;
 	}
 
-	public IAttributedStatefulObject get(String name) {
+	public IFileSystemObject get(String name) {
 		try {
 			Diagnostic.trace("Getting file with name: " + name, Diagnostic.RUN);
 			IAttributes atts = map.getAttributes(name);
@@ -77,7 +88,7 @@ public class StoreBasedDirectory extends StoreBasedFileSystemObject implements I
 				
 				if (directoryCache.containsKey(guid.toString())) {
 					Diagnostic.trace("Found directory with name: " + name + " in cache", Diagnostic.RUN);
-					return (IAttributedStatefulObject) directoryCache.get(guid.toString());
+					return (IFileSystemObject) directoryCache.get(guid.toString());
 				} else {
                     return makeCollection(guid, this, store, atts);
                 }

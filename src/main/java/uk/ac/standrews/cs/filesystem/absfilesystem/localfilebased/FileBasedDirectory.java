@@ -9,6 +9,7 @@ import uk.ac.standrews.cs.fs.exceptions.BindingPresentException;
 import uk.ac.standrews.cs.fs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
+import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.impl.NameAttributedPersistentObjectBinding;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
@@ -42,7 +43,17 @@ public class FileBasedDirectory extends FileBasedFileSystemObject implements IDi
         real_file = real_directory;
     }
 
-    public IDirectory getParent() {
+	@Override
+	public void setName(String s) {
+		this.name = s;
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	public IDirectory getParent() {
         return logical_parent;
     }
     
@@ -54,7 +65,7 @@ public class FileBasedDirectory extends FileBasedFileSystemObject implements IDi
         return new DirectoryIterator(real_file);
 	}
 
-	public IAttributedStatefulObject get(String name) {
+	public IFileSystemObject get(String name) {
 
 		File candidate = new File(real_file, name);
 		if (!candidate.exists()) {

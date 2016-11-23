@@ -463,7 +463,12 @@ public class PROPFIND extends AbstractHTTPMethod {
 			while (directory_entry_iterator.hasNext()) {
 				
 				INameAttributedPersistentObjectBinding binding = (INameAttributedPersistentObjectBinding) directory_entry_iterator.next();
-				
+
+				if (binding == null) {
+					System.err.println("Binding is null for contents in URI: " + uri.toString());
+					continue;
+				}
+
 				String name = binding.getName();
 				IAttributedStatefulObject child = binding.getObject();
 				URI child_uri = UriUtil.childUri(uri, name, false);

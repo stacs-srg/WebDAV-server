@@ -109,4 +109,23 @@ public class FileBasedFile extends FileBasedFileSystemObject implements IFile {
 		Error.hardError("unimplemented method");
 	}
 
+	@Override
+	public void setName(String s) {
+		this.name = name;
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public IDirectory getParent() {
+		return null;
+	}
+
+	@Override
+	public void setParent(IDirectory iDirectory) {
+
+	}
 }

@@ -41,4 +41,24 @@ public class StoreBasedFile extends StoreBasedFileSystemObject implements IFile 
     public StoreBasedFile(IGUIDStore store, IData data) throws PersistenceException {
         this(store, data, null);
     }
+
+    @Override
+    public void setName(String s) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public IDirectory getParent() {
+        return parent;
+    }
+
+    @Override
+    public void setParent(IDirectory iDirectory) {
+        this.parent = parent;
+    }
 }
