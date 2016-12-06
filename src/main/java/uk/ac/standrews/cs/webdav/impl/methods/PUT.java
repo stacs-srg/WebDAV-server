@@ -13,9 +13,7 @@ import uk.ac.standrews.cs.webdav.impl.MIME;
 import uk.ac.standrews.cs.webdav.impl.Request;
 import uk.ac.standrews.cs.webdav.impl.Response;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 
 /**
@@ -28,46 +26,12 @@ public class PUT extends AbstractHTTPMethod {
 	}
 
 	public void execute(Request request, Response response) throws IOException, HTTPException {
-		
-//		if (isChunked(request)) {
-//            System.out.println("Chunked PUT");
-//            System.out.println("has content: " + request.hasContent());
-//            System.out.println("content length: " + request.getContentLength());
-//            // throw new HTTPException("Chunked puts are not allowed", HTTP.RESPONSE_NOT_IMPLEMENTED);
-//
-//
-//        }
+
         processRequest(request);
 
 		response.setStatusCode(HTTP.RESPONSE_CREATED);
 		response.close();
 	}
-
-    // REMOVEME
-    public String readFullyAsString(InputStream inputStream, String encoding)
-            throws IOException {
-        return readFully(inputStream).toString(encoding);
-    }
-
-    // REMOVEME
-    public byte[] readFullyAsBytes(InputStream inputStream)
-            throws IOException {
-        return readFully(inputStream).toByteArray();
-    }
-
-    // REMOVEME
-    private ByteArrayOutputStream readFully(InputStream inputStream)
-            throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int length = 0;
-        while ((length = inputStream.read(buffer)) != -1) {
-            baos.write(buffer, 0, length);
-        }
-        return baos;
-    }
-
-
 
     private void processRequest(Request request) throws HTTPException {
 

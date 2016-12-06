@@ -495,8 +495,12 @@ public class PROPFIND extends AbstractHTTPMethod {
 				String base_name = UriUtil.baseName(locked_uri);
 				
 				// Return info on URI if it is lock-null - no corresponding extant object.
-				if (((IDirectory)object).get(base_name) == null)
-					propFindUri(multistatus_element, locked_uri, request, requested_property_names);
+				if (object instanceof IDirectory) {
+					IDirectory directory = (IDirectory) object;
+					if (directory.get(base_name) == null)
+						propFindUri(multistatus_element, locked_uri, request, requested_property_names);
+				}
+
 			}
 		}
 	}
