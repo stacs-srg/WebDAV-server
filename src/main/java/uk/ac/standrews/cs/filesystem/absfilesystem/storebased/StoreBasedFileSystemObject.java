@@ -7,8 +7,8 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.IPID;
 import uk.ac.standrews.cs.fs.exceptions.AccessFailureException;
 import uk.ac.standrews.cs.fs.exceptions.PersistenceException;
-import uk.ac.standrews.cs.fs.persistence.impl.AttributedStatefulObject;
-import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
+import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
+import uk.ac.standrews.cs.fs.persistence.impl.FileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.fs.store.exceptions.StoreGetException;
@@ -20,7 +20,7 @@ import uk.ac.standrews.cs.fs.store.interfaces.IGUIDStore;
  * 
  * @author al, graham
  */
-public abstract class StoreBasedFileSystemObject extends AttributedStatefulObject implements IAttributedStatefulObject {
+public abstract class StoreBasedFileSystemObject extends FileSystemObject implements IFileSystemObject {
 
     protected IGUIDStore store;
     

@@ -7,7 +7,7 @@ import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.fs.exceptions.*;
 import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
-import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
+import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.fs.persistence.interfaces.INameAttributedPersistentObjectBinding;
 import uk.ac.standrews.cs.utils.Error;
@@ -61,8 +61,8 @@ public abstract class AbstractFileSystem {
 	 * @throws PersistenceException if the updated file cannot be made persistent
 	 */
 	public synchronized void updateFile(IDirectory parent, String name, String content_type, IData data) throws BindingAbsentException, UpdateException, PersistenceException {
-		
-		IAttributedStatefulObject source_file = parent.get(name);
+
+		IFileSystemObject source_file = parent.get(name);
 		
 		// Check that the file exists.
 		if (source_file == null) {
@@ -89,7 +89,7 @@ public abstract class AbstractFileSystem {
 
 	public synchronized void appendToFile(IDirectory directory, String name, String content_type, IData data) throws BindingAbsentException, AppendException, PersistenceException {
 
-        IAttributedStatefulObject source_file = directory.get(name);
+		IFileSystemObject source_file = directory.get(name);
 
         // Check that the file exists.
         if (source_file == null) {
@@ -148,7 +148,7 @@ public abstract class AbstractFileSystem {
 	public synchronized void copyObject(IDirectory source_directory, String source_name,
 			IDirectory destination_directory, String destination_name, boolean overwrite) throws BindingAbsentException, BindingPresentException, PersistenceException {
 
-		IAttributedStatefulObject source_object = source_directory.get(source_name);
+		IFileSystemObject source_object = source_directory.get(source_name);
 		
 		checkSourceAndDestination(source_name, destination_directory, destination_name, overwrite, source_object);
 		
@@ -204,12 +204,12 @@ public abstract class AbstractFileSystem {
 	 * @param uri a path expression to a file or directory
 	 * @return the file or directory associated with that path, or null if the given path expression does not resolve to a file or directory
 	 */
-	public IAttributedStatefulObject resolveObject(URI uri) {
+	public IFileSystemObject resolveObject(URI uri) {
 		
 		Iterator iterator = UriUtil.pathElementIterator(uri);
 		IDirectory parent = getRootDirectory();
 		
-		IAttributedStatefulObject object = parent;
+		IFileSystemObject object = parent;
 		
 		while (iterator.hasNext()) {
 		
@@ -231,7 +231,7 @@ public abstract class AbstractFileSystem {
 		return object;
 	}
 	
-	protected void checkSourceAndDestination(String source_name, IDirectory destination_parent, String destination_name, boolean overwrite, IAttributedStatefulObject source_object) throws BindingAbsentException, BindingPresentException {
+	protected void checkSourceAndDestination(String source_name, IDirectory destination_parent, String destination_name, boolean overwrite, IFileSystemObject source_object) throws BindingAbsentException, BindingPresentException {
 		
 		// Error if the source does not exist.
 		if (source_object == null) {

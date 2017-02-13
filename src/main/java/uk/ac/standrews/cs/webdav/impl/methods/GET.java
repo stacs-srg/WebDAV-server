@@ -5,7 +5,7 @@ import uk.ac.standrews.cs.filesystem.exceptions.InvalidPathException;
 import uk.ac.standrews.cs.fs.exceptions.AccessFailureException;
 import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
-import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
+import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.fs.persistence.interfaces.INameAttributedPersistentObjectBinding;
 import uk.ac.standrews.cs.utils.Diagnostic;
@@ -43,7 +43,7 @@ public class GET extends AbstractHTTPMethod {
 			// Process the source information.
 			URI uri = request.getUri();
 			
-			IAttributedStatefulObject target_object = file_system.resolveObject(uri);
+			IFileSystemObject target_object = file_system.resolveObject(uri);
 			
 			if (target_object == null) {
 				throw new InvalidPathException();     // Caught at the end of this method.
@@ -64,7 +64,7 @@ public class GET extends AbstractHTTPMethod {
         }
 	}
 
-    private void processDirectory(Request request, Response response, IAttributedStatefulObject target_object) throws IOException {
+    private void processDirectory(Request request, Response response, IFileSystemObject target_object) throws IOException {
         // If the directory URI has a trailing slash, send a directory listing.
         // Otherwise, send a redirect to the proper URL with trailing slash.
 
@@ -80,7 +80,7 @@ public class GET extends AbstractHTTPMethod {
         }
     }
 
-    private void processFile(Request request, Response response, IAttributedStatefulObject target_object, URI uri) throws IOException {
+    private void processFile(Request request, Response response, IFileSystemObject target_object, URI uri) throws IOException {
         IFile file = (IFile) target_object;
 
         if (request.hasParameter(HTTP.PARAMETER_INFO)) {
@@ -151,7 +151,7 @@ public class GET extends AbstractHTTPMethod {
 		Iterator iter2 = collection.iterator();
 		while( iter2.hasNext() ) {        
 			INameAttributedPersistentObjectBinding binding = (INameAttributedPersistentObjectBinding) iter2.next();
-			IAttributedStatefulObject child = binding.getObject();
+			IFileSystemObject child = binding.getObject();
 			String fname = binding.getName();
 			/// pretty things like icons, dates, last modifieds, sizes etc..
 			if (child instanceof IDirectory) {

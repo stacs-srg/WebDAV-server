@@ -14,7 +14,6 @@ import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.impl.NameAttributedPersistentObjectBinding;
-import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.fs.store.exceptions.StoreGetException;
@@ -146,7 +145,7 @@ public class StoreBasedDirectory extends StoreBasedFileSystemObject implements I
 		Diagnostic.trace( "Removing entry with name: " + name, Diagnostic.RUN );  
 		
 		// If it's a directory being removed, remove link to this directory as parent.
-		IAttributedStatefulObject entry = get(name);
+		IFileSystemObject entry = get(name);
 		
 		if (entry instanceof IDirectory) {
 			IDirectory directory_being_removed = (IDirectory) entry;
@@ -209,7 +208,7 @@ public class StoreBasedDirectory extends StoreBasedFileSystemObject implements I
 
 	/*********************** Private methods ***********************/
  
-	private void addObject(String name, IAttributedStatefulObject object, IAttributes atts) throws BindingPresentException {
+	private void addObject(String name, IFileSystemObject object, IAttributes atts) throws BindingPresentException {
 		
 		// Add the name-GUID pair to the map.
 		map.put(name, object.getGUID());

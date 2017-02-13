@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.webdav.impl.methods;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
+import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.utils.Error;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.impl.HTTP;
@@ -31,7 +31,7 @@ public class PROPPATCH extends AbstractHTTPMethod {
 		// TODO need to check locks
 		
 		URI uri = request.getUri();
-		IAttributedStatefulObject object = file_system.resolveObject(uri);
+		IFileSystemObject object = file_system.resolveObject(uri);
 		
 		if (object == null) throw new HTTPException("Object '" + uri + "' not found.", HTTP.RESPONSE_NOT_FOUND, false);
 		

@@ -9,7 +9,7 @@ import uk.ac.standrews.cs.fs.exceptions.AccessFailureException;
 import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
-import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
+import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.fs.persistence.interfaces.INameAttributedPersistentObjectBinding;
 import uk.ac.standrews.cs.locking.interfaces.ILockManager;
@@ -86,7 +86,7 @@ public class PROPFIND extends AbstractHTTPMethod {
 		multistatus_element.setAttribute(WebDAV.DAV_XML_NS_PREFIX, WebDAV.DAV_NS);
 		
 		// Test whether URI corresponds to extant file system object or not (lock-null resource).
-		IAttributedStatefulObject object = file_system.resolveObject(uri);
+		IFileSystemObject object = file_system.resolveObject(uri);
 
 		if (object == null) {
 			
@@ -187,7 +187,7 @@ public class PROPFIND extends AbstractHTTPMethod {
 		return depth;
 	}
 
-	private void addCreationDateProperty(Element prop_element_OK, Element prop_element_NOT_FOUND, IAttributedStatefulObject object, boolean property_explicitly_requested, boolean value_requested) {
+	private void addCreationDateProperty(Element prop_element_OK, Element prop_element_NOT_FOUND, IFileSystemObject object, boolean property_explicitly_requested, boolean value_requested) {
 		
 		Element property_element;
 		
@@ -209,7 +209,7 @@ public class PROPFIND extends AbstractHTTPMethod {
 		prop_element_OK.appendChild(property_element); 
 	}
 
-	private void addLastModifiedProperty(Element prop_element_OK, Element prop_element_NOT_FOUND, IAttributedStatefulObject object, boolean property_explicitly_requested, boolean value_requested) {
+	private void addLastModifiedProperty(Element prop_element_OK, Element prop_element_NOT_FOUND, IFileSystemObject object, boolean property_explicitly_requested, boolean value_requested) {
 		
 		Element property_element;
 		
@@ -231,7 +231,7 @@ public class PROPFIND extends AbstractHTTPMethod {
 		prop_element_OK.appendChild(property_element);
 	}
 
-	private void addETagProperty(Element prop_element_OK, Element prop_element_NOT_FOUND, IAttributedStatefulObject object, boolean property_explicitly_requested, boolean value_requested) {
+	private void addETagProperty(Element prop_element_OK, Element prop_element_NOT_FOUND, IFileSystemObject object, boolean property_explicitly_requested, boolean value_requested) {
 		
 		Element property_element;
 		
@@ -245,7 +245,7 @@ public class PROPFIND extends AbstractHTTPMethod {
 		prop_element_OK.appendChild(property_element);
 	}
 
-	private void addResourceTypeProperty(Element prop_element_OK, Element prop_element_NOT_FOUND, IAttributedStatefulObject object, boolean property_explicitly_requested, boolean value_requested) {
+	private void addResourceTypeProperty(Element prop_element_OK, Element prop_element_NOT_FOUND, IFileSystemObject object, boolean property_explicitly_requested, boolean value_requested) {
 		
 		Element property_element = xml_helper.createElement(WebDAV.DAV_NS, WebDAV.DAV_NS_PREFIX_ + WebDAV.PROPERTY_RESOURCE_TYPE);
 		
@@ -257,7 +257,7 @@ public class PROPFIND extends AbstractHTTPMethod {
 		prop_element_OK.appendChild(property_element);
 	}
 
-	private void addContentLengthProperty(Element prop_element_OK, Element prop_element_NOT_FOUND, IAttributedStatefulObject object, boolean property_explicitly_requested, boolean value_requested) {
+	private void addContentLengthProperty(Element prop_element_OK, Element prop_element_NOT_FOUND, IFileSystemObject object, boolean property_explicitly_requested, boolean value_requested) {
 		
 		if (object instanceof IFile) {
 			
@@ -359,7 +359,7 @@ public class PROPFIND extends AbstractHTTPMethod {
 		}
 	}
 
-	private void addContentTypeProperty(Element prop_element_OK, Element prop_element_NOT_FOUND, IAttributedStatefulObject object, boolean property_explicitly_requested, boolean value_requested) {
+	private void addContentTypeProperty(Element prop_element_OK, Element prop_element_NOT_FOUND, IFileSystemObject object, boolean property_explicitly_requested, boolean value_requested) {
 		
 		Element property_element;
 		
@@ -380,7 +380,7 @@ public class PROPFIND extends AbstractHTTPMethod {
 		prop_element_OK.appendChild(property_element);
 	}
 	
-	private void addDisplayNameProperty(Element prop_element_OK, Element prop_element_NOT_FOUND, IAttributedStatefulObject object, Request request, boolean property_explicitly_requested, boolean value_requested) {
+	private void addDisplayNameProperty(Element prop_element_OK, Element prop_element_NOT_FOUND, IFileSystemObject object, Request request, boolean property_explicitly_requested, boolean value_requested) {
 		
 		Element property_element;
 
@@ -396,7 +396,7 @@ public class PROPFIND extends AbstractHTTPMethod {
 		if (property_explicitly_requested) prop_element_NOT_FOUND.appendChild(xml_helper.createElement(WebDAV.DAV_NS, property_name));
 	}
 
-	private void propFindObject(Element multistatus_element, IAttributedStatefulObject object, URI uri, int depth, Request request, PropFindRequest requested_property_names) {
+	private void propFindObject(Element multistatus_element, IFileSystemObject object, URI uri, int depth, Request request, PropFindRequest requested_property_names) {
 		
 		propFind(multistatus_element, object, uri, depth, request, requested_property_names);
 	}
@@ -406,7 +406,7 @@ public class PROPFIND extends AbstractHTTPMethod {
 		propFind(multistatus_element, null, uri, 0, request, requested_property_names);
 	}
 
-	private void propFind(Element multistatus_element, IAttributedStatefulObject object, URI uri, int depth, Request request, PropFindRequest requested_property_names) {
+	private void propFind(Element multistatus_element, IFileSystemObject object, URI uri, int depth, Request request, PropFindRequest requested_property_names) {
 		
 		/* XML to produce:
 		
@@ -470,7 +470,7 @@ public class PROPFIND extends AbstractHTTPMethod {
 				}
 
 				String name = binding.getName();
-				IAttributedStatefulObject child = binding.getObject();
+				IFileSystemObject child = binding.getObject();
 				URI child_uri = UriUtil.childUri(uri, name, false);
 				
 				propFindObject(multistatus_element, child, child_uri, child_depth, request, requested_property_names);
@@ -481,7 +481,7 @@ public class PROPFIND extends AbstractHTTPMethod {
 		}
 	}
 
-	private void addLockNullProperties(Element multistatus_element, IAttributedStatefulObject object, URI uri, Request request, PropFindRequest requested_property_names) {
+	private void addLockNullProperties(Element multistatus_element, IFileSystemObject object, URI uri, Request request, PropFindRequest requested_property_names) {
 		
 		Iterator uri_iterator = lock_manager.uriIterator();
 		
@@ -505,7 +505,7 @@ public class PROPFIND extends AbstractHTTPMethod {
 		}
 	}
 	
-	private void addObjectProperties(IAttributedStatefulObject object, URI uri, Element response_element, PropFindRequest prop_find_request, Request request) {
+	private void addObjectProperties(IFileSystemObject object, URI uri, Element response_element, PropFindRequest prop_find_request, Request request) {
 		
 		addProperties(object, uri, response_element, prop_find_request, request);
 	}
@@ -515,7 +515,7 @@ public class PROPFIND extends AbstractHTTPMethod {
 		addProperties(null, uri, response_element, prop_find_request, request);
 	}
 	
-	private void addProperties(IAttributedStatefulObject object, URI uri, Element response_element, PropFindRequest prop_find_request, Request request) {
+	private void addProperties(IFileSystemObject object, URI uri, Element response_element, PropFindRequest prop_find_request, Request request) {
 		
 		Element propstat_element_OK = xml_helper.createElement(WebDAV.DAV_NS, WebDAV.DAV_NS_PREFIX_ + WebDAV.DAV_PROPSTAT);
 		Element prop_element_OK = xml_helper.createElement(WebDAV.DAV_NS, WebDAV.DAV_NS_PREFIX_ + WebDAV.DAV_PROP);
@@ -546,7 +546,7 @@ public class PROPFIND extends AbstractHTTPMethod {
 		if (prop_element_NOT_FOUND.getFirstChild() != null) response_element.appendChild(propstat_element_NOT_FOUND);
 	}
 	
-	private void addObjectProperty(String property_name, IAttributedStatefulObject object, URI uri, Request request, Element prop_element_OK, Element prop_element_NOT_FOUND, boolean property_explicitly_requested, boolean value_requested) {
+	private void addObjectProperty(String property_name, IFileSystemObject object, URI uri, Request request, Element prop_element_OK, Element prop_element_NOT_FOUND, boolean property_explicitly_requested, boolean value_requested) {
 		
 		// Based on object.
 		     if (property_name.equals(WebDAV.PROPERTY_CREATION_DATE))  addCreationDateProperty(prop_element_OK, prop_element_NOT_FOUND, object, property_explicitly_requested, value_requested);

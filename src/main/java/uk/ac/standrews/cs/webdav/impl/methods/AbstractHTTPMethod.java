@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.filesystem.FileSystemConstants;
 import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
-import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
+import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.locking.interfaces.ILockManager;
 import uk.ac.standrews.cs.utils.Error;
 import uk.ac.standrews.cs.utils.StringUtil;
@@ -50,7 +50,7 @@ public abstract class AbstractHTTPMethod implements HTTPMethod {
 		URI parent_path = UriUtil.parentUri(uri);
 		
 		// Get the parent directory.
-		IAttributedStatefulObject parent_object = file_system.resolveObject(parent_path);
+		IFileSystemObject parent_object = file_system.resolveObject(parent_path);
 			
 		try {
 			return (IDirectory) parent_object;

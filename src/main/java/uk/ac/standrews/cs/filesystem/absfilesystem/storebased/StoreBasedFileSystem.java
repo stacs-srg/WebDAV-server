@@ -12,7 +12,7 @@ import uk.ac.standrews.cs.fs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
-import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
+import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.fs.store.exceptions.StoreIntegrityException;
@@ -126,7 +126,7 @@ public class StoreBasedFileSystem extends AbstractFileSystem implements IFileSys
 	public synchronized void moveObject(IDirectory sourceDirectory, String sourceName,
 			IDirectory destinationDirectory, String destinationName, boolean overwrite) throws BindingAbsentException, BindingPresentException {
 
-		IAttributedStatefulObject source_object = sourceDirectory.get(sourceName);
+		IFileSystemObject source_object = sourceDirectory.get(sourceName);
 		
 		checkSourceAndDestination(sourceName, destinationDirectory, destinationName, overwrite, source_object);
 

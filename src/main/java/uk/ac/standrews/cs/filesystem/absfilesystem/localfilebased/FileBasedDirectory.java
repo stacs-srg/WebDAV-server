@@ -11,7 +11,6 @@ import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.impl.NameAttributedPersistentObjectBinding;
-import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.fs.store.impl.localfilebased.FileData;
@@ -168,7 +167,7 @@ public class FileBasedDirectory extends FileBasedFileSystemObject implements IDi
         public Object next() {
         	
         	String name = names[index];
-        	IAttributedStatefulObject obj = get(name);
+        	IFileSystemObject obj = get(name);
         	index++;
         	
         	return new NameAttributedPersistentObjectBinding(name, obj);

@@ -4,8 +4,8 @@
 package uk.ac.standrews.cs.filesystem.absfilesystem.localfilebased;
 
 import uk.ac.standrews.cs.fs.interfaces.IDirectory;
-import uk.ac.standrews.cs.fs.persistence.impl.AttributedStatefulObject;
-import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
+import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
+import uk.ac.standrews.cs.fs.persistence.impl.FileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.utils.Error;
 import uk.ac.standrews.cs.utils.UriUtil;
@@ -20,7 +20,7 @@ import java.net.URISyntaxException;
  * 
  * @author al, graham
  */
-public abstract class FileBasedFileSystemObject extends AttributedStatefulObject implements IAttributedStatefulObject {
+public abstract class FileBasedFileSystemObject extends FileSystemObject implements IFileSystemObject {
 	
 	protected String name;
 	protected IDirectory logical_parent;

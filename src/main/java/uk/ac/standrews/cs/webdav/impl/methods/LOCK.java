@@ -5,7 +5,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import uk.ac.standrews.cs.exceptions.LockException;
-import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
+import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.locking.impl.LockDepth;
 import uk.ac.standrews.cs.locking.impl.LockScope;
 import uk.ac.standrews.cs.locking.impl.LockType;
@@ -149,7 +149,7 @@ public class LOCK extends AbstractHTTPMethod {
 
 				// FIXME - set only one status, not multiple
                 // Target object seems to be returned even if object does not exist
-                IAttributedStatefulObject target_object = file_system.resolveObject(uri);
+                IFileSystemObject target_object = file_system.resolveObject(uri);
                 if (target_object != null) {
                     response.setStatusCode(HTTP.RESPONSE_MULTI_STATUS);
                     response.setStatusCode(HTTP.RESPONSE_OK);

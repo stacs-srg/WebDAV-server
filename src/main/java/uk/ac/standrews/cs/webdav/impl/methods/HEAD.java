@@ -3,7 +3,7 @@ package uk.ac.standrews.cs.webdav.impl.methods;
 import uk.ac.standrews.cs.filesystem.exceptions.InvalidPathException;
 import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
-import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributedStatefulObject;
+import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.utils.Error;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.impl.HTTP;
@@ -28,7 +28,7 @@ public class HEAD extends AbstractHTTPMethod {
 			// Process the source information.
 			URI uri = request.getUri();
 			
-			IAttributedStatefulObject target_object = file_system.resolveObject(uri);
+			IFileSystemObject target_object = file_system.resolveObject(uri);
 			
 			if (target_object == null) {
 				throw new InvalidPathException();     // Caught at the end of this method.
