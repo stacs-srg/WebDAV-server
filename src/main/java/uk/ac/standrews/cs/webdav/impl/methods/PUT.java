@@ -30,6 +30,7 @@ public class PUT extends AbstractHTTPMethod {
         processRequest(request);
 
 		response.setStatusCode(HTTP.RESPONSE_CREATED);
+		response.close();
 	}
 
     private void processRequest(Request request) throws HTTPException {
@@ -100,9 +101,7 @@ public class PUT extends AbstractHTTPMethod {
 
                 }
 
-                // Skip HTTP.CRLF
-                request.getInputStream().read();
-                request.getInputStream().read();
+                request.skipCRLF();
             } while (data != null);
 
         } catch (LockUseException e) {
@@ -174,6 +173,7 @@ public class PUT extends AbstractHTTPMethod {
             if (size != 0) {
                 return new InputStreamData(request.getInputStream(), size);
             } else {
+                System.err.println("WebDAV - chunked - size is zero");
                 return null;
             }
         } catch (IOException e) {

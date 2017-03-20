@@ -245,6 +245,11 @@ public class Request {
         }
     }
 
+    public void skipCRLF() throws IOException {
+        getInputStream().read();
+        getInputStream().read();
+    }
+
     /**
      * Returns true if the request has a body.
      */

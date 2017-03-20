@@ -164,7 +164,7 @@ public class HTTP {
         HEADER_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
-    public static final byte[] CRLF = {13, 10};
+    public static final byte[] CRLF = {13, 10}; // \r\n
     public static final byte SPACE = (byte) 32;
     public static final byte[] HEADER_COLON_SPACE = {(byte) ':', (byte) ' '};
     public static final byte COLON = (byte) ':';
