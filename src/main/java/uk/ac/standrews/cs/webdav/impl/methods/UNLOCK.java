@@ -45,5 +45,6 @@ public class UNLOCK extends AbstractHTTPMethod {
 		lock_manager.removeResourceFromMatchingLocks(uri, token_without_delimiters);
 		
 		response.setStatusCode(HTTP.RESPONSE_NO_CONTENT);
+		response.close();
 	}
 }

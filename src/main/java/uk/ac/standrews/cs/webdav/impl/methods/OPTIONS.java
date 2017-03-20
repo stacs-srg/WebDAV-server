@@ -33,6 +33,7 @@ public class OPTIONS extends AbstractHTTPMethod {
         response.setHeader(HTTP.HEADER_MS_AUTHOR_VIA, HTTP.HEADER_DAV);
         
         response.setContentType(HTTP.CONTENT_TYPE_TEXT_PLAIN);      // Like Apache.
+        response.close();
     }
 
      public void init(IFileSystem file_system, ILockManager lock_manager) {

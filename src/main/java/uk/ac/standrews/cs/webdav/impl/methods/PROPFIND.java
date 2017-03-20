@@ -99,6 +99,7 @@ public class PROPFIND extends AbstractHTTPMethod {
 		xml_helper.writeXML(multistatus_element, response.getOutputWriter());
 		
 		response.setChunked(true);
+		response.close();
 	}
 
 	private PropFindRequest getRequestedPropertyNames(Request request) throws IOException, HTTPException {

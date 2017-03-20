@@ -69,7 +69,8 @@ public abstract class CopyOrMove extends AbstractHTTPMethod {
 			
 			if (destination_not_null) response.setStatusCode(HTTP.RESPONSE_NO_CONTENT);
 			else                      response.setStatusCode(HTTP.RESPONSE_CREATED);
-
+			
+			response.close();
 		}
 		catch (LockUseException e) {
             handleLockException(lock_token, e);
