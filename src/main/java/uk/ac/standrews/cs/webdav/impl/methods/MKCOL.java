@@ -51,6 +51,5 @@ public class MKCOL extends AbstractHTTPMethod {
         }
 		
 		response.setStatusCode(HTTP.RESPONSE_CREATED);
-		response.close();
 	}
 }

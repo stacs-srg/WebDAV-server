@@ -86,10 +86,9 @@ public class FileBasedFile extends FileBasedFileSystemObject implements IFile {
 		// Write the data to the file.
         byte[] bytes = state.getState();
         
-        try {
-	        FileOutputStream output_stream = new FileOutputStream(real_file);
+        try (FileOutputStream output_stream = new FileOutputStream(real_file)) {
+
 			output_stream.write(bytes);
-			output_stream.close();
     	} catch (IOException e) {
             throw new PersistenceException("couldn't write data to file: "+ e.getMessage());
         }

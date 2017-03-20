@@ -82,8 +82,9 @@ public class RequestHandler implements Runnable {
 
         method.init(file_system, lock_manager);
         request.processHeaders();
-        Response response = request.getResponse();
-        method.execute(request, response);
+        try(Response response = request.getResponse()) {
+            method.execute(request, response);
+        }
 
         Diagnostic.trace("************* Completed Request: " + request.getVerb() + " " + request.getUri() + " [thread " + Thread.currentThread().hashCode() + "]", Diagnostic.RUN);
     }

@@ -57,7 +57,6 @@ public class HEAD extends AbstractHTTPMethod {
             }
 			
 			response.setStatusCode(HTTP.RESPONSE_OK);
-			response.close();
 		}
 		catch (InvalidPathException e) {
             throw new HTTPException("Object '" + request.getUri() + "' not found.", HTTP.RESPONSE_NOT_FOUND, false);

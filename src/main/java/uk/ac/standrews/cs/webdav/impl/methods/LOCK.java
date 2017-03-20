@@ -166,7 +166,6 @@ public class LOCK extends AbstractHTTPMethod {
 				properties.appendChild(lockDiscovery);
 				
 				xml_helper.writeXML(properties, response.getOutputWriter());
-				response.close();
 			}
 			else throw new HTTPException("No data sent", HTTP.RESPONSE_BAD_REQUEST, false);
 		}

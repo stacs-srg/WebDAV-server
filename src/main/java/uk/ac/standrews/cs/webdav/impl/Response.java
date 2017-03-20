@@ -23,7 +23,7 @@ import java.util.*;
  *
  * @author Ben Catherall, heavily rewritten by al, stuart & graham!
  */
-public class Response {
+public class Response implements AutoCloseable {
 	
     private OutputStream out;
     private Map headers = new HashMap(); // <String, String>
@@ -202,6 +202,7 @@ public class Response {
      * Flush and close the OutputStream, closing the underlying OutputStream if the
      * connection is not keep-alive.
      */
+    @Override
     public void close() throws IOException {
     	
         if (writer != null) writer.flush();      // Flush unwritten data to buffer.

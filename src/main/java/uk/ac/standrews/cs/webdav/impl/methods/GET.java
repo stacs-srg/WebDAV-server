@@ -58,7 +58,7 @@ public class GET extends AbstractHTTPMethod {
             }
 			
 			response.setStatusCode(HTTP.RESPONSE_OK);
-			response.close();
+
 		} catch (InvalidPathException e) {
             throw new HTTPException("Object '" + request.getUri() + "' not found.", HTTP.RESPONSE_NOT_FOUND, false);
         }
@@ -86,7 +86,6 @@ public class GET extends AbstractHTTPMethod {
         if (request.hasParameter(HTTP.PARAMETER_INFO)) {
             Diagnostic.trace("sending file information", Diagnostic.RUN);
             sendFileInformation(request, response, file, UriUtil.baseName(uri));
-            response.close();
             return;
         }
 

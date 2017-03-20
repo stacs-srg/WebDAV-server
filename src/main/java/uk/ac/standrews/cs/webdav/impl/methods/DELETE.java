@@ -50,6 +50,5 @@ public class DELETE extends AbstractHTTPMethod {
         }
 		
 		response.setStatusCode(HTTP.RESPONSE_NO_CONTENT);
-		response.close();
 	}
 }

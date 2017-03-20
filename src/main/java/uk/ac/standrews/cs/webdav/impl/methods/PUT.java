@@ -30,7 +30,6 @@ public class PUT extends AbstractHTTPMethod {
         processRequest(request);
 
 		response.setStatusCode(HTTP.RESPONSE_CREATED);
-		response.close();
 	}
 
     private void processRequest(Request request) throws HTTPException {
@@ -167,6 +166,10 @@ public class PUT extends AbstractHTTPMethod {
     private IData getNextChunkData(Request request) {
         try {
             byte[] sizeBytes = request.stopAtBytes(HTTP.CRLF, 10, 4);
+            if (sizeBytes == null) {
+                return null;
+            }
+
             int size= Integer.parseInt(new String(sizeBytes), 16); // HEX
             if (size != 0) {
                 return new InputStreamData(request.getInputStream(), size);
