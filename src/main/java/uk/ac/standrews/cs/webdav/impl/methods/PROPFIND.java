@@ -549,26 +549,48 @@ public class PROPFIND extends AbstractHTTPMethod {
 	private void addObjectProperty(String property_name, IFileSystemObject object, URI uri, Request request, Element prop_element_OK, Element prop_element_NOT_FOUND, boolean property_explicitly_requested, boolean value_requested) {
 		
 		// Based on object.
-		     if (property_name.equals(WebDAV.PROPERTY_CREATION_DATE))  addCreationDateProperty(prop_element_OK, prop_element_NOT_FOUND, object, property_explicitly_requested, value_requested);
-		else if (property_name.equals(WebDAV.PROPERTY_DISPLAY_NAME))   addDisplayNameProperty(prop_element_OK, prop_element_NOT_FOUND, object, request, property_explicitly_requested, value_requested);
-		else if (property_name.equals(WebDAV.PROPERTY_CONTENT_LENGTH)) addContentLengthProperty(prop_element_OK, prop_element_NOT_FOUND, object, property_explicitly_requested, value_requested);
-		else if (property_name.equals(WebDAV.PROPERTY_CONTENT_TYPE))   addContentTypeProperty(prop_element_OK, prop_element_NOT_FOUND, object, property_explicitly_requested, value_requested);
-		else if (property_name.equals(WebDAV.PROPERTY_E_TAG))		    addETagProperty(prop_element_OK, prop_element_NOT_FOUND, object, property_explicitly_requested, value_requested);
-		else if (property_name.equals(WebDAV.PROPERTY_LAST_MODIFIED))  addLastModifiedProperty(prop_element_OK, prop_element_NOT_FOUND, object, property_explicitly_requested, value_requested);
-		else if (property_name.equals(WebDAV.PROPERTY_RESOURCE_TYPE))  addResourceTypeProperty(prop_element_OK, prop_element_NOT_FOUND, object, property_explicitly_requested, value_requested);
-		     
-		// Based on URI.
-		else addUriProperty(property_name, uri, request, prop_element_OK, prop_element_NOT_FOUND, property_explicitly_requested, value_requested);
+		switch (property_name) {
+			case WebDAV.PROPERTY_CREATION_DATE:
+				addCreationDateProperty(prop_element_OK, prop_element_NOT_FOUND, object, property_explicitly_requested, value_requested);
+				break;
+			case WebDAV.PROPERTY_DISPLAY_NAME:
+				addDisplayNameProperty(prop_element_OK, prop_element_NOT_FOUND, object, request, property_explicitly_requested, value_requested);
+				break;
+			case WebDAV.PROPERTY_CONTENT_LENGTH:
+				addContentLengthProperty(prop_element_OK, prop_element_NOT_FOUND, object, property_explicitly_requested, value_requested);
+				break;
+			case WebDAV.PROPERTY_CONTENT_TYPE:
+				addContentTypeProperty(prop_element_OK, prop_element_NOT_FOUND, object, property_explicitly_requested, value_requested);
+				break;
+			case WebDAV.PROPERTY_E_TAG:
+				addETagProperty(prop_element_OK, prop_element_NOT_FOUND, object, property_explicitly_requested, value_requested);
+				break;
+			case WebDAV.PROPERTY_LAST_MODIFIED:
+				addLastModifiedProperty(prop_element_OK, prop_element_NOT_FOUND, object, property_explicitly_requested, value_requested);
+				break;
+			case WebDAV.PROPERTY_RESOURCE_TYPE:
+				addResourceTypeProperty(prop_element_OK, prop_element_NOT_FOUND, object, property_explicitly_requested, value_requested);
+				break;
+			default: // Based on URI.
+				addUriProperty(property_name, uri, request, prop_element_OK, prop_element_NOT_FOUND, property_explicitly_requested, value_requested);
+				break;
+		}
 	}
 
 	private void addUriProperty(String property_name, URI uri, Request request, Element prop_element_OK, Element prop_element_NOT_FOUND, boolean property_explicitly_requested, boolean value_requested) {
 		
 		// Based on URI.	
-		     if (property_name.equals(WebDAV.DAV_LOCKDISCOVERY))	addLockDiscoveryProperty(prop_element_OK, prop_element_NOT_FOUND, uri, property_explicitly_requested, value_requested);
-		else if (property_name.equals(WebDAV.DAV_SUPPORTEDLOCK))	addSupportedLockProperty(prop_element_OK, value_requested);
-	     
-		// Unknown.
-		else													    addUnknownProperty(property_name, prop_element_NOT_FOUND, property_explicitly_requested);
+		switch (property_name) {
+			case WebDAV.DAV_LOCKDISCOVERY:
+				addLockDiscoveryProperty(prop_element_OK, prop_element_NOT_FOUND, uri, property_explicitly_requested, value_requested);
+				break;
+			case WebDAV.DAV_SUPPORTEDLOCK:
+				addSupportedLockProperty(prop_element_OK, value_requested);
+				break;
+			default: 	// Unknown.
+				addUnknownProperty(property_name, prop_element_NOT_FOUND, property_explicitly_requested);
+				break;
+		}
 	}
 
 	private void setStatus(Request request, Element propstat_element, int code) {

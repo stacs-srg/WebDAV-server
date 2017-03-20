@@ -106,10 +106,7 @@ public class PUT extends AbstractHTTPMethod {
 
         } catch (LockUseException e) {
             handleLockException(lock_token, e);
-        } catch (BindingAbsentException |
-                PersistenceException | UpdateException | AppendException e)  {
-            throw new HTTPException(e, HTTP.RESPONSE_INTERNAL_SERVER_ERROR, true);
-        }catch (IOException e) {
+        } catch (BindingAbsentException | PersistenceException | UpdateException | AppendException | IOException e)  {
             throw new HTTPException(e, HTTP.RESPONSE_INTERNAL_SERVER_ERROR, true);
         }
     }

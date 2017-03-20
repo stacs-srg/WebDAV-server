@@ -279,7 +279,7 @@ public class Response {
                 byte[] responseCode = Integer.toString(getStatus_code()).getBytes();
                 out.write(responseCode);
                 out.write(HTTP.SPACE);
-                byte[] message = (byte[]) HTTP.RESPONSE_TITLES.get(new Integer(getStatus_code()));
+                byte[] message = (byte[]) HTTP.RESPONSE_TITLES.get(getStatus_code());
                 
                 if (message == null) message = responseCode;
                 
@@ -289,7 +289,7 @@ public class Response {
                 insertStandardHeaders();
                 Set s = getHeaders().keySet();
                 Iterator iter = s.iterator();
-                
+
                 while (iter.hasNext()) {
                     String key = (String) iter.next();
                     String value = (String) getHeaders().get(key);
