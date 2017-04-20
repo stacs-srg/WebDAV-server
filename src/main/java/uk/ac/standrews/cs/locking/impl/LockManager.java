@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.exceptions.LockUseException;
 import uk.ac.standrews.cs.locking.interfaces.ILock;
 import uk.ac.standrews.cs.locking.interfaces.ILockManager;
 import uk.ac.standrews.cs.locking.interfaces.IResourceLockInfo;
-import uk.ac.standrews.cs.utils.Error;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 import java.net.URI;
 import java.util.HashSet;
@@ -272,7 +272,7 @@ public class LockManager implements ILockManager {
 
 		public void remove() {
 
-			Error.hardError("unimplemented method");
+			ErrorHandling.hardError("unimplemented method");
 		}
 		
 		private ILock getNext() {

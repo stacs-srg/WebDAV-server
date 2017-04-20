@@ -10,8 +10,8 @@ import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.fs.persistence.interfaces.INameAttributedPersistentObjectBinding;
-import uk.ac.standrews.cs.utils.Error;
-import uk.ac.standrews.cs.utils.UriUtil;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
+import uk.ac.standrews.cs.utilities.archive.UriUtil;
 
 import java.net.URI;
 import java.util.Iterator;
@@ -43,7 +43,7 @@ public abstract class AbstractFileSystem {
 		if (!(parent.contains(name) ^ absence)) {
 			
 			String msg = error_message + ": " + name;
-			Error.error(msg);							   // log it and
+			ErrorHandling.error(msg);							   // log it and
 			throw new BindingPresentException(msg);		 // propagate to caller
 		}
 	}
@@ -68,7 +68,7 @@ public abstract class AbstractFileSystem {
 		if (source_file == null) {
 			
 			String msg = "attempt to update non-existent file: " + name;
-			Error.error(msg);						  // log it and
+			ErrorHandling.error(msg);						  // log it and
 			throw new BindingAbsentException(msg);	 // propagate to caller 
 		}
 		
@@ -95,7 +95,7 @@ public abstract class AbstractFileSystem {
         if (source_file == null) {
 
             String msg = "attempt to update non-existent file: " + name;
-            Error.error(msg);
+            ErrorHandling.error(msg);
             throw new BindingAbsentException(msg);
         }
 
@@ -125,7 +125,7 @@ public abstract class AbstractFileSystem {
 		try {
 			check(parent, name, "attempt to delete non-existent object", false);
 		} catch (BindingPresentException e) {
-			Error.hardExceptionError("shouldn't get BindingPresentException on deletion", e);
+			ErrorHandling.hardExceptionError(e, "shouldn't get BindingPresentException on deletion", e);
 		}
 
 		parent.remove(name);
@@ -177,7 +177,7 @@ public abstract class AbstractFileSystem {
 		
 			addCopyOfFileToDirectory(destination_directory, destination_name, (IFile)source_object);
 		}
-		else Error.hardError("unknown attributed stateful object encountered of type: " + source_object.getClass().getName());
+		else ErrorHandling.hardError("unknown attributed stateful object encountered of type: " + source_object.getClass().getName());
 	 }
 	
 	/**
@@ -237,7 +237,7 @@ public abstract class AbstractFileSystem {
 		if (source_object == null) {
 		
 			String msg = "attempt to access non-existent object: " + source_name;
-			Error.error(msg);						// log it
+			ErrorHandling.error(msg);						// log it
 			throw new BindingAbsentException(msg);   // propagate to caller		   
 		}
 		
@@ -245,7 +245,7 @@ public abstract class AbstractFileSystem {
 		if (! overwrite && destination_parent.contains(destination_name))  {
 		
 			String msg = "destination exists but overwrite set to false for: " + destination_name;
-			Error.error(msg);						// log it
+			ErrorHandling.error(msg);						// log it
 			throw new BindingPresentException(msg);  // propagate to caller
 		}
 	}

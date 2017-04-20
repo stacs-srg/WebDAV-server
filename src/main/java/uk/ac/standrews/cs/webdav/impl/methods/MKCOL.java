@@ -4,7 +4,7 @@ import uk.ac.standrews.cs.exceptions.LockUseException;
 import uk.ac.standrews.cs.fs.exceptions.BindingPresentException;
 import uk.ac.standrews.cs.fs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.fs.interfaces.IDirectory;
-import uk.ac.standrews.cs.utils.UriUtil;
+import uk.ac.standrews.cs.utilities.archive.UriUtil;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.impl.HTTP;
 import uk.ac.standrews.cs.webdav.impl.Request;

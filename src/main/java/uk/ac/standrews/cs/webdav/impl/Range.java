@@ -3,7 +3,7 @@
  */
 package uk.ac.standrews.cs.webdav.impl;
 
-import uk.ac.standrews.cs.utils.Error;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 /**
  * Represents a range - duh
@@ -40,7 +40,7 @@ public class Range implements Comparable {
      */
     public int compareTo(Object o) {
         if( ! ( o instanceof Range ) ) {
-            Error.hardError( "Cannot compare object with range" );
+            ErrorHandling.hardError( "Cannot compare object with range" );
             return 0;
         }
         Range other = (Range) o;

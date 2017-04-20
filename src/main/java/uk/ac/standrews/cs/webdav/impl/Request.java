@@ -1,7 +1,6 @@
 package uk.ac.standrews.cs.webdav.impl;
 
-import uk.ac.standrews.cs.utils.Diagnostic;
-import uk.ac.standrews.cs.utils.StringUtil;
+import uk.ac.standrews.cs.utilities.archive.Diagnostic;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 
 import java.io.BufferedInputStream;
@@ -226,7 +225,7 @@ public class Request {
                 throw new HTTPException("Invalid content length sent");
             }
         } else if ((header = getHeader(HTTP.HEADER_TRANSFER_ENCODING)) != null){
-            if (StringUtil.contains(header.toLowerCase(),HTTP.HEADER_TOKEN_CHUNKED)){
+            if (header.toLowerCase().contains(HTTP.HEADER_TOKEN_CHUNKED)){
                 hasContent = true;
             }
         }
@@ -236,7 +235,7 @@ public class Request {
             for (int ii = 0; ii < HTTP.NON_CHUNKED_AGENTS.length; ii++ ){
                 String agent = HTTP.NON_CHUNKED_AGENTS[ii];
                 //Diagnostic.trace("Checking user agent '"+userAgentHeader+"' against '"+agent+"'", Diagnostic.FULL);
-                if (StringUtil.contains(userAgentHeader,agent)){
+                if (userAgentHeader.contains(agent)){
                     //Diagnostic.trace("Agent "+userAgentHeader+" is non chunked ("+agent+")", Diagnostic.FULL);
                     getResponse().setAllowChunked(false);
                     break;

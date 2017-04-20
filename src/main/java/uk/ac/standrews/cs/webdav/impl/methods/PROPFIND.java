@@ -13,14 +13,16 @@ import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.fs.persistence.interfaces.INameAttributedPersistentObjectBinding;
 import uk.ac.standrews.cs.locking.interfaces.ILockManager;
-import uk.ac.standrews.cs.utils.UriUtil;
+import uk.ac.standrews.cs.utilities.archive.UriUtil;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.impl.*;
 import uk.ac.standrews.cs.webdav.util.ISO8601Format;
 import uk.ac.standrews.cs.webdav.util.XMLLockPropertiesGen;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -471,8 +473,14 @@ public class PROPFIND extends AbstractHTTPMethod {
 
 				String name = binding.getName();
 				IFileSystemObject child = binding.getObject();
-				URI child_uri = UriUtil.childUri(uri, name, false);
-				
+				URI child_uri = null;
+				try {
+					child_uri = UriUtil.childUri(uri, name, false);
+				} catch (UnsupportedEncodingException | URISyntaxException e) {
+					System.err.println("URI is not valid");
+					continue;
+				}
+
 				propFindObject(multistatus_element, child, child_uri, child_depth, request, requested_property_names);
 			}
 			
@@ -488,8 +496,15 @@ public class PROPFIND extends AbstractHTTPMethod {
 		while (uri_iterator.hasNext()) {
 			
 			URI locked_uri = (URI) uri_iterator.next();
-			
-			if (UriUtil.parentUri(locked_uri).equals(uri)) {
+
+			URI parentURI = null;
+			try {
+				parentURI = UriUtil.parentUri(locked_uri);
+			} catch (UnsupportedEncodingException | URISyntaxException e) {
+				System.err.println("URI is not valid");
+			}
+
+			if (parentURI.equals(uri)) {
 				
 				// This locked URI has the original URI has parent - check for lock-null resource.
 				String base_name = UriUtil.baseName(locked_uri);

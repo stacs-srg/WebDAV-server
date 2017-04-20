@@ -7,8 +7,8 @@ import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.impl.FileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
-import uk.ac.standrews.cs.utils.Error;
-import uk.ac.standrews.cs.utils.UriUtil;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
+import uk.ac.standrews.cs.utilities.archive.UriUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,11 +52,11 @@ public abstract class FileBasedFileSystemObject extends FileSystemObject impleme
 			return new URI(UriUtil.uriEncode(real_file.getCanonicalPath()));
 		}
 		catch (URISyntaxException e) {
-			Error.hardExceptionError("uri syntax error", e);
+			ErrorHandling.hardExceptionError(e, "uri syntax error", e);
 			return null;
 		}
 		catch (IOException e) {
-			Error.hardExceptionError("I/O error", e);
+			ErrorHandling.hardExceptionError(e, "I/O error", e);
 			return null;
 		}
 	}

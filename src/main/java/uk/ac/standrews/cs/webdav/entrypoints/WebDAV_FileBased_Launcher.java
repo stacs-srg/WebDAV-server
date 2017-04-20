@@ -9,8 +9,7 @@ import uk.ac.standrews.cs.exceptions.GUIDGenerationException;
 import uk.ac.standrews.cs.filesystem.factories.LocalFileFileSystemFactory;
 import uk.ac.standrews.cs.fs.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
-import uk.ac.standrews.cs.utils.Error;
-import uk.ac.standrews.cs.utils.Output;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,14 +45,14 @@ public class WebDAV_FileBased_Launcher extends WebDAVLauncher {
 
 				StartWebDAVServer(file_system, port);
 			} catch (FileSystemCreationException e) {
-				Error.exceptionError("couldn't create file system", e);
+				ErrorHandling.exceptionError(e, "couldn't create file system", e);
 			} catch (IOException e) {
-				Error.exceptionError("socket error", e);
+				ErrorHandling.exceptionError(e,"socket error", e);
 			} catch (GUIDGenerationException e) {
 				e.printStackTrace();
 			}
 		} else {
-			Output.getSingleton().println("Usage: java WebDAV_FileBased_Launcher -r<store root guid> [-p<port>] [-d<root directory>] [-D]");
+			System.out.println("Usage: java WebDAV_FileBased_Launcher -r<store root guid> [-p<port>] [-d<root directory>] [-D]");
 		}
 	}
 

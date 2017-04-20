@@ -10,16 +10,17 @@ import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.locking.interfaces.ILockManager;
-import uk.ac.standrews.cs.utils.Error;
-import uk.ac.standrews.cs.utils.StringUtil;
-import uk.ac.standrews.cs.utils.UriUtil;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
+import uk.ac.standrews.cs.utilities.archive.UriUtil;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.impl.HTTP;
 import uk.ac.standrews.cs.webdav.impl.Request;
 import uk.ac.standrews.cs.webdav.interfaces.HTTPMethod;
 import uk.ac.standrews.cs.webdav.util.XMLHelper;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * Contains code common to various HTTP methods.
@@ -47,8 +48,14 @@ public abstract class AbstractHTTPMethod implements HTTPMethod {
 	protected IDirectory getParent(URI uri) {
 		
 		// Path denotes an element of a sub-directory of the root.
-		URI parent_path = UriUtil.parentUri(uri);
-		
+		URI parent_path = null;
+		try {
+			parent_path = UriUtil.parentUri(uri);
+		} catch (UnsupportedEncodingException | URISyntaxException e) {
+			ErrorHandling.exceptionError(e, "URI not valid");
+			return null;
+		}
+
 		// Get the parent directory.
 		IFileSystemObject parent_object = file_system.resolveObject(parent_path);
 			
@@ -56,7 +63,7 @@ public abstract class AbstractHTTPMethod implements HTTPMethod {
 			return (IDirectory) parent_object;
 		}
 		catch (ClassCastException e) {
-			Error.hardExceptionError("parent of " + uri + "not a directory", e);
+			ErrorHandling.hardExceptionError(e, "parent of " + uri + "not a directory", e);
 			return null;
 		}
 	}
@@ -65,7 +72,7 @@ public abstract class AbstractHTTPMethod implements HTTPMethod {
 	protected boolean shouldOverwrite(Request request) {
 		
 		String overwriteHeader = request.getHeader(HTTP.HEADER_OVERWRITE);
-		return !(overwriteHeader != null && StringUtil.contains(overwriteHeader,HTTP.HEADER_TOKEN_F));
+		return !(overwriteHeader != null && overwriteHeader.contains(HTTP.HEADER_TOKEN_F));
 	}
 	
 	protected String getFileContentType(IFile file) {

@@ -1,10 +1,9 @@
 package uk.ac.standrews.cs.webdav.entrypoints;
 
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
-import uk.ac.standrews.cs.utils.CommandLineArgs;
-import uk.ac.standrews.cs.utils.CommandLineInput;
-import uk.ac.standrews.cs.utils.Diagnostic;
-import uk.ac.standrews.cs.utils.Output;
+import uk.ac.standrews.cs.utilities.archive.CommandLineArgs;
+import uk.ac.standrews.cs.utilities.archive.CommandLineInput;
+import uk.ac.standrews.cs.utilities.archive.Diagnostic;
 
 import java.io.IOException;
 
@@ -27,7 +26,7 @@ public class WebDAVLauncher {
 
         if (CommandLineArgs.getArg(args, "-D") == null) {
 
-            Output.getSingleton().print("Enter D<return> for diagnostics, anything else for no diagnostics: ");
+            System.out.print("Enter D<return> for diagnostics, anything else for no diagnostics: ");
             String input = CommandLineInput.readLine();
 
             if (! input.equalsIgnoreCase("D"))

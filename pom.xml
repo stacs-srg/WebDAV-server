@@ -56,7 +56,7 @@
 
         <dependency>
             <groupId>uk.ac.standrews.cs</groupId>
-            <artifactId>utils-sta</artifactId>
+            <artifactId>utilities</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>

@@ -11,15 +11,15 @@ import uk.ac.standrews.cs.locking.impl.LockScope;
 import uk.ac.standrews.cs.locking.impl.LockType;
 import uk.ac.standrews.cs.locking.interfaces.ILock;
 import uk.ac.standrews.cs.locking.interfaces.IResourceLockInfo;
-import uk.ac.standrews.cs.utils.Diagnostic;
-import uk.ac.standrews.cs.utils.StringUtil;
-import uk.ac.standrews.cs.utils.UriUtil;
+import uk.ac.standrews.cs.utilities.archive.Diagnostic;
+import uk.ac.standrews.cs.utilities.archive.UriUtil;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.impl.*;
 import uk.ac.standrews.cs.webdav.util.XMLLockPropertiesGen;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Iterator;
 
 /**
@@ -122,7 +122,7 @@ public class LOCK extends AbstractHTTPMethod {
 				if (depthHeader != null) {
 					
 					// Check for infinity.
-					if (!StringUtil.contains(depthHeader.toLowerCase(), HTTP.HEADER_TOKEN_INFINITY))
+					if (!depthHeader.toLowerCase().contains(HTTP.HEADER_TOKEN_INFINITY))
 						
 						try { depth = Integer.parseInt(depthHeader); }
 						catch (NumberFormatException e) { throw new HTTPException("Invalid depth header", HTTP.RESPONSE_BAD_REQUEST, true); }
@@ -170,7 +170,11 @@ public class LOCK extends AbstractHTTPMethod {
 			}
 			else throw new HTTPException("No data sent", HTTP.RESPONSE_BAD_REQUEST, false);
 		}
-		catch (LockException e) { throw new HTTPException("Lock refused: " + e.getMessage(), HTTP.RESPONSE_LOCKED, true); }
+		catch (LockException e) {
+			throw new HTTPException("Lock refused: " + e.getMessage(), HTTP.RESPONSE_LOCKED, true);
+		} catch (URISyntaxException e) {
+			throw new HTTPException("URI invalid");
+		}
 	}
 
 	private String extractLockScope(Node next_element) throws HTTPException {

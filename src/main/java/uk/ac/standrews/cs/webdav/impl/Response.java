@@ -161,7 +161,7 @@ public class Response {
         
         if (message == null) message = "";
 
-        String text = MessageFormat.format(HTTP.HTTP_BUNDLE_STRING("error.template"), new Object[] { generalTitle, generalMessage, message, new Integer( status_code ) } );
+        String text = MessageFormat.format(HTTP.HTTP_BUNDLE_STRING("ErrorHandling.template"), new Object[] { generalTitle, generalMessage, message, new Integer( status_code ) } );
 
         //Writer writer = getOutputWriter();
         Writer writer = new OutputStreamWriter(getOutputBuffer());
@@ -189,7 +189,7 @@ public class Response {
         if (generalMessage == null) generalMessage = "The object you requested has moved";
 
         String message = MessageFormat.format(HTTP.HTTP_BUNDLE_STRING("E300"),new Object[] { uri } );
-        String text = MessageFormat.format(HTTP.HTTP_BUNDLE_STRING("error.template"), new Object[] { generalTitle, generalMessage, message, new Integer( status_code ) } );
+        String text = MessageFormat.format(HTTP.HTTP_BUNDLE_STRING("ErrorHandling.template"), new Object[] { generalTitle, generalMessage, message, new Integer( status_code ) } );
 
         Writer writer = getOutputWriter();
         writer.write(text);

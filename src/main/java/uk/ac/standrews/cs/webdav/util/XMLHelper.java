@@ -7,7 +7,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
-import uk.ac.standrews.cs.utils.Error;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -42,7 +42,7 @@ public class XMLHelper {
             outputFormat.setIndent(2);
             outputFormat.setEncoding("utf-8");
         } catch (Exception e) {
-            Error.exceptionError( "Unable to create document: ", e);
+            ErrorHandling.exceptionError(e, "Unable to create document: ", e);
         }
     }
     
@@ -70,7 +70,7 @@ public class XMLHelper {
             XMLSerializer serializer = new XMLSerializer(writer, outputFormat);
             serializer.serialize(element);
         } catch (IOException e) {
-            Error.exceptionError( "While serializing XML", e);
+            ErrorHandling.exceptionError(e, "While serializing XML", e);
         }
     }
     
@@ -88,7 +88,7 @@ public class XMLHelper {
 		try {
 			output.serialize(element);
 		} catch (IOException e) {
-			Error.exceptionError("IO exception", e);
+			ErrorHandling.exceptionError(e, "IO exception", e);
 			return "";
 		}
 		return string_writer.getBuffer().toString();

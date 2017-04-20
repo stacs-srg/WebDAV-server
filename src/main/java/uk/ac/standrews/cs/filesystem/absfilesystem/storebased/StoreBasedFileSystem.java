@@ -20,8 +20,8 @@ import uk.ac.standrews.cs.fs.store.impl.localfilebased.NameGUIDMap;
 import uk.ac.standrews.cs.fs.store.interfaces.IGUIDStore;
 import uk.ac.standrews.cs.fs.store.interfaces.INameGUIDMap;
 import uk.ac.standrews.cs.fs.util.Attributes;
-import uk.ac.standrews.cs.utils.Diagnostic;
-import uk.ac.standrews.cs.utils.Error;
+import uk.ac.standrews.cs.utilities.archive.Diagnostic;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 /**
  * File system implementation using a given IGUIDStore. Knows about stores but not how they're implemented.
@@ -145,7 +145,7 @@ public class StoreBasedFileSystem extends AbstractFileSystem implements IFileSys
 			
 			addExistingFileToDirectory(destinationDirectory, destinationName, (IFile)source_object);
 		}
-		else Error.hardError("unknown attributed stateful object encountered of type: " + source_object.getClass().getName());
+		else ErrorHandling.hardError("unknown attributed stateful object encountered of type: " + source_object.getClass().getName());
 	}
 	
 	/************************************ Private methods ************************************/

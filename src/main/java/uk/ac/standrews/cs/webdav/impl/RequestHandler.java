@@ -5,8 +5,8 @@ package uk.ac.standrews.cs.webdav.impl;
 
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.locking.interfaces.ILockManager;
-import uk.ac.standrews.cs.utils.Diagnostic;
-import uk.ac.standrews.cs.utils.Error;
+import uk.ac.standrews.cs.utilities.archive.Diagnostic;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.interfaces.HTTPMethod;
 
@@ -46,12 +46,12 @@ public class RequestHandler implements Runnable {
                 Diagnostic.trace("************* Completed Request: " + request.getVerb() + " " + request.getUri() + " [thread " + Thread.currentThread().hashCode() + "]", Diagnostic.RUN);
             } catch (RuntimeException e) {
                 // Absorb any unchecked exceptions.
-                Error.exceptionError("While processing request", e);
+                ErrorHandling.exceptionError(e, "While processing request", e);
                 internalServerErrorResponse(request, e);
             }
 
         } catch (IOException e) {
-            Error.exceptionError("While setting up client socket streams", e);
+            ErrorHandling.exceptionError(e, "While setting up client socket streams", e);
         } finally {
             //Diagnostic.trace( "Thread completed " + Thread.currentThread().hashCode(), Diagnostic.RUN );
             closeConnectedSocket();
@@ -93,18 +93,18 @@ public class RequestHandler implements Runnable {
 			if (socket != null && socket.isConnected())
 				closeSocket();
 		} catch (IOException e) {
-			Error.exceptionError("While trying to close socket", e);
+			ErrorHandling.exceptionError(e, "While trying to close socket", e);
 		}
 	}
 
     private void tryToCloseSocket(IOException e) {
-        // Comms error.
+        // Comms ErrorHandling.
         // No point in setting the error code in the response if we can't send it...
         try {
-            Error.exceptionError("While processing request from " + socket.getInetAddress().getHostName(), e);
+            ErrorHandling.exceptionError(e, "While processing request from " + socket.getInetAddress().getHostName(), e);
             closeSocket();
         } catch (IOException ioe) {
-            Error.exceptionError("IOException while closing socket", ioe);
+            ErrorHandling.exceptionError(e, "IOException while closing socket", ioe);
         }
     }
 
@@ -119,7 +119,7 @@ public class RequestHandler implements Runnable {
         try {
             response.writeError(e.getStatusCode(), e.getMessage());
         } catch (IOException e1) {
-            Error.exceptionError("While processing http exception response", e);
+            ErrorHandling.exceptionError(e, "While processing http exception response", e);
         }
     }
 
@@ -128,7 +128,7 @@ public class RequestHandler implements Runnable {
         try {
             response.writeError(HTTP.RESPONSE_INTERNAL_SERVER_ERROR, e.getMessage());
         } catch (IOException e1) {
-            Error.exceptionError("While processing internal server error response", e);
+            ErrorHandling.exceptionError(e, "While processing internal server error response", e);
         }
     }
 }

@@ -4,7 +4,7 @@ import uk.ac.standrews.cs.filesystem.exceptions.InvalidPathException;
 import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
-import uk.ac.standrews.cs.utils.Error;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.impl.HTTP;
 import uk.ac.standrews.cs.webdav.impl.Request;
@@ -53,7 +53,7 @@ public class HEAD extends AbstractHTTPMethod {
 				response.setContentType(getFileContentType(file));
 				response.setContentLength(getFileSize(file));
 			} else {
-                Error.hardError("unknown attributed stateful object encountered of type: " + target_object.getClass().getName());
+                ErrorHandling.hardError("unknown attributed stateful object encountered of type: " + target_object.getClass().getName());
             }
 			
 			response.setStatusCode(HTTP.RESPONSE_OK);

@@ -15,8 +15,8 @@ import uk.ac.standrews.cs.fs.persistence.interfaces.IAttributes;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.fs.store.impl.localfilebased.FileData;
 import uk.ac.standrews.cs.fs.util.Attributes;
-import uk.ac.standrews.cs.utils.Diagnostic;
-import uk.ac.standrews.cs.utils.Error;
+import uk.ac.standrews.cs.utilities.archive.Diagnostic;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 import java.io.File;
 import java.util.Iterator;
@@ -78,7 +78,7 @@ public class FileBasedDirectory extends FileBasedFileSystemObject implements IDi
 				return new FileBasedFile(this, name, file_data);
 			}
 			catch (PersistenceException e) {
-				Error.exceptionError("couldn't read file data", e);
+				ErrorHandling.exceptionError(e, "couldn't read file data", e);
 				return null;
 			}
 		}
@@ -87,7 +87,7 @@ public class FileBasedDirectory extends FileBasedFileSystemObject implements IDi
 			return new FileBasedDirectory(this, name);
 		}
 		
-		Error.hardError("directory entry not file or directory");
+		ErrorHandling.hardError("directory entry not file or directory");
 		return null;
 	}
 
@@ -123,7 +123,7 @@ public class FileBasedDirectory extends FileBasedFileSystemObject implements IDi
 	}
 
 	public void setAttributes(IAttributes atts) {
-		Error.hardError("unimplemented method");
+		ErrorHandling.hardError("unimplemented method");
 	}
 
     public long getCreationTime() {
@@ -152,12 +152,12 @@ public class FileBasedDirectory extends FileBasedFileSystemObject implements IDi
         public DirectoryIterator(File real_file) {
 
             names = real_file.list();
-            if (names == null) Error.hardError("file: " + real_file.getPath() + " is not a directory");
+            if (names == null) ErrorHandling.hardError("file: " + real_file.getPath() + " is not a directory");
             index = 0;
         }
 
         public void remove() {
-    		Error.hardError("unimplemented method");
+    		ErrorHandling.hardError("unimplemented method");
         }
 
         public boolean hasNext() {

@@ -5,8 +5,9 @@ import uk.ac.standrews.cs.fs.exceptions.*;
 import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.fs.store.impl.localfilebased.InputStreamData;
-import uk.ac.standrews.cs.utils.Diagnostic;
-import uk.ac.standrews.cs.utils.UriUtil;
+import uk.ac.standrews.cs.utilities.archive.Diagnostic;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
+import uk.ac.standrews.cs.utilities.archive.UriUtil;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.impl.HTTP;
 import uk.ac.standrews.cs.webdav.impl.MIME;
@@ -14,7 +15,9 @@ import uk.ac.standrews.cs.webdav.impl.Request;
 import uk.ac.standrews.cs.webdav.impl.Response;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * @author Ben Catherall, al, graham
@@ -139,7 +142,13 @@ public class PUT extends AbstractHTTPMethod {
 
     private void createFile(URI uri, String lock_token, IDirectory parent, String base_name, String content_type, IData data)
             throws LockUseException, BindingPresentException, PersistenceException {
-        URI parent_uri = UriUtil.parentUri(uri);
+        URI parent_uri = null;
+        try {
+            parent_uri = UriUtil.parentUri(uri);
+        } catch (UnsupportedEncodingException | URISyntaxException e) {
+            ErrorHandling.exceptionError(e, "URI not valid");
+            return;
+        }
 
         // If the parent directory is currently locked, check that the token specified in the If header is the right one.
         lock_manager.checkWhetherLockedWithOtherToken(parent_uri, lock_token);

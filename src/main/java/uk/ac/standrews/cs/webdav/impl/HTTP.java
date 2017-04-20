@@ -4,7 +4,7 @@ import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.params.HttpMethodParams;
-import uk.ac.standrews.cs.utils.Error;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.impl.methods.*;
 import uk.ac.standrews.cs.webdav.interfaces.HTTPMethod;
@@ -150,7 +150,7 @@ public class HTTP {
                 HTTPMethod method = (HTTPMethod) clazz.newInstance();
                 METHODS.put(method.getMethodName(), method);
             } catch (InstantiationException | IllegalAccessException e) {
-                Error.exceptionError("While initialising HTTP method of class " + clazz, e);
+                ErrorHandling.exceptionError(e, "While initialising HTTP method of class " + clazz, e);
             }
         }
 

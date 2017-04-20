@@ -13,7 +13,7 @@ import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
-import uk.ac.standrews.cs.utils.Error;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 import java.io.File;
 
@@ -81,7 +81,7 @@ public class FileBasedFileSystem extends AbstractFileSystem implements IFileSyst
         File source_path = new File(real_source_directory, sourceName);
         File destination_path = new File(real_destination_directory, destinationName);
         
-        if (!source_path.renameTo(destination_path)) Error.error("couldn't move object");
+        if (!source_path.renameTo(destination_path)) ErrorHandling.error("couldn't move object");
 	}
 
     /************************************ Private methods ************************************/

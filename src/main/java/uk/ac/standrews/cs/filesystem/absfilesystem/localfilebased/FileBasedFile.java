@@ -13,7 +13,7 @@ import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.fs.util.Attributes;
 import uk.ac.standrews.cs.impl.SHAKeyFactory;
 import uk.ac.standrews.cs.impl.keys.KeyImpl;
-import uk.ac.standrews.cs.utils.Error;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 import uk.ac.standrews.cs.webdav.impl.MIME;
 
 import java.io.File;
@@ -36,7 +36,7 @@ public class FileBasedFile extends FileBasedFileSystemObject implements IFile {
         super(logical_parent, name, data);
         
         if (!(logical_parent instanceof FileBasedDirectory)) {
-			Error.hardError("parent of file-based file isn't file-based");
+			ErrorHandling.hardError("parent of file-based file isn't file-based");
 		}
         
         real_file = new File(((FileBasedDirectory)logical_parent).getRealFile(), name);
@@ -57,7 +57,7 @@ public class FileBasedFile extends FileBasedFileSystemObject implements IFile {
         try {
             attr = Files.readAttributes(real_file.toPath(), BasicFileAttributes.class);
         } catch (IOException e) {
-            Error.error("Unable to get creation time for file " + real_file.getName());
+            ErrorHandling.error("Unable to get creation time for file " + real_file.getName());
         }
 
 		return attr.creationTime().toMillis();
@@ -105,7 +105,7 @@ public class FileBasedFile extends FileBasedFileSystemObject implements IFile {
 	}
 
 	public void setAttributes(IAttributes atts) {
-		Error.hardError("unimplemented method");
+		ErrorHandling.hardError("unimplemented method");
 	}
 
 	@Override

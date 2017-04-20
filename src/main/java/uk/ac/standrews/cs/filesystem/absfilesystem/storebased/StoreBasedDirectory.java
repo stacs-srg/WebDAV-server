@@ -23,9 +23,8 @@ import uk.ac.standrews.cs.fs.store.impl.localfilebased.NameGUIDMap;
 import uk.ac.standrews.cs.fs.store.interfaces.IGUIDStore;
 import uk.ac.standrews.cs.fs.store.interfaces.INameGUIDMap;
 import uk.ac.standrews.cs.fs.util.Attributes;
-import uk.ac.standrews.cs.utils.Assert;
-import uk.ac.standrews.cs.utils.Diagnostic;
-import uk.ac.standrews.cs.utils.Error;
+import uk.ac.standrews.cs.utilities.archive.Diagnostic;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -50,8 +49,7 @@ public class StoreBasedDirectory extends StoreBasedFileSystemObject implements I
 		super(store, map.getGUID(), atts);
 		
 		this.map = map;
-		
-		Assert.assertion(! directoryCache.containsKey( guid.toString()),"GUID already in dir cache" );
+
 		directoryCache.put(guid.toString(), this);
 		
 		// Obsolete?
@@ -96,12 +94,12 @@ public class StoreBasedDirectory extends StoreBasedFileSystemObject implements I
                 try {
                     return makeFile(guid, store, atts);
                 } catch (StoreGetException e) {
-                    Error.exceptionError("couldn't make file for " + name, e);
+                    ErrorHandling.exceptionError(e, "couldn't make file for " + name, e);
                     return null;
                 }
 
             } else {
-				Error.error("Encountered an unknown file type for " + name);
+				ErrorHandling.error("Encountered an unknown file type for " + name);
 				return null;
 			}
 		}
@@ -110,7 +108,7 @@ public class StoreBasedDirectory extends StoreBasedFileSystemObject implements I
 			return null;
 		}
 		catch (PersistenceException e) {
-			Error.exceptionError("couldn't make collection", e);
+			ErrorHandling.exceptionError(e, "couldn't make collection", e);
 			return null;
 		}
 	}
@@ -216,7 +214,8 @@ public class StoreBasedDirectory extends StoreBasedFileSystemObject implements I
 		// Set the attributes for the name.
 		try {
 			map.setAttributes(name, atts);
-		} catch (BindingAbsentException e) {Error.hardExceptionError("Couldn't set attributes for newly added name", e);
+		} catch (BindingAbsentException e) {
+			ErrorHandling.hardExceptionError(e, "Couldn't set attributes for newly added name", e);
         }
 		
 		// Record the modification time.
@@ -299,16 +298,16 @@ public class StoreBasedDirectory extends StoreBasedFileSystemObject implements I
 						return new NameAttributedPersistentObjectBinding( name, f );
 					}
 					else {
-						Error.hardError( "encountered unknown file type" );
+						ErrorHandling.hardError( "encountered unknown file type" );
 						// unreached
 						return null;
 					}
 				} catch (Exception e) {
-					Error.hardError( "cannot extract attributes" );
+					ErrorHandling.hardError( "cannot extract attributes" );
 					return null;
 				}
 			} else {
-				Error.hardError( "encountered an unexpected object in iterator" + o.getClass() );
+				ErrorHandling.hardError( "encountered an unexpected object in iterator" + o.getClass() );
 				return null;
 			}
 		}

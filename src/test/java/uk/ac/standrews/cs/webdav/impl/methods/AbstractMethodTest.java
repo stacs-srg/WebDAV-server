@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.webdav.impl.methods;
 
 import org.junit.Before;
-import uk.ac.standrews.cs.utils.Error;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 import uk.ac.standrews.cs.webdav.entrypoints.WebDAV_FileBased_Launcher;
 import uk.ac.standrews.cs.webdav.impl.HTTP;
 
@@ -87,9 +87,9 @@ public abstract class AbstractMethodTest {
 			
 			return reply.toString();
 		} catch (UnknownHostException e) {
-			Error.exceptionError("connecting to host", e); return "";
+			ErrorHandling.exceptionError(e, "connecting to host", e); return "";
 		} catch (IOException e) {
-			Error.exceptionError("connecting to host", e); return "";
+			ErrorHandling.exceptionError(e, "connecting to host", e); return "";
 		}
 	}
 }

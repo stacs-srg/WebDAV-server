@@ -3,8 +3,8 @@ package uk.ac.standrews.cs.webdav.entrypoints;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystem;
 import uk.ac.standrews.cs.locking.impl.LockManager;
 import uk.ac.standrews.cs.locking.interfaces.ILockManager;
-import uk.ac.standrews.cs.utils.ActionQueue;
-import uk.ac.standrews.cs.utils.Diagnostic;
+import uk.ac.standrews.cs.utilities.archive.ActionQueue;
+import uk.ac.standrews.cs.utilities.archive.Diagnostic;
 import uk.ac.standrews.cs.webdav.impl.RequestHandler;
 
 import java.io.IOException;

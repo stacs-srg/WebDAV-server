@@ -4,7 +4,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
-import uk.ac.standrews.cs.utils.Error;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.impl.HTTP;
 import uk.ac.standrews.cs.webdav.impl.Request;
@@ -25,7 +25,7 @@ public class PROPPATCH extends AbstractHTTPMethod {
 
 	public void execute(Request request, Response response) throws IOException, HTTPException {
 		
-		Error.hardError("method not implemented - please tell Graham");
+		ErrorHandling.hardError("method not implemented - please tell Graham");
 		
 		// TODO actually implement the property updates...
 		// TODO need to check locks

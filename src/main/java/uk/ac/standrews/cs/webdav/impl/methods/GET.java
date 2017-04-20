@@ -8,9 +8,9 @@ import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.fs.persistence.interfaces.INameAttributedPersistentObjectBinding;
-import uk.ac.standrews.cs.utils.Diagnostic;
-import uk.ac.standrews.cs.utils.Error;
-import uk.ac.standrews.cs.utils.UriUtil;
+import uk.ac.standrews.cs.utilities.archive.Diagnostic;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
+import uk.ac.standrews.cs.utilities.archive.UriUtil;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.impl.HTTP;
 import uk.ac.standrews.cs.webdav.impl.Request;
@@ -54,7 +54,7 @@ public class GET extends AbstractHTTPMethod {
 			} else if (target_object instanceof IFile) {
                 processFile(request, response, target_object, uri);
 			} else {
-                Error.hardError("unknown attributed stateful object encountered of type: " + target_object.getClass().getName());
+                ErrorHandling.hardError("unknown attributed stateful object encountered of type: " + target_object.getClass().getName());
             }
 			
 			response.setStatusCode(HTTP.RESPONSE_OK);

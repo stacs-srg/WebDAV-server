@@ -1,6 +1,6 @@
 package uk.ac.standrews.cs.webdav.impl;
 
-import uk.ac.standrews.cs.utils.Error;
+import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,7 +35,7 @@ public class MIME {
                 }
             }
         } catch (IOException e){
-            Error.exceptionError("While parsing MIME types",e);
+            ErrorHandling.exceptionError(e, "While parsing MIME types",e);
         }
     }
 
