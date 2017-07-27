@@ -4,7 +4,6 @@
 
 This is a webdav server implementation.
 
-This instance depends on the sos-core module. You can however remove the SOS dependent code without affecting the rest of the project.
 
 ## How to RUN it
 

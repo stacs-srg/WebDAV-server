@@ -3,7 +3,6 @@
  */
 package uk.ac.standrews.cs.filesystem.factories;
 
-import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.filesystem.absfilesystem.storebased.StoreBasedFileSystem;
 import uk.ac.standrews.cs.fs.exceptions.FileSystemCreationException;
 import uk.ac.standrews.cs.fs.exceptions.PersistenceException;
@@ -12,6 +11,7 @@ import uk.ac.standrews.cs.fs.interfaces.IFileSystemFactory;
 import uk.ac.standrews.cs.fs.store.exceptions.StoreIntegrityException;
 import uk.ac.standrews.cs.fs.store.factories.LocalFileBasedStoreFactory;
 import uk.ac.standrews.cs.fs.store.interfaces.IGUIDStore;
+import uk.ac.standrews.cs.guid.IGUID;
 
 /**
  * Factory providing methods to create a new file system using a given store.

@@ -4,7 +4,7 @@
  */
 package uk.ac.standrews.cs.locking.impl;
 
-import uk.ac.standrews.cs.impl.RandomGUID;
+import uk.ac.standrews.cs.guid.impl.RandomGUID;
 import uk.ac.standrews.cs.locking.interfaces.IResourceLockInfo;
 
 import java.net.URI;

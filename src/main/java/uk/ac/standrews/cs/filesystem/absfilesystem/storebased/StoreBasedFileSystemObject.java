@@ -3,8 +3,6 @@
  */
 package uk.ac.standrews.cs.filesystem.absfilesystem.storebased;
 
-import uk.ac.standrews.cs.IGUID;
-import uk.ac.standrews.cs.IPID;
 import uk.ac.standrews.cs.fs.exceptions.AccessFailureException;
 import uk.ac.standrews.cs.fs.exceptions.PersistenceException;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
@@ -14,6 +12,8 @@ import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.fs.store.exceptions.StoreGetException;
 import uk.ac.standrews.cs.fs.store.exceptions.StorePutException;
 import uk.ac.standrews.cs.fs.store.interfaces.IGUIDStore;
+import uk.ac.standrews.cs.guid.IGUID;
+import uk.ac.standrews.cs.guid.IPID;
 
 /**
  * Attributed stateful object that uses a store as its persistence mechanism.

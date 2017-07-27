@@ -3,13 +3,13 @@
  */
 package uk.ac.standrews.cs.filesystem.absfilesystem;
 
-import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.fs.exceptions.*;
 import uk.ac.standrews.cs.fs.interfaces.IDirectory;
 import uk.ac.standrews.cs.fs.interfaces.IFile;
 import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.fs.persistence.interfaces.INameAttributedPersistentObjectBinding;
+import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 import uk.ac.standrews.cs.utilities.archive.UriUtil;
 

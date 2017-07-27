@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.webdav.impl.methods;
 
 import org.junit.Test;
-import uk.ac.standrews.cs.impl.RandomGUID;
+import uk.ac.standrews.cs.guid.impl.RandomGUID;
 
 import static org.junit.Assert.assertTrue;
 

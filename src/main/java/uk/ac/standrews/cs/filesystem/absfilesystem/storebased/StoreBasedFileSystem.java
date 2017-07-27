@@ -3,7 +3,6 @@
  */
 package uk.ac.standrews.cs.filesystem.absfilesystem.storebased;
 
-import uk.ac.standrews.cs.IGUID;
 import uk.ac.standrews.cs.filesystem.FileSystemConstants;
 import uk.ac.standrews.cs.filesystem.absfilesystem.AbstractFileSystem;
 import uk.ac.standrews.cs.fs.exceptions.BindingAbsentException;
@@ -20,6 +19,7 @@ import uk.ac.standrews.cs.fs.store.impl.localfilebased.NameGUIDMap;
 import uk.ac.standrews.cs.fs.store.interfaces.IGUIDStore;
 import uk.ac.standrews.cs.fs.store.interfaces.INameGUIDMap;
 import uk.ac.standrews.cs.fs.util.Attributes;
+import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.utilities.archive.Diagnostic;
 import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
 
