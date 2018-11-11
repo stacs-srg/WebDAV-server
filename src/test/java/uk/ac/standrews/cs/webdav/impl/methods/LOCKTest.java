@@ -1,7 +1,7 @@
 package uk.ac.standrews.cs.webdav.impl.methods;
 
 import org.junit.Test;
-import uk.ac.standrews.cs.guid.impl.RandomGUID;
+import uk.ac.standrews.cs.guid.GUIDFactory;
 
 import static org.junit.Assert.assertTrue;
 
@@ -9,7 +9,7 @@ public class LOCKTest extends AbstractMethodTest {
 
 	@Test
     public void testNonExtantURI() {
-        String uri = "/" + (new RandomGUID()).toString();
+        String uri = "/" + (GUIDFactory.generateRandomGUID()).toString();
 
         System.out.println("Should be able to lock a non-extant URI with extant parent - result should be 201 CREATED.\n");
 
@@ -23,7 +23,7 @@ public class LOCKTest extends AbstractMethodTest {
 	@Test
 	public void test1() {
 		
-		String uri = "/" + (new RandomGUID()).toString();
+		String uri = "/" + (GUIDFactory.generateRandomGUID()).toString();
 
 		System.out.println("Should be able to lock a non-extant URI with extant parent - result should be 200 OK.\n");
 		showResponse(null, 9093, "ASA", "LOCK " + uri, makeTestString(9093, uri));
@@ -43,7 +43,7 @@ public class LOCKTest extends AbstractMethodTest {
 			e.printStackTrace();
 		}
 
-		String uri2 = "/" + (new RandomGUID()).toString() + "/" + (new RandomGUID()).toString();
+		String uri2 = "/" + (GUIDFactory.generateRandomGUID()).toString() + "/" + (GUIDFactory.generateRandomGUID()).toString();
 
 		System.out.println("Shouldn't be able to lock a non-extant URI with non-extant parent - result should be 412 precondition failed.\n");
 		showResponse(null, 9093, "ASA", "LOCK " + uri2, makeTestString(9093, uri2));
@@ -64,7 +64,7 @@ public class LOCKTest extends AbstractMethodTest {
     @Test
 	public void test2() {
 		
-		String random_name = new RandomGUID().toString();
+		String random_name = GUIDFactory.generateRandomGUID().toString();
 		String uri = "/" + random_name;
 
 		System.out.println("Should be able to lock a non-existent URI - result should be 200 OK.\n");
