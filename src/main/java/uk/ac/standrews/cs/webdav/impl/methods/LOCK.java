@@ -12,7 +12,7 @@ import uk.ac.standrews.cs.locking.impl.LockType;
 import uk.ac.standrews.cs.locking.interfaces.ILock;
 import uk.ac.standrews.cs.locking.interfaces.IResourceLockInfo;
 import uk.ac.standrews.cs.utilities.archive.Diagnostic;
-import uk.ac.standrews.cs.utilities.archive.UriUtil;
+import uk.ac.standrews.cs.utilities.network.UriUtil;
 import uk.ac.standrews.cs.webdav.exceptions.HTTPException;
 import uk.ac.standrews.cs.webdav.impl.*;
 import uk.ac.standrews.cs.webdav.util.XMLLockPropertiesGen;

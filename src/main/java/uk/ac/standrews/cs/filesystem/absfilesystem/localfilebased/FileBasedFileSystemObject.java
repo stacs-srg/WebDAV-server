@@ -8,7 +8,7 @@ import uk.ac.standrews.cs.fs.interfaces.IFileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.impl.FileSystemObject;
 import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
-import uk.ac.standrews.cs.utilities.archive.UriUtil;
+import uk.ac.standrews.cs.utilities.network.UriUtil;
 
 import java.io.File;
 import java.io.IOException;

@@ -4,7 +4,7 @@
  */
 package uk.ac.standrews.cs.locking.impl;
 
-import uk.ac.standrews.cs.guid.impl.RandomGUID;
+import uk.ac.standrews.cs.guid.GUIDFactory;
 import uk.ac.standrews.cs.locking.interfaces.IResourceLockInfo;
 
 import java.net.URI;
@@ -22,7 +22,7 @@ public class ResourceLockInfo implements IResourceLockInfo {
         this.depth = depth;
         this.scope = scope;
         this.type = type;
-        this.lockToken = token_prefix + (new RandomGUID());
+        this.lockToken = token_prefix + (GUIDFactory.generateRandomGUID());
         this.resource = resource.normalize();
     }
 

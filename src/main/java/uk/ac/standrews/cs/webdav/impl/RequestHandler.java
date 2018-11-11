@@ -30,8 +30,8 @@ public class RequestHandler implements Runnable {
 	}
 
 	public void run() {
-		// Diagnostic.trace( "Thread started " + Thread.currentThread().hashCode(), Diagnostic.INIT );
-        Request request = null;
+
+        Request request;
 		try {
             request = getRequest();
 			request.setSocket(socket);

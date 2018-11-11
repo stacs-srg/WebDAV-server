@@ -11,7 +11,7 @@ import uk.ac.standrews.cs.fs.persistence.interfaces.IData;
 import uk.ac.standrews.cs.fs.persistence.interfaces.INameAttributedPersistentObjectBinding;
 import uk.ac.standrews.cs.guid.IGUID;
 import uk.ac.standrews.cs.utilities.archive.ErrorHandling;
-import uk.ac.standrews.cs.utilities.archive.UriUtil;
+import uk.ac.standrews.cs.utilities.network.UriUtil;
 
 import java.net.URI;
 import java.util.Iterator;
